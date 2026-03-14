@@ -1,0 +1,3534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Nexus SMM — Grow Your Social Media</title>
+  <meta name="description" content="India's premium SMM panel. Instagram, YouTube, TikTok growth services."/>
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <!-- Firebase compat SDK - loaded directly so always available -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="text/babel" data-presets="react">
+const { useState, useEffect, useRef, useCallback } = React;
+
+/* ═══════════════════════════════════════════════════════════════
+   NEXUS SMM PLATFORM — FINAL SECURE BUILD
+   Admin password is stored ONLY in Firebase Auth — never in code.
+   To change admin password: Firebase Console → Authentication → Users
+═══════════════════════════════════════════════════════════════ */
+
+// Admin email — only this email gets admin access after Firebase login
+const ADMIN_EMAIL = "admin@opluentedge.com";
+// NO password stored here — Firebase Auth handles it securely
+
+// ── CONTACT CONFIG — update these with your real details ──────
+const WHATSAPP_NUM   = "918767282776";   // Your WhatsApp number (with country code, no +)
+const UPI_ID         = "sushantyetekar45-3@okicici";
+const UPI_NAME       = "Nexus SMM";
+const SUPPORT_EMAIL  = "support@nexus-smm.in"; // Your support email
+const BUSINESS_NAME  = "Nexus SMM";
+
+// Price per unit at base qty (1k). Tiered pricing shown in order form.
+// IG Followers: 1k=₹349, 5k=₹1339, 10k=₹2699, 20k=₹6999
+// IG Views:     1k=₹100, 5k=₹479,  10k=₹799,  20k=₹1998
+// IG Likes:     1k=₹100, 5k=₹250,  10k=₹500,  20k=₹1800
+const SERVICES = [
+  // ── INSTAGRAM ──────────────────────────────────────────────────
+  { id:1,  platform:"Instagram", icon:"📸", name:"Instagram Followers – Indian Stable",
+    desc:"100% Indian stable followers. Gradual natural delivery. No-drop guarantee. Safe for all accounts.",
+    speed:"0–12 hrs", min:1000, max:100000,
+    tiers:[{qty:1000,price:349},{qty:5000,price:1339},{qty:10000,price:2699},{qty:20000,price:6999}],
+    cat:"Followers", badge:"🔥 Best Seller" },
+
+  { id:2,  platform:"Instagram", icon:"📸", name:"Instagram Likes – Indian Stable",
+    desc:"Real Indian likes. Instant start. Pushes your post to the Explore page for more organic reach.",
+    speed:"0–1 hr",   min:1000, max:50000,
+    tiers:[{qty:1000,price:100},{qty:5000,price:250},{qty:10000,price:500},{qty:20000,price:1800}],
+    cat:"Likes", badge:"⚡ Instant" },
+
+  { id:3,  platform:"Instagram", icon:"📸", name:"Instagram Reel Views – Indian Stable",
+    desc:"Indian reel views. Boosts your reel to Explore & For You pages. Great for viral growth.",
+    speed:"0–2 hrs",  min:1000, max:500000,
+    tiers:[{qty:1000,price:100},{qty:5000,price:479},{qty:10000,price:799},{qty:15000,price:979},{qty:20000,price:1998}],
+    cat:"Views", badge:"📈 Trending" },
+
+  { id:4,  platform:"Instagram", icon:"📸", name:"Instagram Story Views – Indian",
+    desc:"Boost your story views from Indian accounts. Improves reach and profile visibility.",
+    speed:"0–1 hr",   min:1000, max:200000,
+    tiers:[{qty:1000,price:100},{qty:5000,price:479},{qty:10000,price:799},{qty:20000,price:1998}],
+    cat:"Views" },
+
+  { id:5,  platform:"Instagram", icon:"📸", name:"Instagram Comments – Custom",
+    desc:"Positive custom comments from Indian-looking profiles. You provide the comment text.",
+    speed:"0–6 hrs",  min:10,   max:1000, price:18.00, cat:"Comments" },
+
+  { id:6,  platform:"Instagram", icon:"📸", name:"Instagram Saves – Indian",
+    desc:"Post saves from real Indian accounts. Saves are a top ranking signal on Instagram.",
+    speed:"0–3 hrs",  min:500,  max:20000, price:0.80, cat:"Engagement" },
+
+  // ── YOUTUBE ─────────────────────────────────────────────────────
+  { id:7,  platform:"YouTube", icon:"▶️", name:"YouTube Views – Indian HQ",
+    desc:"High-retention Indian views with watch time boost. Helps reach monetization thresholds.",
+    speed:"1–24 hrs", min:500, max:500000, price:0.55, cat:"Views" },
+
+  { id:8,  platform:"YouTube", icon:"▶️", name:"YouTube Subscribers – Indian",
+    desc:"Real Indian subscribers. Grows your channel credibility and helps monetize faster.",
+    speed:"1–48 hrs", min:100, max:50000, price:3.50, cat:"Followers" },
+
+  { id:9,  platform:"YouTube", icon:"▶️", name:"YouTube Likes – Indian",
+    desc:"Boost your video with Indian likes. Increases trust and ranking in search.",
+    speed:"1–12 hrs", min:100, max:50000, price:1.20, cat:"Likes" },
+
+  // ── TIKTOK ──────────────────────────────────────────────────────
+  { id:10, platform:"TikTok", icon:"🎵", name:"TikTok Views – Worldwide",
+    desc:"Push your content to For You pages worldwide. Fast delivery, no password needed.",
+    speed:"0–6 hrs", min:1000, max:1000000, price:0.09, cat:"Views" },
+
+  { id:11, platform:"TikTok", icon:"🎵", name:"TikTok Followers – Global",
+    desc:"Grow your TikTok presence fast with real-looking followers.",
+    speed:"0–12 hrs", min:100, max:100000, price:1.50, cat:"Followers" },
+
+  { id:12, platform:"TikTok", icon:"🎵", name:"TikTok Likes – Global",
+    desc:"Instant likes for your TikTok videos. Safe and fast delivery.",
+    speed:"0–2 hrs", min:100, max:100000, price:0.50, cat:"Likes" },
+
+  // ── TWITTER / X ─────────────────────────────────────────────────
+  { id:13, platform:"Twitter", icon:"🐦", name:"Twitter / X Followers",
+    desc:"Boost your credibility with a higher follower count. Gradual delivery.",
+    speed:"1–24 hrs", min:100, max:50000, price:1.80, cat:"Followers" },
+
+  { id:14, platform:"Twitter", icon:"🐦", name:"Twitter / X Likes",
+    desc:"Engagement boost for your tweets and posts. Fast delivery.",
+    speed:"0–6 hrs", min:50, max:20000, price:0.55, cat:"Likes" },
+
+  // ── TELEGRAM ────────────────────────────────────────────────────
+  { id:15, platform:"Telegram", icon:"✈️", name:"Telegram Members – Indian",
+    desc:"Real Indian members for your Telegram channel or group. Boosts credibility.",
+    speed:"0–12 hrs", min:100, max:200000, price:0.90, cat:"Followers" },
+
+  // ── FACEBOOK ────────────────────────────────────────────────────
+  { id:16, platform:"Facebook", icon:"👍", name:"Facebook Page Likes – Indian",
+    desc:"Indian page likes for your Facebook business page. Looks 100% natural.",
+    speed:"1–48 hrs", min:100, max:50000, price:1.10, cat:"Likes" },
+
+  // ── SNAPCHAT ────────────────────────────────────────────────────
+  { id:17, platform:"Snapchat", icon:"👻", name:"Snapchat Followers",
+    desc:"Grow your Snapchat audience with real-looking followers.",
+    speed:"0–24 hrs", min:100, max:10000, price:2.20, cat:"Followers" },
+];
+
+const PLATFORMS = ["All","Instagram","YouTube","TikTok","Twitter","Telegram","Facebook","Snapchat"];
+
+// Internal coupons – never shown to user, only validated on entry
+const VALID_COUPONS = { "NEXUS20":20, "SAVE10":10, "FIRST50":50 };
+
+const fmt = (n) => "₹" + parseFloat(n).toFixed(2);
+
+// ── Wipe any old localStorage data once ──────────────────────
+(()=>{ try{ Object.keys(localStorage).filter(k=>k.startsWith("nx_")).forEach(k=>localStorage.removeItem(k)); }catch{} })();
+const uid = () => "ORD-" + String(Math.floor(Math.random()*9000)+1000);
+const today = () => new Date().toISOString().slice(0,10);
+
+// ─── Colors ───────────────────────────────────────────────────
+const C = {
+  bg:"#06060a", surface:"rgba(255,255,255,0.035)", border:"rgba(255,255,255,0.08)",
+  purple:"#7c3aed", purpleL:"#a855f7", gold:"#d4a017", goldL:"#f5c842",
+  blue:"#2563eb", blueL:"#06b6d4", green:"#10b981", red:"#ef4444",
+  text:"#e8e8f2", muted:"#6b7280",
+  gP:"linear-gradient(135deg,#7c3aed,#a855f7)",
+  gG:"linear-gradient(135deg,#d4a017,#f5c842)",
+  gB:"linear-gradient(135deg,#2563eb,#06b6d4)",
+  gGr:"linear-gradient(135deg,#059669,#34d399)",
+};
+
+// ─── FIREBASE CONFIG ─────────────────────────────────────────
+const FIREBASE_CONFIG = {
+  apiKey:            "AIzaSyCAS5BsEBCEtAbGFCmv9w0K_M8OA3bTXxc",
+  authDomain:        "nexus-smm-15cc1.firebaseapp.com",
+  projectId:         "nexus-smm-15cc1",
+  storageBucket:     "nexus-smm-15cc1.firebasestorage.app",
+  messagingSenderId: "204100385620",
+  appId:             "1:204100385620:web:8b2942518dc6cb9bf6e6c1",
+};
+const FIREBASE_LIVE = true; // Set true after pasting real config above
+
+// ─── Firebase init ───────────────────────────────────────────
+const waitForFirebase = () => new Promise((resolve, reject) => {
+  let tries = 0;
+  const check = () => {
+    if(typeof firebase !== "undefined" && typeof firebase.firestore === "function") { resolve(); return; }
+    tries++;
+    if(tries > 100) { reject(new Error("Firebase SDK failed to load after 5 seconds")); return; }
+    setTimeout(check, 50);
+  };
+  check();
+});
+
+let _fbPromise = null;
+const initFB = () => {
+  if(_fbPromise) return _fbPromise;
+  _fbPromise = waitForFirebase().then(() => {
+    if(!firebase.apps.length) firebase.initializeApp(FIREBASE_CONFIG);
+    console.log("✅ Firebase ready:", FIREBASE_CONFIG.projectId);
+  });
+  return _fbPromise;
+};
+
+const getFS = async () => {
+  if(!FIREBASE_LIVE) return null;
+  await initFB();
+  return firebase.firestore();
+};
+
+const getFirebaseAuth = async () => {
+  if(!FIREBASE_LIVE) return null;
+  await initFB();
+  return firebase.auth();
+};
+
+window.testFirebase = async () => {
+  try {
+    const fs = await getFS();
+    if(!fs){ alert("❌ No Firestore!"); return; }
+    await fs.collection("_test").doc("ping").set({ok:true,ts:Date.now()});
+    const snap = await fs.collection("_test").doc("ping").get();
+    alert("✅ Firebase OK!\nProject: "+FIREBASE_CONFIG.projectId+"\n"+JSON.stringify(snap.data()));
+  } catch(e){ alert("❌ "+e.message); }
+};
+
+// ─── DB layer — Firebase ONLY, no localStorage ──────────────
+const DB = {
+  K:{ orders:"nx_orders", users:"nx_users", txns:"nx_txns", announce:"nx_announce" },
+  _mem:{}, // in-memory only, cleared on refresh
+  _get(k){ return this._mem[k]||[]; },
+  _set(k,v){ this._mem[k]=v; },
+
+  // ── Orders ────────────────────────────────────────────────────
+  getOrders(){ return this._get(this.K.orders); },
+
+  async getOrdersFromFirebase(){
+    if(!FIREBASE_LIVE) return [];
+    try{
+      const fs=await getFS(); if(!fs) return [];
+      const snap=await fs.collection("orders").get();
+      return snap.docs.map(d=>d.data()).sort((a,b)=>b.date>a.date?1:-1);
+    }catch(e){ console.error("getOrders:",e); return []; }
+  },
+
+  addOrder(o){
+    getFS().then(fs=>{ if(fs) fs.collection("orders").add(o).catch(console.error); });
+  },
+
+  updateOrder(id,status){
+    getFS().then(fs=>{ if(fs) fs.collection("orders").where("id","==",id).get().then(snap=>snap.forEach(d=>d.ref.update({status}))).catch(console.error); });
+  },
+
+  // ── Users ─────────────────────────────────────────────────────
+  getUsers(){ return this._get(this.K.users); },
+
+  async getUsersFromFirebase(){
+    if(!FIREBASE_LIVE) return [];
+    try{
+      const fs=await getFS(); if(!fs) return [];
+      const snap=await fs.collection("users").get();
+      return snap.docs.map(d=>d.data());
+    }catch(e){ console.error("getUsers:",e); return []; }
+  },
+
+  addUser(user){
+    if(!FIREBASE_LIVE) return;
+    getFS().then(fs=>{
+      if(!fs) return;
+      const key=user.email.toLowerCase().trim().replace(/[@.]/g,"_");
+      fs.collection("users").doc(key).get().then(snap=>{
+        if(!snap.exists) fs.collection("users").doc(key).set({...user,balance:0});
+      }).catch(console.error);
+    });
+  },
+
+  getUser(email){ return null; }, // Always load fresh from Firebase
+
+  async updateUserBalanceAsync(email,balance){
+    if(!FIREBASE_LIVE) return;
+    const fs=await getFS();
+    if(!fs) throw new Error("No Firebase connection");
+    const key=email.toLowerCase().trim().replace(/[@.]/g,"_");
+    await fs.collection("wallets").doc(key).set({balance, email:email.toLowerCase().trim(), ts:Date.now()});
+    console.log("✅ Wallet saved:",email,"=",balance);
+  },
+  updateUserBalance(email,balance){
+    this.updateUserBalanceAsync(email,balance).catch(console.error);
+  },
+
+  // ── Deposit Requests (UTR system) ────────────────────────────
+  async addDepositRequest(req){
+    if(!FIREBASE_LIVE) throw new Error("Firebase is disabled (FIREBASE_LIVE=false)");
+    console.log("📤 Saving deposit:", req.id, "email:", req.email, "utr:", req.utr);
+    const fs=await getFS();
+    if(!fs) throw new Error("Firebase not ready — check internet connection");
+    if(!req.id) throw new Error("Deposit has no ID");
+    if(!req.email) throw new Error("Deposit has no email");
+    if(!req.utr) throw new Error("Deposit has no UTR");
+    await fs.collection("deposits").doc(req.id).set({
+      id: req.id,
+      email: req.email.toLowerCase().trim(),
+      userName: req.userName || req.email.split("@")[0],
+      amount: Number(req.amount),
+      utr: req.utr.trim(),
+      method: req.method || "UPI",
+      status: "pending",
+      date: req.date,
+      createdAt: req.createdAt,
+    });
+    console.log("✅ Deposit saved to Firebase:", req.id);
+  },
+  getDepositRequests(){ return []; },
+  async getDepositRequestsFromFirebase(){
+    if(!FIREBASE_LIVE) return [];
+    try{
+      const fs=await getFS(); if(!fs) return [];
+      const snap=await fs.collection("deposits").get();
+      console.log("📥 Total deposit docs in Firebase:", snap.docs.length);
+      const deps = snap.docs
+        .map(d=>{
+          const data = d.data();
+          return {
+            ...data,
+            _docId: d.id,
+            id: data.id || d.id,
+            email: (data.email||"").toLowerCase().trim(),
+          };
+        })
+        .filter(d=>d.email && d.utr)
+        .sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
+      console.log("📥 Valid deposits after filter:", deps.length);
+      return deps;
+    }catch(e){ console.error("getDeposits error:",e); return []; }
+  },
+  async updateDepositStatus(id,status){
+    if(!id){ console.error("No deposit ID!"); return; }
+    getFS().then(fs=>{ if(fs) fs.collection("deposits").doc(id).set({status},{merge:true}).catch(console.error); });
+  },
+
+  async getBalanceFromFirebase(email){
+    if(!FIREBASE_LIVE || !email) return 0;
+    try{
+      const fs=await getFS(); if(!fs) return 0;
+      const key=email.toLowerCase().trim().replace(/[@.]/g,"_");
+      const snap=await fs.collection("wallets").doc(key).get();
+      const bal = snap.exists ? (snap.data().balance ?? 0) : 0;
+      return bal;
+    }catch(e){ console.error("getBalance:",e); return 0; }
+  },
+
+  // ── Transactions ──────────────────────────────────────────────
+  getTxns(email){ return this._get(this.K.txns).filter(t=>!email||t.email===email); },
+  addTxn(txn){
+    getFS().then(fs=>{ if(fs) fs.collection("transactions").add(txn).catch(console.error); });
+  },
+
+  // ── Announcements ─────────────────────────────────────────────
+  getAnnounce(){ return this._get(this.K.announce)||[]; },
+  setAnnounce(list){
+    this._set(this.K.announce,list);
+    getFS().then(fs=>{ if(fs) fs.collection("config").doc("announcements").set({list}).catch(console.error); });
+  },
+};
+
+// ─── Global CSS ────────────────────────────────────────────────
+const GS = () => (
+  <style>{`
+    @import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800;900&family=DM+Sans:wght@400;500;600;700&display=swap');
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{background:#06060a;color:#e8e8f2;font-family:'DM Sans',sans-serif}
+    ::-webkit-scrollbar{width:5px;height:5px}
+    ::-webkit-scrollbar-track{background:rgba(255,255,255,.02)}
+    ::-webkit-scrollbar-thumb{background:rgba(124,58,237,.5);border-radius:4px}
+    input,textarea,select,button{font-family:'DM Sans',sans-serif}
+    input:focus,textarea:focus{outline:none;border-color:rgba(124,58,237,.6)!important;box-shadow:0 0 0 3px rgba(124,58,237,.12)}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+    @keyframes glow{0%,100%{box-shadow:0 0 20px rgba(124,58,237,.3)}50%{box-shadow:0 0 40px rgba(124,58,237,.6)}}
+    @keyframes slideDown{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+    @media(max-width:768px){
+      .sidebar{display:none!important}
+      .dash-main{margin-left:0!important;padding:16px 14px 90px!important;max-width:100vw!important}
+      .mobile-bar{display:flex!important}
+      .pg-header{flex-direction:column;gap:10px}
+      .stat-grid{grid-template-columns:1fr 1fr!important}
+      .order-panel{grid-template-columns:1fr!important}
+      .hide-mob{display:none!important}
+      .two-col{grid-template-columns:1fr!important}
+    }
+    @media(max-width:480px){.stat-grid{grid-template-columns:1fr!important}}
+  `}</style>
+);
+
+// ─── Base UI ───────────────────────────────────────────────────
+const Card = ({ children, style={}, glow=false, gold=false, onClick }) => (
+  <div onClick={onClick} style={{
+    background:"linear-gradient(145deg,rgba(255,255,255,.05),rgba(255,255,255,.02))",
+    border:`1px solid ${gold?"rgba(212,160,23,.35)":glow?"rgba(124,58,237,.4)":C.border}`,
+    borderRadius:16, backdropFilter:"blur(20px)",
+    boxShadow:glow?"0 0 40px rgba(124,58,237,.15),inset 0 1px 0 rgba(255,255,255,.07)":
+              gold?"0 0 30px rgba(212,160,23,.1),inset 0 1px 0 rgba(255,255,255,.06)":
+                   "0 4px 32px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.05)",
+    cursor:onClick?"pointer":undefined, ...style,
+  }}>{children}</div>
+);
+
+const Btn = ({ children, onClick, v="purple", size="md", style={}, disabled=false, loading=false }) => {
+  const [h,setH]=useState(false);
+  const bg = disabled?"rgba(255,255,255,.05)":v==="purple"?C.gP:v==="gold"?C.gG:v==="green"?C.gGr:v==="ghost"?"transparent":"rgba(255,255,255,.07)";
+  const col = disabled?C.muted:v==="gold"?"#1a0f00":v==="ghost"?C.purpleL:"#fff";
+  const pad = size==="sm"?"7px 16px":size==="lg"?"14px 36px":"10px 22px";
+  return (
+    <button disabled={disabled||loading} onClick={onClick}
+      onMouseEnter={()=>setH(true)} onMouseLeave={()=>setH(false)}
+      style={{ background:bg, border:v==="ghost"?"1px solid rgba(124,58,237,.4)":"none",
+        borderRadius:10, padding:pad, color:col, fontWeight:700,
+        fontSize:size==="sm"?12:size==="lg"?15:13, cursor:disabled?"not-allowed":"pointer",
+        transition:"all .2s", opacity:disabled?.5:1,
+        transform:h&&!disabled?"translateY(-1px)":"none",
+        boxShadow:h&&!disabled?"0 8px 24px rgba(124,58,237,.35)":"0 2px 8px rgba(0,0,0,.3)",
+        display:"inline-flex",alignItems:"center",gap:7, ...style }}>
+      {loading&&<span style={{width:13,height:13,border:"2px solid rgba(255,255,255,.25)",borderTopColor:"#fff",borderRadius:"50%",animation:"spin .7s linear infinite",flexShrink:0}}/>}
+      {children}
+    </button>
+  );
+};
+
+const Inp = ({ label, value, onChange, type="text", placeholder, error, icon, hint, readOnly=false }) => (
+  <div style={{marginBottom:16}}>
+    {label&&<label style={{display:"block",fontSize:11,fontWeight:700,color:C.muted,letterSpacing:".07em",marginBottom:6,textTransform:"uppercase"}}>{label}</label>}
+    <div style={{position:"relative"}}>
+      {icon&&<span style={{position:"absolute",left:13,top:"50%",transform:"translateY(-50%)",fontSize:16,opacity:.5,pointerEvents:"none"}}>{icon}</span>}
+      <input type={type} value={value} onChange={onChange} placeholder={placeholder} readOnly={readOnly}
+        style={{ width:"100%", background:"rgba(255,255,255,.04)",
+          border:`1px solid ${error?"rgba(239,68,68,.5)":C.border}`, borderRadius:11,
+          padding:icon?"11px 14px 11px 40px":"11px 14px", color:C.text, fontSize:14,
+          transition:"all .2s", cursor:readOnly?"default":"text" }}/>
+    </div>
+    {error&&<p style={{color:"#f87171",fontSize:12,marginTop:4}}>⚠ {error}</p>}
+    {hint&&!error&&<p style={{color:C.muted,fontSize:11,marginTop:4}}>{hint}</p>}
+  </div>
+);
+
+const Badge = ({ s }) => {
+  const M = {
+    Completed: {bg:"rgba(16,185,129,.15)", c:"#34d399", b:"rgba(16,185,129,.3)"},
+    Processing:{bg:"rgba(59,130,246,.15)", c:"#60a5fa", b:"rgba(59,130,246,.3)"},
+    Pending:   {bg:"rgba(245,158,11,.15)", c:"#fbbf24", b:"rgba(245,158,11,.3)"},
+    Cancelled: {bg:"rgba(239,68,68,.15)",  c:"#f87171", b:"rgba(239,68,68,.3)"},
+    Active:    {bg:"rgba(16,185,129,.15)", c:"#34d399", b:"rgba(16,185,129,.3)"},
+    Suspended: {bg:"rgba(239,68,68,.15)",  c:"#f87171", b:"rgba(239,68,68,.3)"},
+    Refunded:  {bg:"rgba(124,58,237,.15)", c:"#c4b5fd", b:"rgba(124,58,237,.3)"},
+    Open:      {bg:"rgba(245,158,11,.15)", c:"#fbbf24", b:"rgba(245,158,11,.3)"},
+    Resolved:  {bg:"rgba(16,185,129,.15)", c:"#34d399", b:"rgba(16,185,129,.3)"},
+  };
+  const x=M[s]||M.Pending;
+  return <span style={{background:x.bg,color:x.c,border:`1px solid ${x.b}`,borderRadius:6,padding:"3px 10px",fontSize:11,fontWeight:800,letterSpacing:".04em",whiteSpace:"nowrap"}}>{s}</span>;
+};
+
+const StatCard = ({ icon, label, value, grad, sub }) => (
+  <Card style={{padding:22}}>
+    <div style={{display:"flex",justifyContent:"space-between",marginBottom:12}}>
+      <span style={{fontSize:22}}>{icon}</span>
+      {sub&&<span style={{fontSize:10,fontWeight:700,color:"#34d399",background:"rgba(16,185,129,.1)",border:"1px solid rgba(16,185,129,.25)",borderRadius:20,padding:"2px 8px"}}>{sub}</span>}
+    </div>
+    <div style={{fontSize:30,fontWeight:900,letterSpacing:"-.03em",background:grad||C.gP,WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",marginBottom:4}}>{value}</div>
+    <div style={{color:C.muted,fontSize:12,fontWeight:500}}>{label}</div>
+  </Card>
+);
+
+const Logo = () => (
+  <div style={{display:"flex",alignItems:"center",gap:9}}>
+    <div style={{width:34,height:34,borderRadius:10,background:C.gP,display:"flex",alignItems:"center",justifyContent:"center",fontSize:17,boxShadow:"0 0 18px rgba(124,58,237,.5)"}}>✦</div>
+    <div>
+      <div style={{fontWeight:900,fontSize:16,fontFamily:"Syne,sans-serif",color:"#f0f0ff",letterSpacing:".01em"}}>NEXUS</div>
+      <div style={{fontSize:9,color:C.muted,letterSpacing:".1em",marginTop:-2}}>SMM PLATFORM</div>
+    </div>
+  </div>
+);
+
+const Divider = () => <div style={{height:1,background:C.border,margin:"6px 0"}}/>;
+
+// ─── Sidebar Nav Item ─────────────────────────────────────────
+const NavItem = ({ item, active, onClick }) => {
+  const [h,setH]=useState(false);
+  return (
+    <button onClick={onClick} onMouseEnter={()=>setH(true)} onMouseLeave={()=>setH(false)}
+      style={{ display:"flex",alignItems:"center",gap:11,width:"100%",padding:"10px 12px",
+        marginBottom:2,borderRadius:10,border:"none",
+        background:active?"linear-gradient(135deg,rgba(124,58,237,.25),rgba(168,85,247,.12))":h?"rgba(255,255,255,.04)":"transparent",
+        borderLeft:`2px solid ${active?"#7c3aed":"transparent"}`,
+        color:active?"#c4b5fd":h?"#a0a0b8":C.muted,
+        fontSize:13,fontWeight:active?700:500,cursor:"pointer",transition:"all .18s",textAlign:"left" }}>
+      <span style={{fontSize:15,opacity:active?1:.6}}>{item.icon}</span>
+      {item.label}
+    </button>
+  );
+};
+
+// ─── Mobile Bottom Bar ────────────────────────────────────────
+const MobileBar = ({ page, setPage, isAdmin, onLogout }) => {
+  const [drawer, setDrawer] = useState(false);
+
+  // User bottom tabs (5 fit perfectly)
+  const uItems = [
+    {id:"overview", i:"⊞", l:"Home"},
+    {id:"neworder", i:"✦", l:"Order"},
+    {id:"orders",   i:"📦", l:"Orders"},
+    {id:"wallet",   i:"◈", l:"Wallet"},
+    {id:"settings", i:"👤", l:"Me"},
+  ];
+
+  // Admin ALL tabs shown in drawer
+  const aAllItems = [
+    {id:"a-overview",  i:"📊", l:"Analytics"},
+    {id:"a-orders",    i:"📦", l:"All Orders"},
+    {id:"a-services",  i:"◇",  l:"Services"},
+    {id:"a-users",     i:"👥", l:"Users"},
+    {id:"a-coupons",   i:"🎟", l:"Coupons"},
+    {id:"a-payments",  i:"💰", l:"Payments"},
+    {id:"a-announce",  i:"📣", l:"Announcements"},
+  ];
+
+  // Admin bottom bar: 4 quick tabs + Menu button
+  const aBottomItems = [
+    {id:"a-overview", i:"📊", l:"Stats"},
+    {id:"a-orders",   i:"📦", l:"Orders"},
+    {id:"a-users",    i:"👥", l:"Users"},
+    {id:"a-announce", i:"📣", l:"Announce"},
+    {id:"__menu__",   i:"☰",  l:"More"},
+  ];
+
+  if(!isAdmin) {
+    // ── User mobile bar ──
+    return (
+      <div className="mobile-bar" style={{display:"none",position:"fixed",bottom:0,left:0,right:0,zIndex:500,
+        background:"rgba(6,6,12,.97)",backdropFilter:"blur(24px)",
+        borderTop:`1px solid ${C.border}`,padding:"8px 0 env(safe-area-inset-bottom,10px)"}}>
+        {uItems.map(item=>(
+          <button key={item.id} onClick={()=>setPage(item.id)} style={{
+            flex:1,display:"flex",flexDirection:"column",alignItems:"center",gap:3,
+            background:"none",border:"none",cursor:"pointer",padding:"6px 4px",
+            color:page===item.id?"#c4b5fd":C.muted,transition:"color .2s"}}>
+            <span style={{fontSize:19,lineHeight:1}}>{item.i}</span>
+            <span style={{fontSize:9,fontWeight:700,letterSpacing:".04em"}}>{item.l}</span>
+            {page===item.id&&<div style={{width:18,height:2,borderRadius:2,background:"#7c3aed",marginTop:1}}/>}
+          </button>
+        ))}
+      </div>
+    );
+  }
+
+  // ── Admin mobile bar + full drawer ──
+  return (
+    <>
+      {/* Full-screen drawer with ALL admin tabs */}
+      {drawer&&(
+        <div style={{position:"fixed",inset:0,zIndex:600,background:"rgba(0,0,0,.6)",backdropFilter:"blur(4px)"}}
+          onClick={()=>setDrawer(false)}>
+          <div onClick={e=>e.stopPropagation()}
+            style={{position:"absolute",bottom:0,left:0,right:0,
+              background:"#09090f",borderTop:`1px solid rgba(212,160,23,.3)`,
+              borderRadius:"20px 20px 0 0",padding:"20px 16px 40px"}}>
+            {/* Handle */}
+            <div style={{width:40,height:4,borderRadius:2,background:"rgba(255,255,255,.15)",margin:"0 auto 20px"}}/>
+            <div style={{fontWeight:800,color:"#fbbf24",fontSize:12,letterSpacing:".1em",marginBottom:16,textAlign:"center"}}>
+              ADMIN MENU
+            </div>
+            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:16}}>
+              {aAllItems.map(item=>(
+                <button key={item.id} onClick={()=>{setPage(item.id);setDrawer(false);}}
+                  style={{display:"flex",alignItems:"center",gap:12,padding:"14px 16px",
+                    background:page===item.id?"rgba(212,160,23,.15)":"rgba(255,255,255,.04)",
+                    border:`1px solid ${page===item.id?"rgba(212,160,23,.4)":C.border}`,
+                    borderRadius:12,cursor:"pointer",textAlign:"left"}}>
+                  <span style={{fontSize:22}}>{item.i}</span>
+                  <span style={{fontSize:13,fontWeight:700,
+                    color:page===item.id?"#fbbf24":"#e8e8f2"}}>{item.l}</span>
+                </button>
+              ))}
+            </div>
+            {/* Logout in drawer */}
+            <button onClick={()=>{setDrawer(false);onLogout&&onLogout();}}
+              style={{width:"100%",padding:"14px",background:"rgba(239,68,68,.1)",
+                border:"1px solid rgba(239,68,68,.3)",borderRadius:12,
+                color:"#f87171",fontSize:14,fontWeight:700,cursor:"pointer",
+                display:"flex",alignItems:"center",justifyContent:"center",gap:10}}>
+              🚪 Log Out
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Bottom bar */}
+      <div className="mobile-bar" style={{display:"none",position:"fixed",bottom:0,left:0,right:0,zIndex:500,
+        background:"rgba(9,9,15,.97)",backdropFilter:"blur(24px)",
+        borderTop:"1px solid rgba(212,160,23,.2)",padding:"8px 0 env(safe-area-inset-bottom,10px)"}}>
+        {aBottomItems.map(item=>(
+          <button key={item.id}
+            onClick={()=>{
+              if(item.id==="__menu__") setDrawer(d=>!d);
+              else setPage(item.id);
+            }}
+            style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",gap:3,
+              background:"none",border:"none",cursor:"pointer",padding:"6px 4px",
+              color:item.id==="__menu__"
+                ? (drawer?"#fbbf24":C.muted)
+                : page===item.id?"#fbbf24":C.muted,
+              transition:"color .2s"}}>
+            <span style={{fontSize:19,lineHeight:1}}>{item.i}</span>
+            <span style={{fontSize:9,fontWeight:700,letterSpacing:".04em"}}>{item.l}</span>
+            {page===item.id&&item.id!=="__menu__"&&
+              <div style={{width:18,height:2,borderRadius:2,background:"#fbbf24",marginTop:1}}/>}
+          </button>
+        ))}
+      </div>
+    </>
+  );
+};
+
+// ─── Page Header ──────────────────────────────────────────────
+const PgH = ({ title, sub, action }) => (
+  <div className="pg-header" style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:26}}>
+    <div>
+      <h1 style={{fontSize:24,fontWeight:900,letterSpacing:"-.02em",color:"#f0f0ff",fontFamily:"Syne,sans-serif",marginBottom:3}}>{title}</h1>
+      {sub&&<p style={{color:C.muted,fontSize:13}}>{sub}</p>}
+    </div>
+    {action&&<div>{action}</div>}
+  </div>
+);
+
+// ═══════════════════════════════════════════════════════════════
+//  LANDING PAGE
+// ═══════════════════════════════════════════════════════════════
+const Landing = ({ goLogin, goSignup, goAdmin }) => {
+  const [pf,setPf]=useState("All");
+  const [wi,setWi]=useState(0);
+  const words=["Creators","Brands","Agencies","Influencers"];
+  useEffect(()=>{const t=setInterval(()=>setWi(i=>(i+1)%4),2400);return()=>clearInterval(t);},[]);
+  const filtered=pf==="All"?SERVICES.slice(0,9):SERVICES.filter(s=>s.platform===pf).slice(0,9);
+
+  return (
+    <div style={{background:C.bg,minHeight:"100vh"}}>
+      {/* NAV */}
+      <nav style={{position:"fixed",top:0,left:0,right:0,zIndex:300,
+        background:"rgba(6,6,10,.88)",backdropFilter:"blur(24px)",borderBottom:`1px solid ${C.border}`,
+        padding:"0 5%",height:64,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+        <Logo/>
+        <div style={{display:"flex",gap:8}}>
+          <Btn v="ghost" onClick={goLogin} size="sm">Log In</Btn>
+          <Btn onClick={goSignup} size="sm">Get Started →</Btn>
+        </div>
+      </nav>
+
+      {/* HERO */}
+      <section style={{minHeight:"100vh",display:"flex",flexDirection:"column",alignItems:"center",
+        justifyContent:"center",padding:"110px 24px 70px",textAlign:"center",position:"relative",overflow:"hidden"}}>
+        <div style={{position:"absolute",top:"20%",left:"50%",transform:"translateX(-50%)",
+          width:800,height:800,borderRadius:"50%",background:"radial-gradient(ellipse,rgba(124,58,237,.11) 0%,transparent 70%)",pointerEvents:"none"}}/>
+        <div style={{position:"absolute",top:"40%",left:"8%",width:360,height:360,borderRadius:"50%",
+          background:"radial-gradient(ellipse,rgba(6,182,212,.07) 0%,transparent 70%)",pointerEvents:"none"}}/>
+        <div style={{position:"relative",zIndex:1,animation:"fadeUp .8s ease both"}}>
+          <div style={{display:"inline-flex",alignItems:"center",gap:8,
+            background:"linear-gradient(135deg,rgba(124,58,237,.2),rgba(212,160,23,.15))",
+            border:"1px solid rgba(124,58,237,.3)",borderRadius:50,padding:"6px 18px",
+            fontSize:11,fontWeight:700,letterSpacing:".1em",color:"#c4b5fd",marginBottom:28}}>
+            ✦ TRUSTED BY 1,000+ USERS IN INDIA & WORLDWIDE
+          </div>
+          <h1 style={{fontSize:"clamp(2.6rem,6vw,5rem)",fontWeight:900,lineHeight:1.05,
+            letterSpacing:"-.04em",fontFamily:"Syne,sans-serif",marginBottom:18}}>
+            <span style={{background:"linear-gradient(135deg,#f0f0ff 0%,#c4b5fd 55%,#f5c842 100%)",
+              WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent"}}>
+              Premium Growth<br/>for{" "}
+            </span>
+            <span style={{background:C.gP,WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent"}}>
+              {words[wi]}
+            </span>
+          </h1>
+          <p style={{fontSize:17,color:C.muted,maxWidth:520,margin:"0 auto 40px",lineHeight:1.7}}>
+            Buy followers, likes, views & more for Instagram, YouTube, TikTok & more.
+            Real delivery. Starting from just <span style={{color:C.goldL,fontWeight:700}}>₹0.09</span>.
+          </p>
+          <div style={{display:"flex",gap:14,justifyContent:"center",flexWrap:"wrap"}}>
+            <Btn onClick={goSignup} size="lg" style={{animation:"glow 2.5s ease infinite"}}>🚀 Create Free Account</Btn>
+            <Btn v="ghost" size="lg" onClick={()=>document.getElementById("svc").scrollIntoView({behavior:"smooth"})}>Browse Services ↓</Btn>
+          </div>
+          <div style={{display:"flex",gap:10,marginTop:48,flexWrap:"wrap",justifyContent:"center"}}>
+            {["📸 Instagram","▶️ YouTube","🎵 TikTok","🐦 Twitter","✈️ Telegram","👍 Facebook"].map(p=>(
+              <span key={p} style={{background:"rgba(255,255,255,.04)",border:`1px solid ${C.border}`,borderRadius:50,padding:"7px 16px",fontSize:12,fontWeight:600,color:C.muted}}>{p}</span>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* STATS */}
+      <section style={{padding:"60px 5%",background:"rgba(255,255,255,.015)",borderTop:`1px solid ${C.border}`}}>
+        <div style={{maxWidth:1100,margin:"0 auto",display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(200px,1fr))",gap:18}}>
+          {[{i:"◉",v:"100+",l:"Happy Users",g:C.gP},{i:"📦",v:"500+",l:"Orders Delivered",g:C.gG},{i:"⚡",v:"< 2 hrs",l:"Avg Delivery",g:C.gB},{i:"⭐",v:"4.9/5",l:"Customer Rating",g:C.gGr}].map(s=><StatCard key={s.l} icon={s.i} value={s.v} label={s.l} grad={s.g}/>)}
+        </div>
+      </section>
+
+      {/* SERVICES */}
+      <section id="svc" style={{padding:"70px 5%"}}>
+        <div style={{maxWidth:1200,margin:"0 auto"}}>
+          <div style={{textAlign:"center",marginBottom:44}}>
+            <h2 style={{fontFamily:"Syne,sans-serif",fontSize:36,fontWeight:900,letterSpacing:"-.03em",
+              background:"linear-gradient(135deg,#f0f0ff,#c4b5fd)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",marginBottom:8}}>
+              Services Marketplace
+            </h2>
+            <p style={{color:C.muted,fontSize:15}}>100+ premium services · Fast delivery · Secure ₹ payments</p>
+          </div>
+          <div style={{display:"flex",gap:8,flexWrap:"wrap",justifyContent:"center",marginBottom:36}}>
+            {PLATFORMS.map(p=>(
+              <button key={p} onClick={()=>setPf(p)} style={{background:pf===p?C.gP:"rgba(255,255,255,.04)",
+                border:`1px solid ${pf===p?"transparent":C.border}`,borderRadius:50,padding:"8px 18px",
+                color:pf===p?"#fff":C.muted,fontSize:12,fontWeight:600,cursor:"pointer",transition:"all .2s"}}>{p}</button>
+            ))}
+          </div>
+          <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(300px,1fr))",gap:16}}>
+            {filtered.map(s=><SvcCard key={s.id} svc={s} onOrder={goSignup}/>)}
+          </div>
+          <div style={{textAlign:"center",marginTop:36}}>
+            <Btn onClick={goSignup} size="lg">Sign Up to Order All Services →</Btn>
+          </div>
+        </div>
+      </section>
+
+      {/* HOW IT WORKS */}
+      <section style={{padding:"70px 5%",background:"rgba(255,255,255,.015)",borderTop:`1px solid ${C.border}`}}>
+        <div style={{maxWidth:900,margin:"0 auto",textAlign:"center"}}>
+          <h2 style={{fontFamily:"Syne,sans-serif",fontSize:34,fontWeight:900,marginBottom:10,
+            background:"linear-gradient(135deg,#f0f0ff,#c4b5fd)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent"}}>
+            How It Works
+          </h2>
+          <p style={{color:C.muted,marginBottom:48,fontSize:14}}>4 simple steps to grow your social media</p>
+          <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(180px,1fr))",gap:18}}>
+            {[{n:"01",i:"👤",t:"Create Account",d:"Sign up free with email or phone"},
+              {n:"02",i:"💰",t:"Add Funds",d:"Top up wallet — min ₹100"},
+              {n:"03",i:"🛒",t:"Place Order",d:"Choose service, paste link, confirm"},
+              {n:"04",i:"📈",t:"Get Results",d:"Delivery starts within minutes"},
+            ].map((s,i)=>(
+              <Card key={i} style={{padding:26,textAlign:"center"}}>
+                <div style={{fontSize:10,fontWeight:800,color:C.purpleL,letterSpacing:".12em",marginBottom:10}}>STEP {s.n}</div>
+                <div style={{fontSize:34,marginBottom:12}}>{s.i}</div>
+                <div style={{fontWeight:800,fontSize:15,color:"#e8e8f2",marginBottom:6,fontFamily:"Syne,sans-serif"}}>{s.t}</div>
+                <div style={{color:C.muted,fontSize:12,lineHeight:1.6}}>{s.d}</div>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section style={{padding:"70px 5%",textAlign:"center"}}>
+        <Card glow style={{maxWidth:640,margin:"0 auto",padding:"56px 40px"}}>
+          <div style={{fontSize:42,marginBottom:14}}>🚀</div>
+          <h2 style={{fontFamily:"Syne,sans-serif",fontSize:36,fontWeight:900,marginBottom:12,
+            background:C.gG,WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent"}}>Ready to Go Viral?</h2>
+          <p style={{color:C.muted,fontSize:15,marginBottom:32,maxWidth:400,margin:"0 auto 32px"}}>Join 1,000+ creators growing with Nexus SMM today.</p>
+          <Btn onClick={goSignup} size="lg" style={{animation:"glow 2.5s ease infinite"}}>Create Free Account →</Btn>
+        </Card>
+      </section>
+
+      {/* FOOTER */}
+      <footer style={{borderTop:`1px solid ${C.border}`,padding:"24px 5%",display:"flex",justifyContent:"space-between",alignItems:"center",flexWrap:"wrap",gap:12}}>
+        <Logo/>
+        <div style={{color:C.muted,fontSize:12,display:"flex",gap:20}}>
+          {["Terms","Privacy","Refunds","Support"].map(l=>(
+            <span key={l} style={{cursor:"pointer"}} onMouseEnter={e=>e.target.style.color=C.purpleL} onMouseLeave={e=>e.target.style.color=C.muted}>{l}</span>
+          ))}
+        </div>
+        <div style={{display:"flex",alignItems:"center",gap:12}}>
+          <span style={{color:C.muted,fontSize:11}}>© 2025 Nexus SMM India</span>
+          <span onClick={goAdmin} style={{color:"rgba(212,160,23,.4)",fontSize:10,cursor:"pointer",fontWeight:600,letterSpacing:".04em",
+            border:"1px solid rgba(212,160,23,.15)",borderRadius:20,padding:"2px 10px"}}
+            onMouseEnter={e=>e.target.style.color="rgba(212,160,23,.8)"}
+            onMouseLeave={e=>e.target.style.color="rgba(212,160,23,.4)"}>
+            🔐 Admin
+          </span>
+        </div>
+      </footer>
+    </div>
+  );
+};
+
+const SvcCard = ({ svc, onOrder }) => {
+  const [h,setH]=useState(false);
+  return (
+    <Card style={{padding:22,transition:"all .25s",cursor:"pointer",
+      transform:h?"translateY(-3px)":"none",border:`1px solid ${h?"rgba(124,58,237,.4)":C.border}`}}
+      onClick={onOrder}>
+      <div onMouseEnter={()=>setH(true)} onMouseLeave={()=>setH(false)}>
+        <div style={{display:"flex",justifyContent:"space-between",marginBottom:12}}>
+          <div>
+            <div style={{fontSize:10,color:C.purpleL,fontWeight:800,letterSpacing:".08em",marginBottom:4}}>{svc.platform} · {svc.cat}</div>
+            <div style={{fontWeight:700,fontSize:15,color:"#e8e8f2"}}>{svc.name}</div>
+          </div>
+          <span style={{fontSize:26}}>{svc.icon}</span>
+        </div>
+        <p style={{color:C.muted,fontSize:12,lineHeight:1.6,marginBottom:16}}>{svc.desc}</p>
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:8,marginBottom:16}}>
+          {[{l:"Speed",v:svc.speed},{l:"Min Qty",v:svc.min.toLocaleString()},{l:"Per Unit",v:`₹${svc.price}`}].map(({l,v})=>(
+            <div key={l} style={{background:"rgba(255,255,255,.03)",borderRadius:8,padding:"7px 8px",textAlign:"center"}}>
+              <div style={{fontSize:9,color:C.muted,letterSpacing:".05em",marginBottom:2}}>{l}</div>
+              <div style={{fontSize:11,fontWeight:800,color:"#c4b5fd"}}>{v}</div>
+            </div>
+          ))}
+        </div>
+        <Btn style={{width:"100%",justifyContent:"center"}} size="sm">Order Now</Btn>
+      </div>
+    </Card>
+  );
+};
+
+// ═══════════════════════════════════════════════════════════════
+//  AUTH — SIGNUP
+// ═══════════════════════════════════════════════════════════════
+const Signup = ({ goLogin, onSuccess }) => {
+  const [form,setForm]=useState({name:"",email:"",password:"",confirm:""});
+  const [errs,setErrs]=useState({});
+  const [loading,setLoading]=useState(false);
+  const [done,setDone]=useState(false);
+  const [errMsg,setErrMsg]=useState("");
+  const F=(k,v)=>setForm(f=>({...f,[k]:v}));
+
+  const validate=()=>{
+    const e={};
+    if(!form.name.trim()) e.name="Full name required";
+    if(!form.email.includes("@")) e.email="Enter valid email";
+    if(form.password.length<6) e.password="Min 6 characters";
+    if(form.password!==form.confirm) e.confirm="Passwords don't match";
+    setErrs(e); return !Object.keys(e).length;
+  };
+
+  const handleSignup=async()=>{
+    if(!validate()) return;
+    setErrMsg("");
+    setLoading(true);
+    try {
+      const auth = await getFirebaseAuth();
+      if(auth){
+        const cred = await auth.createUserWithEmailAndPassword(form.email, form.password);
+        await cred.user.sendEmailVerification();
+        // Save user to DB
+        DB.addUser({
+          id:"USR-"+Date.now(),
+          name:form.name,
+          email:form.email,
+          balance:0,
+          orders:0,
+          joined:today(),
+          status:"Active",
+        });
+        setLoading(false);
+        setDone(true);
+      }
+    } catch(e){
+      setLoading(false);
+      if(e.code==="auth/email-already-in-use")
+        setErrMsg("This email is already registered! Please log in instead.");
+      else if(e.code==="auth/invalid-email")
+        setErrMsg("Invalid email address. Please check and try again.");
+      else if(e.code==="auth/weak-password")
+        setErrMsg("Password too weak. Use at least 6 characters.");
+      else setErrMsg("Error: " + (e.code || e.message || "Unknown"));
+    }
+  };
+
+  return (
+    <AuthWrap>
+      <Logo/>
+      <div style={{margin:"28px 0 24px"}}>
+        <h2 style={{fontFamily:"Syne,sans-serif",fontSize:26,fontWeight:900,color:"#f0f0ff",marginBottom:5}}>
+          {done?"Check Your Email! 📧":"Create Account"}
+        </h2>
+        <p style={{color:C.muted,fontSize:13}}>
+          {done?"We sent a verification link to your email. Click it to activate your account!":"Start growing your social media today"}
+        </p>
+      </div>
+
+      {!done&&<>
+        {errMsg&&<div style={{background:"rgba(239,68,68,.1)",border:"1px solid rgba(239,68,68,.3)",borderRadius:11,padding:"12px 16px",marginBottom:18,color:"#f87171",fontSize:13}}>⚠ {errMsg}</div>}
+        <Inp label="Full Name" value={form.name} onChange={e=>F("name",e.target.value)} placeholder="Your full name" error={errs.name} icon="👤"/>
+        <Inp label="Email Address" type="email" value={form.email} onChange={e=>F("email",e.target.value)} placeholder="you@email.com" error={errs.email} icon="📧"/>
+        <Inp label="Password" type="password" value={form.password} onChange={e=>F("password",e.target.value)} placeholder="Min 6 characters" error={errs.password} icon="🔒"/>
+        <Inp label="Confirm Password" type="password" value={form.confirm} onChange={e=>F("confirm",e.target.value)} placeholder="Repeat password" error={errs.confirm} icon="🔒"/>
+        <Btn onClick={handleSignup} loading={loading} style={{width:"100%",justifyContent:"center",marginTop:4}} size="lg">Create Account →</Btn>
+        <p style={{textAlign:"center",marginTop:18,color:C.muted,fontSize:13}}>
+          Have an account? <span onClick={goLogin} style={{color:C.purpleL,fontWeight:700,cursor:"pointer"}}>Log In</span>
+        </p>
+      </>}
+
+      {done&&(
+        <div style={{textAlign:"center",padding:"28px 0"}}>
+          <div style={{width:76,height:76,borderRadius:"50%",background:C.gP,margin:"0 auto 18px",
+            display:"flex",alignItems:"center",justifyContent:"center",fontSize:34,boxShadow:"0 0 40px rgba(124,58,237,.4)"}}>📧</div>
+          <h3 style={{fontWeight:900,color:"#c4b5fd",fontSize:18,marginBottom:8}}>Verification Email Sent!</h3>
+          <p style={{color:C.muted,fontSize:13,marginBottom:20}}>Check your inbox at<br/><strong style={{color:"#f0f0ff"}}>{form.email}</strong><br/>and click the link to verify.</p>
+          <Btn onClick={goLogin} style={{width:"100%",justifyContent:"center"}} size="lg">Go to Login →</Btn>
+        </div>
+      )}
+    </AuthWrap>
+  );
+};
+
+// ─── Firebase Auth Helper ─────────────────────────────────────
+
+
+// ─── Auth — LOGIN ─────────────────────────────────────────────
+const Login = ({ goSignup, onUserLogin, onAdminLogin }) => {
+  const [form,setForm]=useState({email:"",password:""});
+  const [err,setErr]=useState("");
+  const [loading,setLoading]=useState(false);
+  const [resetSent,setResetSent]=useState(false);
+  const F=(k,v)=>setForm(f=>({...f,[k]:v}));
+
+  const handle=async()=>{
+    setErr("");
+    if(!form.email||!form.password){ setErr("Please fill in all fields"); return; }
+    setLoading(true);
+    try {
+      const auth = await getFirebaseAuth();
+      if(!auth){ setLoading(false); setErr("Login service unavailable. Please try again."); return; }
+      const cred = await auth.signInWithEmailAndPassword(form.email, form.password);
+      setLoading(false);
+      // Check if this is the admin account — password verified by Firebase, never in code
+      if(cred.user.email.toLowerCase().trim() === ADMIN_EMAIL.toLowerCase()) {
+        onAdminLogin();
+      } else {
+        onUserLogin(cred.user.displayName||form.email.split("@")[0], form.email);
+      }
+    } catch(e){
+      setLoading(false);
+      if(e.code==="auth/user-not-found"||e.code==="auth/wrong-password"||e.code==="auth/invalid-credential")
+        setErr("Wrong email or password. Please try again.");
+      else if(e.code==="auth/too-many-requests")
+        setErr("Too many attempts. Please wait a few minutes.");
+      else setErr("Login failed: " + (e.message||"Unknown error"));
+    }
+  };
+
+  const handleForgot=async()=>{
+    if(!form.email){ setErr("Enter your email above first"); return; }
+    try {
+      const auth = await getFirebaseAuth();
+      if(auth){ await auth.sendPasswordResetEmail(form.email); setResetSent(true); }
+    } catch(e){ setErr("Could not send reset email. Check your email address."); }
+  };
+
+  return (
+    <AuthWrap>
+      <Logo/>
+      <div style={{margin:"28px 0 24px"}}>
+        <h2 style={{fontFamily:"Syne,sans-serif",fontSize:26,fontWeight:900,color:"#f0f0ff",marginBottom:5}}>Welcome Back</h2>
+        <p style={{color:C.muted,fontSize:13}}>Log in to your Nexus account</p>
+      </div>
+      {err&&<div style={{background:"rgba(239,68,68,.1)",border:"1px solid rgba(239,68,68,.3)",borderRadius:11,padding:"12px 16px",marginBottom:18,color:"#f87171",fontSize:13}}>⚠ {err}</div>}
+      {resetSent&&<div style={{background:"rgba(52,211,153,.1)",border:"1px solid rgba(52,211,153,.3)",borderRadius:11,padding:"12px 16px",marginBottom:18,color:"#34d399",fontSize:13}}>✅ Password reset email sent! Check your inbox.</div>}
+      <Inp label="Email" type="email" value={form.email} onChange={e=>F("email",e.target.value)} placeholder="you@email.com" icon="📧"/>
+      <Inp label="Password" type="password" value={form.password} onChange={e=>F("password",e.target.value)} placeholder="Your password" icon="🔒"/>
+      <div style={{textAlign:"right",marginTop:-8,marginBottom:18}}>
+        <span onClick={handleForgot} style={{color:C.purpleL,fontSize:12,cursor:"pointer",fontWeight:600}}>Forgot password?</span>
+      </div>
+      <Btn onClick={handle} loading={loading} style={{width:"100%",justifyContent:"center"}} size="lg">Log In →</Btn>
+      <p style={{textAlign:"center",color:C.muted,fontSize:13}}>
+        No account? <span onClick={goSignup} style={{color:C.purpleL,fontWeight:700,cursor:"pointer"}}>Sign Up Free</span>
+      </p>
+    </AuthWrap>
+  );
+};
+
+const AuthWrap = ({ children }) => (
+  <div style={{minHeight:"100vh",background:C.bg,display:"flex",alignItems:"center",justifyContent:"center",padding:20,position:"relative",overflow:"hidden"}}>
+    <div style={{position:"absolute",top:"20%",left:"50%",transform:"translateX(-50%)",width:600,height:600,borderRadius:"50%",
+      background:"radial-gradient(ellipse,rgba(124,58,237,.1) 0%,transparent 70%)",pointerEvents:"none"}}/>
+    <div style={{width:"100%",maxWidth:440,position:"relative",zIndex:1,animation:"fadeUp .5s ease"}}>
+      <Card glow style={{padding:"36px 32px"}}>{children}</Card>
+    </div>
+  </div>
+);
+
+// ═══════════════════════════════════════════════════════════════
+//  USER DASHBOARD
+// ═══════════════════════════════════════════════════════════════
+const UserDash = ({ userName, userEmail, onLogout }) => {
+  const [page,setPage]=useState("overview");
+  // Start with empty — load fresh from Firebase
+  const [orders,setOrders]=useState([]);
+  const [balance,setBalance]=useState(0);
+  const [txns,setTxns]=useState([]);
+  // txns loaded from Firebase on mount
+  const [announcements]=useState([]);
+  const [showProfile,setShowProfile]=useState(false);
+  const [dashLoading,setDashLoading]=useState(false);
+
+  // Load everything fresh from Firebase on login
+  useEffect(()=>{
+    let mounted = true;
+    const loadAll = async () => {
+      try {
+        // Load balance
+        const bal = await DB.getBalanceFromFirebase(userEmail);
+        if(mounted && bal !== null && bal !== undefined) setBalance(bal);
+        // Load orders (only this user's)
+        const allOrders = await DB.getOrdersFromFirebase();
+        const normEmail = (userEmail||"").toLowerCase().trim();
+        if(mounted) setOrders(allOrders.filter(o=>(o.userEmail||"").toLowerCase().trim()===normEmail));
+      } catch(e){ console.error("Load failed:",e); }
+      if(mounted) setDashLoading(false);
+    };
+    loadAll();
+
+    // Poll balance so admin-added funds appear quickly
+    const poll = async () => {
+      try {
+        const bal = await DB.getBalanceFromFirebase(userEmail);
+        if(mounted && bal !== null && bal !== undefined) {
+          setBalance(bal);
+        }
+      } catch(e){ console.error("Poll error:",e); }
+    };
+    poll(); // poll immediately on mount too
+    const iv = setInterval(poll, 4000);
+    return () => { mounted=false; clearInterval(iv); };
+  },[userEmail]);
+
+  // Sync balance to DB whenever it changes
+  const setBalanceSync=(val)=>{
+    const n=typeof val==="function"?val(balance):val;
+    setBalance(n);
+    DB.updateUserBalance(userEmail,n);
+  };
+  // Sync orders to DB when placed
+  const addOrderSync=async(newOrder)=>{
+    const withUser={...newOrder,userEmail,userName};
+    DB.addOrder(withUser);
+    // Reload from Firebase to get accurate list
+    const allOrders = await DB.getOrdersFromFirebase();
+    setOrders(allOrders.filter(o=>(o.userEmail||'').toLowerCase().trim()===(userEmail||'').toLowerCase().trim()));
+    // Update user order count
+    const u=DB.getUser(userEmail);
+    if(u){ DB.addUser({...u,orders:(u.orders||0)+1}); }
+  };
+  // Sync txns to DB
+  const addTxnSync=(txn)=>{
+    const withUser={...txn,email:userEmail,userName};
+    DB.addTxn(withUser);
+    setTxns(DB.getTxns(userEmail));
+  };
+
+  const NAV=[
+    {id:"overview",  label:"Overview",    icon:"⊞"},
+    {id:"neworder",  label:"New Order",   icon:"✦"},
+    {id:"orders",    label:"My Orders",   icon:"📦"},
+    {id:"wallet",    label:"Wallet",      icon:"◈"},
+    {id:"addfunds",  label:"Add Funds",   icon:"⊕"},
+    {id:"services",  label:"Services",    icon:"◇"},
+    {id:"support",   label:"Support",     icon:"💬"},
+    {id:"settings",  label:"Profile",     icon:"👤"},
+  ];
+
+  const renderPage=()=>{
+    switch(page){
+      case "overview":  return <UserOverview orders={orders} balance={balance} setPage={setPage} userName={userName} announcements={announcements} userEmail={userEmail}/>;
+      case "neworder":  return <UserNewOrder orders={orders} addOrderSync={addOrderSync} balance={balance} setBalance={setBalanceSync} setPage={setPage}/>;
+      case "orders":    return <UserOrders orders={orders} setOrders={setOrders} userEmail={userEmail}/>;
+      case "wallet":    return <UserWallet balance={balance} txns={txns} userEmail={userEmail}/>;
+      case "addfunds":  return <UserAddFunds balance={balance} setBalance={setBalanceSync} setPage={setPage} setTxns={addTxnSync} userName={userName} userEmail={userEmail}/>;
+      case "services":  return <UserServices setPage={setPage}/>;
+      case "support":   return <UserSupport/>;
+      case "settings":  return <UserProfile userName={userName} userEmail={userEmail} balance={balance} orders={orders} onLogout={onLogout}/>;
+      default:          return <UserOverview orders={orders} balance={balance} setPage={setPage} userName={userName} announcements={announcements} userEmail={userEmail}/>;
+    }
+  };
+
+  return (
+    <div style={{display:"flex",minHeight:"100vh",background:C.bg}}>
+      {/* SIDEBAR */}
+      <aside className="sidebar" style={{width:224,minHeight:"100vh",
+        background:"linear-gradient(180deg,#09090f 0%,#06060a 100%)",
+        borderRight:`1px solid ${C.border}`,padding:"22px 13px",
+        display:"flex",flexDirection:"column",position:"fixed",left:0,top:0,bottom:0,zIndex:100}}>
+        <div style={{marginBottom:22,padding:"0 4px"}}><Logo/></div>
+
+        {/* User info card */}
+        <div style={{marginBottom:20,padding:"12px 14px",background:"rgba(255,255,255,.03)",
+          borderRadius:13,border:`1px solid ${C.border}`,cursor:"pointer"}}
+          onClick={()=>setPage("settings")}>
+          <div style={{display:"flex",alignItems:"center",gap:10}}>
+            <div style={{width:36,height:36,borderRadius:"50%",background:C.gP,
+              display:"flex",alignItems:"center",justifyContent:"center",fontSize:16,fontWeight:800,color:"#fff",flexShrink:0}}>
+              {(userName||"U")[0].toUpperCase()}
+            </div>
+            <div style={{overflow:"hidden",flex:1}}>
+              <div style={{fontWeight:700,color:"#c4b5fd",fontSize:13,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{userName}</div>
+              <div style={{fontSize:10,color:C.muted,marginTop:1}}>Balance: <span style={{color:C.goldL,fontWeight:700}}>{fmt(balance)}</span></div>
+            </div>
+            <span style={{fontSize:12,color:C.muted}}>→</span>
+          </div>
+        </div>
+
+        <nav style={{flex:1}}>
+          {NAV.map(item=><NavItem key={item.id} item={item} active={page===item.id} onClick={()=>setPage(item.id)}/>)}
+        </nav>
+
+        <Divider/>
+        <button onClick={onLogout} style={{display:"flex",alignItems:"center",gap:10,padding:"10px 12px",
+          marginTop:10,width:"100%",background:"rgba(239,68,68,.08)",border:"1px solid rgba(239,68,68,.2)",
+          borderRadius:10,color:"#f87171",fontSize:13,fontWeight:600,cursor:"pointer",transition:"all .2s"}}
+          onMouseEnter={e=>{ e.currentTarget.style.background="rgba(239,68,68,.18)"; }}
+          onMouseLeave={e=>{ e.currentTarget.style.background="rgba(239,68,68,.08)"; }}>
+          🚪 Log Out
+        </button>
+      </aside>
+
+      {/* MAIN */}
+      <main className="dash-main" style={{flex:1,marginLeft:224,padding:"28px 32px",minHeight:"100vh",maxWidth:"calc(100vw - 224px)"}}>
+        {renderPage()}
+      </main>
+
+      <MobileBar page={page} setPage={setPage} isAdmin={false} onLogout={onLogout}/>
+    </div>
+  );
+};
+
+// ─── User: Overview ───────────────────────────────────────────
+const UserOverview = ({ orders, balance, setPage, userName, announcements, userEmail="" }) => {
+  const comp=orders.filter(o=>o.status==="Completed").length;
+  const active=orders.filter(o=>["Processing","Pending"].includes(o.status)).length;
+
+  return (
+    <div style={{animation:"fadeIn .4s ease"}}>
+      {/* Top action bar */}
+      <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:26,flexWrap:"wrap",gap:12}}>
+        <div>
+          <h1 style={{fontSize:24,fontWeight:900,letterSpacing:"-.02em",color:"#f0f0ff",fontFamily:"Syne,sans-serif",marginBottom:3}}>Hey, {userName} 👋</h1>
+          <p style={{color:C.muted,fontSize:13}}>Here's your account overview</p>
+        </div>
+        <div style={{display:"flex",gap:10,alignItems:"center"}}>
+          {/* Notification bell */}
+          <div style={{position:"relative",cursor:"pointer"}}>
+            <div style={{width:38,height:38,borderRadius:10,background:"rgba(255,255,255,.05)",
+              border:`1px solid ${C.border}`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:17}}>🔔</div>
+            {announcements.length>0&&<div style={{position:"absolute",top:-4,right:-4,width:16,height:16,
+              borderRadius:"50%",background:"#ef4444",display:"flex",alignItems:"center",justifyContent:"center",
+              fontSize:9,fontWeight:900,color:"#fff",border:"2px solid #06060a"}}>{announcements.length}</div>}
+          </div>
+          <Btn onClick={()=>setPage("neworder")}>✦ New Order</Btn>
+        </div>
+      </div>
+
+      {/* ANNOUNCEMENTS BOARD */}
+      {announcements.length>0&&(
+        <div style={{marginBottom:24}}>
+          <div style={{fontSize:11,fontWeight:800,color:C.muted,letterSpacing:".08em",marginBottom:10}}>📣 ANNOUNCEMENTS</div>
+          <div style={{display:"flex",flexDirection:"column",gap:10}}>
+            {announcements.slice(0,2).map(a=>(
+              <Card key={a.id} gold={a.type==="Offer"} style={{padding:"14px 20px",display:"flex",alignItems:"flex-start",gap:14}}>
+                <div style={{fontSize:20,flexShrink:0}}>{a.type==="Offer"?"🔥":a.type==="Notice"?"⚠️":"🆕"}</div>
+                <div style={{flex:1}}>
+                  <div style={{fontWeight:700,color:a.type==="Offer"?C.goldL:"#e8e8f2",fontSize:14,marginBottom:3}}>{a.title}</div>
+                  <div style={{color:C.muted,fontSize:13,lineHeight:1.5}}>{a.body}</div>
+                </div>
+                <div style={{fontSize:11,color:C.muted,flexShrink:0}}>{a.date}</div>
+              </Card>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* STATS */}
+      <div className="stat-grid" style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:16,marginBottom:24}}>
+        <StatCard icon="◈" label="Balance"       value={fmt(balance)} grad={C.gG}/>
+        <StatCard icon="📦" label="Total Orders"  value={orders.length} grad={C.gP}/>
+        <StatCard icon="⚡" label="Active Orders" value={active} grad={C.gB}/>
+        <StatCard icon="✅" label="Completed"     value={comp} grad={C.gGr}/>
+      </div>
+
+      {/* LOYALTY LEVEL */}
+      {(()=>{
+        const spent=orders.reduce((s,o)=>s+o.price,0);
+        const lvls=[
+          {n:"Starter",  mn:0,     mx:5000,   i:"🌱",c:"#6b7280",g:"linear-gradient(135deg,#374151,#6b7280)",perks:["Basic support"]},
+          {n:"Bronze",   mn:5000,  mx:15000,  i:"🥉",c:"#b45309",g:"linear-gradient(135deg,#78350f,#d97706)",perks:["Priority support","5% bonus"]},
+          {n:"Silver",   mn:15000, mx:50000,  i:"🥈",c:"#9ca3af",g:"linear-gradient(135deg,#4b5563,#d1d5db)",perks:["8% bonus","Monthly reward"]},
+          {n:"Gold",     mn:50000, mx:150000, i:"🥇",c:"#d4a017",g:"linear-gradient(135deg,#b45309,#f59e0b)",perks:["12% bonus","VIP support","Free refill"]},
+          {n:"Platinum", mn:150000,mx:9999999,i:"💎",c:"#06b6d4",g:"linear-gradient(135deg,#0284c7,#06b6d4)",perks:["15% bonus","Instant delivery","Account manager"]},
+        ];
+        const cur=lvls.find(l=>spent>=l.mn&&spent<l.mx)||lvls[0];
+        const nxt=lvls[lvls.indexOf(cur)+1];
+        const pct=nxt?Math.min(100,Math.round(((spent-cur.mn)/(nxt.mn-cur.mn))*100)):100;
+        return (
+          <Card style={{padding:22,marginBottom:24}}>
+            <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:16,flexWrap:"wrap",gap:12}}>
+              <div style={{display:"flex",alignItems:"center",gap:14}}>
+                <div style={{width:52,height:52,borderRadius:15,background:cur.g,display:"flex",alignItems:"center",
+                  justifyContent:"center",fontSize:26,boxShadow:`0 0 20px ${cur.c}55`,flexShrink:0}}>{cur.i}</div>
+                <div>
+                  <div style={{fontSize:9,color:C.muted,letterSpacing:".1em",marginBottom:2}}>YOUR LOYALTY LEVEL</div>
+                  <div style={{fontFamily:"Syne,sans-serif",fontSize:20,fontWeight:900,color:cur.c,marginBottom:2}}>{cur.n}</div>
+                  <div style={{fontSize:11,color:C.muted}}>{nxt?`₹${(nxt.mn-spent).toLocaleString()} to reach ${nxt.i} ${nxt.n}`:"🏆 Maximum level!"}</div>
+                </div>
+              </div>
+              <div style={{display:"flex",gap:6,flexWrap:"wrap"}}>
+                {cur.perks.map(p=><span key={p} style={{fontSize:10,background:`${cur.c}18`,color:cur.c,border:`1px solid ${cur.c}30`,borderRadius:20,padding:"3px 9px",fontWeight:700}}>✓ {p}</span>)}
+              </div>
+            </div>
+            <div style={{display:"flex",justifyContent:"space-between",fontSize:11,marginBottom:5}}>
+              <span style={{color:C.muted}}>Progress to {nxt?nxt.n:"Max"}</span>
+              <span style={{color:cur.c,fontWeight:700}}>{pct}%</span>
+            </div>
+            <div style={{height:8,background:"rgba(255,255,255,.06)",borderRadius:10,overflow:"hidden"}}>
+              <div style={{height:"100%",width:`${pct}%`,background:cur.g,borderRadius:10,boxShadow:`0 0 10px ${cur.c}55`,transition:"width 1s ease"}}/>
+            </div>
+            <div style={{display:"flex",justifyContent:"space-between",marginTop:10}}>
+              {lvls.map(l=><div key={l.n} style={{textAlign:"center"}}>
+                <div style={{fontSize:16,filter:spent>=l.mn?"none":"grayscale(1) opacity(.3)",marginBottom:2}}>{l.i}</div>
+                <div style={{fontSize:8,fontWeight:700,color:spent>=l.mn?l.c:C.muted}}>{l.n.slice(0,4).toUpperCase()}</div>
+              </div>)}
+            </div>
+          </Card>
+        );
+      })()}
+
+      {/* QUICK ACTIONS */}
+      <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(190px,1fr))",gap:12,marginBottom:24}}>
+        {[
+          {icon:"✦",label:"New Order", sub:"Buy followers, likes & more",page:"neworder",grad:C.gP},
+          {icon:"⊕",label:"Add Funds", sub:"Top up your ₹ wallet",      page:"addfunds",grad:C.gG},
+          {icon:"📦",label:"My Orders", sub:"Track all your orders",       page:"orders",  grad:C.gB},
+          {icon:"💬",label:"Support",   sub:"Chat with our team",          page:"support", grad:C.gGr},
+          {icon:"◇",label:"Services",  sub:"Browse all services",          page:"services",grad:"linear-gradient(135deg,#6366f1,#8b5cf6)"},
+          {icon:"👤",label:"Profile",   sub:"Account settings & referral", page:"settings",grad:"linear-gradient(135deg,#0f766e,#14b8a6)"},
+        ].map(q=>(
+          <Card key={q.label} onClick={()=>setPage(q.page)} style={{padding:18,cursor:"pointer",display:"flex",alignItems:"center",gap:13,transition:"transform .18s,box-shadow .18s"}}
+            onMouseEnter={e=>{ e.currentTarget.style.transform="translateY(-2px)"; e.currentTarget.style.boxShadow="0 8px 30px rgba(0,0,0,.4)"; }}
+            onMouseLeave={e=>{ e.currentTarget.style.transform="none"; e.currentTarget.style.boxShadow=""; }}>
+            <div style={{width:40,height:40,borderRadius:11,background:q.grad,display:"flex",alignItems:"center",justifyContent:"center",fontSize:18,flexShrink:0,boxShadow:`0 4px 12px rgba(0,0,0,.3)`}}>{q.icon}</div>
+            <div>
+              <div style={{fontWeight:700,fontSize:13,color:"#e8e8f2"}}>{q.label}</div>
+              <div style={{fontSize:11,color:C.muted}}>{q.sub}</div>
+            </div>
+          </Card>
+        ))}
+      </div>
+
+      {/* RECENT ORDERS */}
+      <Card style={{padding:22}}>
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:16}}>
+          <h3 style={{fontWeight:800,fontSize:15,color:"#e8e8f2"}}>Recent Orders</h3>
+          <Btn v="ghost" size="sm" onClick={()=>setPage("orders")}>View All →</Btn>
+        </div>
+        <OTable orders={orders.slice(0,4)}/>
+      </Card>
+    </div>
+  );
+};
+
+// ─── Order Table ──────────────────────────────────────────────
+const OTable = ({ orders, onCancel, adminView=false }) => (
+  <div style={{overflowX:"auto"}}>
+    {!orders.length
+      ? <div style={{textAlign:"center",padding:"40px 0",color:C.muted}}><div style={{fontSize:36,marginBottom:10}}>📭</div><p>No orders yet</p></div>
+      : <table style={{width:"100%",borderCollapse:"collapse",fontSize:12}}>
+          <thead>
+            <tr style={{borderBottom:`1px solid ${C.border}`}}>
+              {["Order ID","Service","Qty","Price","Status","Date",...(adminView?["User","Link"]:[]),...(onCancel?["Action"]:[]),...(adminView?["Action"]:[])].filter(Boolean).map(h=>(
+                <th key={h} style={{padding:"9px 12px",textAlign:"left",color:C.muted,fontWeight:700,fontSize:10,letterSpacing:".05em",textTransform:"uppercase",whiteSpace:"nowrap"}}>{h}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {orders.map((o,i)=>(
+              <tr key={o.id} style={{borderBottom:`1px solid rgba(255,255,255,.04)`,background:i%2?"rgba(255,255,255,.01)":"transparent"}}>
+                <td style={{padding:"11px 12px",color:C.purpleL,fontWeight:800,fontFamily:"monospace",fontSize:11,whiteSpace:"nowrap"}}>{o.id}</td>
+                <td style={{padding:"11px 12px"}}>
+                  <div style={{display:"flex",alignItems:"center",gap:7}}>
+                    <span>{o.icon}</span>
+                    <div>
+                      <div style={{color:"#c4b5fd",fontWeight:600,fontSize:12}}>{o.service}</div>
+                      <div style={{color:C.muted,fontSize:10}}>{o.platform}</div>
+                    </div>
+                  </div>
+                </td>
+                <td style={{padding:"11px 12px",color:C.muted,whiteSpace:"nowrap"}}>{o.qty.toLocaleString()}</td>
+                <td style={{padding:"11px 12px",color:C.goldL,fontWeight:800,whiteSpace:"nowrap"}}>{fmt(o.price)}</td>
+                <td style={{padding:"11px 12px"}}><Badge s={o.status}/></td>
+                <td style={{padding:"11px 12px",color:C.muted,fontSize:11,whiteSpace:"nowrap"}}>{o.date}</td>
+                {adminView&&<td style={{padding:"11px 12px",color:"#c4b5fd",fontSize:11,whiteSpace:"nowrap"}}>{o.userEmail||o.userName||"-"}</td>}
+                {adminView&&<td style={{padding:"11px 12px",fontSize:11,maxWidth:160}}>
+                  {o.link
+                    ? <a href={o.link} target="_blank" rel="noreferrer"
+                        style={{color:"#60a5fa",textDecoration:"underline",wordBreak:"break-all",fontSize:10}}>
+                        {o.link.length>35?o.link.slice(0,35)+"...":o.link}
+                      </a>
+                    : <span style={{color:C.muted}}>—</span>}
+                </td>}
+                {onCancel&&<td style={{padding:"11px 12px"}}>
+                  {o.status==="Pending"&&<button onClick={()=>onCancel(o.id)} style={{background:"rgba(239,68,68,.12)",border:"1px solid rgba(239,68,68,.3)",borderRadius:7,padding:"4px 10px",color:"#f87171",fontSize:10,fontWeight:700,cursor:"pointer"}}>Cancel</button>}
+                </td>}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+    }
+  </div>
+);
+
+// ─── User: New Order ──────────────────────────────────────────
+const UserNewOrder = ({ orders, addOrderSync, balance, setBalance, setPage }) => {
+  const [step,setStep]=useState(1);
+  const [pf,setPf]=useState("All");
+  const [sel,setSel]=useState(null);
+  const [link,setLink]=useState("");
+  const [qty,setQty]=useState(1000);
+  const [coupon,setCoupon]=useState("");
+  const [disc,setDisc]=useState(0);
+  const [couponMsg,setCouponMsg]=useState("");
+  const [linkErr,setLinkErr]=useState("");
+  const [loading,setLoading]=useState(false);
+
+  const filtered=pf==="All"?SERVICES:SERVICES.filter(s=>s.platform===pf);
+  // Price calc: use tiers if available, else price per unit
+  const calcTierPrice = (svc, qty) => {
+    if (!svc) return 0;
+    if (!svc.tiers) return qty * svc.price;
+    const tiers = [...svc.tiers].sort((a,b)=>a.qty-b.qty);
+    // Exact match
+    const exact = tiers.find(t=>t.qty===qty);
+    if (exact) return exact.price;
+    // Below min tier — pro-rate from first tier
+    if (qty < tiers[0].qty) return (qty/tiers[0].qty)*tiers[0].price;
+    // Above max tier — pro-rate from last tier
+    const last = tiers[tiers.length-1];
+    if (qty >= last.qty) return last.price + ((qty-last.qty)/last.qty)*last.price;
+    // Interpolate between tiers
+    for (let i=0;i<tiers.length-1;i++) {
+      if (qty>=tiers[i].qty && qty<=tiers[i+1].qty) {
+        const r=(qty-tiers[i].qty)/(tiers[i+1].qty-tiers[i].qty);
+        return tiers[i].price + r*(tiers[i+1].price - tiers[i].price);
+      }
+    }
+    return qty*(tiers[0].price/tiers[0].qty);
+  };
+  const raw=calcTierPrice(sel, qty);
+  const discAmt=raw*(disc/100);
+  const total=raw-discAmt;
+
+  const applyCoupon=()=>{
+    const d=VALID_COUPONS[coupon.trim().toUpperCase()];
+    if(d){ setDisc(d); setCouponMsg(`✅ ${d}% discount applied!`); }
+    else { setDisc(0); setCouponMsg(coupon?"❌ Invalid code. Check and try again.":""); }
+  };
+
+  const place=()=>{
+    if(total>balance){ alert("Insufficient balance! Go to Add Funds."); return; }
+    setLoading(true);
+    setTimeout(()=>{
+      const newOrd={ id:uid(), service:sel.name, platform:sel.platform, icon:sel.icon,
+        qty, price:parseFloat(total.toFixed(2)), status:"Pending", date:today(), link };
+      addOrderSync(newOrd);
+      setBalance(b=>parseFloat((b-total).toFixed(2)));
+      setLoading(false); setStep(4);
+    },1400);
+  };
+
+  if(step===4) return (
+    <div style={{display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",minHeight:"60vh",animation:"fadeIn .5s ease"}}>
+      <div style={{width:86,height:86,borderRadius:"50%",background:C.gGr,display:"flex",alignItems:"center",
+        justifyContent:"center",fontSize:38,marginBottom:22,boxShadow:"0 0 50px rgba(52,211,153,.4)"}}>✓</div>
+      <h2 style={{fontFamily:"Syne,sans-serif",fontSize:28,fontWeight:900,color:"#34d399",marginBottom:8}}>Order Placed! 🚀</h2>
+      <p style={{color:C.muted,marginBottom:6}}><strong style={{color:"#c4b5fd"}}>{sel?.name}</strong> — {qty.toLocaleString()} units</p>
+      <p style={{color:C.muted,fontSize:13,marginBottom:30}}>Delivery starts: <strong style={{color:C.goldL}}>{sel?.speed}</strong></p>
+      <div style={{display:"flex",gap:12}}>
+        <Btn onClick={()=>setPage("orders")}>View Orders →</Btn>
+        <Btn v="ghost" onClick={()=>{ setStep(1); setSel(null); setLink(""); setCoupon(""); setDisc(0); setCouponMsg(""); }}>New Order</Btn>
+      </div>
+    </div>
+  );
+
+  return (
+    <div style={{animation:"fadeIn .4s ease"}}>
+      <PgH title="New Order" sub="Choose a service and grow your presence"/>
+
+      {/* Step pills */}
+      <div style={{display:"flex",gap:0,marginBottom:28,width:"fit-content",
+        background:"rgba(255,255,255,.03)",borderRadius:12,padding:5,border:`1px solid ${C.border}`}}>
+        {[{n:1,l:"Select Service"},{n:2,l:"Details"},{n:3,l:"Confirm"}].map((s,i)=>(
+          <div key={s.n} style={{display:"flex",alignItems:"center"}}>
+            <div onClick={()=>step>s.n&&setStep(s.n)} style={{display:"flex",alignItems:"center",gap:7,padding:"8px 16px",
+              borderRadius:9,background:step===s.n?"rgba(124,58,237,.2)":"transparent",
+              color:step>=s.n?"#c4b5fd":C.muted,fontWeight:step===s.n?700:500,fontSize:12,
+              cursor:step>s.n?"pointer":"default",transition:"all .2s"}}>
+              <div style={{width:20,height:20,borderRadius:"50%",display:"flex",alignItems:"center",justifyContent:"center",
+                fontSize:10,fontWeight:900,background:step>s.n?C.gGr:step===s.n?C.gP:"rgba(255,255,255,.08)",color:"#fff"}}>{step>s.n?"✓":s.n}</div>
+              <span className="hide-mob">{s.l}</span>
+            </div>
+            {i<2&&<div style={{width:16,height:1,background:C.border}}/>}
+          </div>
+        ))}
+      </div>
+
+      {/* STEP 1 */}
+      {step===1&&<>
+        <div style={{display:"flex",gap:8,flexWrap:"wrap",marginBottom:20}}>
+          {PLATFORMS.map(p=>(
+            <button key={p} onClick={()=>setPf(p)} style={{background:pf===p?C.gP:"rgba(255,255,255,.04)",
+              border:`1px solid ${pf===p?"transparent":C.border}`,borderRadius:8,padding:"7px 14px",
+              color:pf===p?"#fff":C.muted,fontSize:12,fontWeight:600,cursor:"pointer",transition:"all .2s"}}>{p}</button>
+          ))}
+        </div>
+        <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(270px,1fr))",gap:14}}>
+          {filtered.map(svc=>(
+            <div key={svc.id} onClick={()=>{ setSel(svc); setQty(svc.tiers?svc.tiers[0].qty:svc.min); setStep(2); }}
+              style={{cursor:"pointer",border:`2px solid ${sel?.id===svc.id?"#7c3aed":C.border}`,
+                borderRadius:13,padding:18,background:sel?.id===svc.id?"rgba(124,58,237,.08)":"rgba(255,255,255,.02)",transition:"all .2s"}}
+              onMouseEnter={e=>{ e.currentTarget.style.borderColor="rgba(124,58,237,.4)"; }}
+              onMouseLeave={e=>{ e.currentTarget.style.borderColor=sel?.id===svc.id?"#7c3aed":C.border; }}>
+              <div style={{display:"flex",justifyContent:"space-between",marginBottom:8}}>
+                <div>
+                  <div style={{fontSize:10,color:C.purpleL,fontWeight:800,letterSpacing:".07em",marginBottom:3}}>{svc.platform} · {svc.cat}</div>
+                  <div style={{fontWeight:700,fontSize:14,color:"#e8e8f2"}}>{svc.name}</div>
+                </div>
+                <span style={{fontSize:24}}>{svc.icon}</span>
+              </div>
+              <p style={{color:C.muted,fontSize:12,lineHeight:1.5,marginBottom:10}}>{svc.desc}</p>
+              <div style={{display:"flex",justifyContent:"space-between",fontSize:12}}>
+                <span style={{color:C.muted}}>⚡ {svc.speed}</span>
+                <span style={{color:C.goldL,fontWeight:800}}>
+                  {svc.tiers ? "From ₹"+svc.tiers[0].price : "₹"+svc.price+"/unit"}
+                </span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </>}
+
+      {/* STEP 2 */}
+      {step===2&&sel&&(
+        <div className="order-panel" style={{display:"grid",gridTemplateColumns:"1fr 340px",gap:22}}>
+          <div>
+            <Card glow style={{padding:26,marginBottom:18}}>
+              <div style={{display:"flex",alignItems:"center",gap:12,padding:"12px 16px",
+                background:"rgba(124,58,237,.08)",borderRadius:11,border:"1px solid rgba(124,58,237,.25)",marginBottom:22}}>
+                <span style={{fontSize:28}}>{sel.icon}</span>
+                <div style={{flex:1}}>
+                  <div style={{fontWeight:800,color:"#c4b5fd",fontSize:15}}>{sel.name}</div>
+                  <div style={{fontSize:11,color:C.muted}}>{sel.platform} · ⚡ {sel.speed}</div>
+                </div>
+                <button onClick={()=>setStep(1)} style={{background:"none",border:"none",color:C.muted,cursor:"pointer",fontSize:12}}>✕ Change</button>
+              </div>
+
+              {sel.tiers&&(
+                <div style={{background:"rgba(212,160,23,.06)",border:"1px solid rgba(212,160,23,.2)",borderRadius:11,padding:"13px 16px",marginBottom:18}}>
+                  <div style={{fontSize:11,fontWeight:800,color:C.goldL,letterSpacing:".07em",marginBottom:10}}>💰 TIERED PRICING</div>
+                  <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(110px,1fr))",gap:8}}>
+                    {sel.tiers.map(t=>(
+                      <div key={t.qty} style={{textAlign:"center",padding:"8px 6px",background:"rgba(255,255,255,.03)",borderRadius:8,border:`1px solid ${qty===t.qty?"rgba(212,160,23,.5)":C.border}`,cursor:"pointer"}}
+                        onClick={()=>setQty(t.qty)}>
+                        <div style={{fontWeight:900,color:C.goldL,fontSize:15}}>₹{t.price}</div>
+                        <div style={{fontSize:10,color:C.muted,marginTop:2}}>{t.qty.toLocaleString()} {sel.cat}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+              <Inp label="Your Link / URL" value={link} onChange={e=>setLink(e.target.value)}
+                placeholder={`e.g. https://instagram.com/yourprofile`} error={linkErr} icon="🔗"
+                hint={`Paste your ${sel.platform} profile or post link`}/>
+
+              <label style={{display:"block",fontSize:11,fontWeight:700,color:C.muted,letterSpacing:".07em",marginBottom:8,textTransform:"uppercase"}}>
+                Quantity ({sel.min.toLocaleString()} – {sel.max.toLocaleString()})
+              </label>
+              <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:8,marginBottom:12}}>
+                {(sel.tiers ? sel.tiers.map(t=>t.qty) : [sel.min, sel.min*5, sel.min*10, sel.min*20]).map(q=>(
+                  <button key={q} onClick={()=>setQty(q)} style={{padding:"8px 0",borderRadius:9,
+                    border:`1px solid ${qty===q?"#7c3aed":C.border}`,
+                    background:qty===q?"rgba(124,58,237,.15)":"rgba(255,255,255,.03)",
+                    color:qty===q?"#c4b5fd":C.muted,fontSize:12,fontWeight:700,cursor:"pointer"}}>
+                    {q.toLocaleString()}
+                  </button>
+                ))}
+              </div>
+              <input type="range" min={sel.min} max={Math.min(sel.max,100000)} step={sel.min}
+                value={qty} onChange={e=>setQty(Number(e.target.value))}
+                style={{width:"100%",accentColor:"#7c3aed",marginBottom:10}}/>
+              <input type="number" value={qty}
+                onChange={e=>setQty(Math.max(sel.min,Math.min(sel.max,Number(e.target.value))))}
+                style={{width:"100%",background:"rgba(255,255,255,.04)",border:`1px solid ${C.border}`,
+                  borderRadius:10,padding:"10px 14px",color:C.text,fontSize:14,fontWeight:700}}/>
+            </Card>
+
+            {/* Coupon — no codes shown, only input box */}
+            <Card style={{padding:20}}>
+              <div style={{fontSize:13,fontWeight:700,color:"#e8e8f2",marginBottom:12}}>🎟 Have a Discount Code?</div>
+              <div style={{display:"flex",gap:10}}>
+                <input value={coupon} onChange={e=>{ setCoupon(e.target.value); setCouponMsg(""); }}
+                  placeholder="Enter your promo code"
+                  style={{flex:1,background:"rgba(255,255,255,.04)",border:`1px solid ${C.border}`,
+                    borderRadius:10,padding:"10px 14px",color:C.text,fontSize:13}}/>
+                <Btn onClick={applyCoupon} v="gold" size="sm">Apply</Btn>
+              </div>
+              {couponMsg&&<p style={{fontSize:12,marginTop:8,color:couponMsg.startsWith("✅")?"#34d399":"#f87171",fontWeight:600}}>{couponMsg}</p>}
+            </Card>
+          </div>
+
+          {/* Summary panel */}
+          <div>
+            <Card glow style={{padding:26,position:"sticky",top:24}}>
+              <h3 style={{fontWeight:800,fontSize:16,color:"#e8e8f2",marginBottom:20}}>Order Summary</h3>
+              {[
+                {l:"Service",v:sel.name},
+                {l:"Platform",v:sel.platform},
+                {l:"Quantity",v:qty.toLocaleString()+" units"},
+                {l:"Rate",v:sel.tiers ? "Tiered pricing" : "₹"+sel.price+" per unit"},
+              ].map(({l,v})=>(
+                <div key={l} style={{display:"flex",justifyContent:"space-between",marginBottom:11,paddingBottom:11,borderBottom:`1px solid ${C.border}`}}>
+                  <span style={{color:C.muted,fontSize:12}}>{l}</span>
+                  <span style={{color:"#c4b5fd",fontWeight:600,fontSize:12,textAlign:"right",maxWidth:"55%"}}>{v}</span>
+                </div>
+              ))}
+              <div style={{display:"flex",justifyContent:"space-between",marginBottom:8}}>
+                <span style={{color:C.muted,fontSize:12}}>Subtotal</span>
+                <span style={{color:"#e8e8f2",fontWeight:700}}>₹{raw.toFixed(2)}</span>
+              </div>
+              {disc>0&&<div style={{display:"flex",justifyContent:"space-between",marginBottom:8}}>
+                <span style={{color:"#34d399",fontSize:12}}>Discount ({disc}%)</span>
+                <span style={{color:"#34d399",fontWeight:700}}>-₹{discAmt.toFixed(2)}</span>
+              </div>}
+              <div style={{background:"rgba(245,200,66,.07)",border:"1px solid rgba(245,200,66,.2)",
+                borderRadius:11,padding:14,marginBottom:18,display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+                <span style={{fontWeight:800,color:"#e8e8f2",fontSize:15}}>Total</span>
+                <span style={{fontWeight:900,fontSize:26,background:C.gG,WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent"}}>₹{total.toFixed(2)}</span>
+              </div>
+              <div style={{fontSize:11,color:C.muted,marginBottom:16,padding:"9px 12px",background:"rgba(255,255,255,.02)",borderRadius:8}}>
+                💰 Wallet balance: <strong style={{color:total>balance?"#f87171":C.goldL}}>{fmt(balance)}</strong>
+                {total>balance&&<span style={{color:"#f87171",display:"block",marginTop:3}}>⚠ Insufficient — please add funds</span>}
+              </div>
+              <Btn onClick={()=>{ if(!link.trim()){ setLinkErr("Please paste your link"); return; } setLinkErr(""); setStep(3); }}
+                style={{width:"100%",justifyContent:"center"}} size="lg" disabled={total>balance}>
+                Review Order →
+              </Btn>
+              <Btn v="ghost" onClick={()=>setStep(1)} style={{width:"100%",justifyContent:"center",marginTop:9}} size="sm">
+                ← Back
+              </Btn>
+            </Card>
+          </div>
+        </div>
+      )}
+
+      {/* STEP 3 */}
+      {step===3&&sel&&(
+        <div style={{maxWidth:520,margin:"0 auto"}}>
+          <Card glow style={{padding:30}}>
+            <h3 style={{fontFamily:"Syne,sans-serif",fontWeight:900,fontSize:20,color:"#f0f0ff",marginBottom:20}}>Confirm Your Order</h3>
+            {[
+              {l:"Service",   v:sel.name,     color:"#c4b5fd"},
+              {l:"Platform",  v:sel.platform},
+              {l:"Link",      v:link,         color:"#60a5fa",mono:true},
+              {l:"Quantity",  v:qty.toLocaleString()+" units"},
+              {l:"Delivery",  v:"⚡ "+sel.speed, color:"#fbbf24"},
+              {l:"Total",     v:fmt(total),   color:C.goldL, big:true},
+            ].map(({l,v,color,mono,big})=>(
+              <div key={l} style={{display:"flex",justifyContent:"space-between",alignItems:"center",
+                padding:"12px 0",borderBottom:`1px solid ${C.border}`}}>
+                <span style={{color:C.muted,fontSize:12,fontWeight:600,flexShrink:0}}>{l}</span>
+                <span style={{color:color||"#e8e8f2",fontWeight:big?900:600,fontSize:big?22:13,
+                  fontFamily:mono?"monospace":"inherit",wordBreak:"break-all",textAlign:"right",maxWidth:"58%"}}>{v}</span>
+              </div>
+            ))}
+            <div style={{display:"flex",gap:12,marginTop:24}}>
+              <Btn onClick={place} loading={loading} style={{flex:1,justifyContent:"center"}} size="lg">🚀 Place Order</Btn>
+              <Btn v="ghost" onClick={()=>setStep(2)} style={{flex:1,justifyContent:"center"}}>← Edit</Btn>
+            </div>
+          </Card>
+        </div>
+      )}
+    </div>
+  );
+};
+
+// ─── User: My Orders ──────────────────────────────────────────
+const UserOrders = ({ orders, setOrders, userEmail="" }) => {
+  const cancel=(id)=>{
+    DB.updateOrder(id,"Cancelled");
+    setOrders(DB.getOrders().filter(o=>o.userEmail===userEmail));
+  };
+  const [view,setView]=useState("cards");
+  const [filter,setFilter]=useState("All");
+  const filtered=filter==="All"?orders:orders.filter(o=>o.status===filter);
+  const pctMap={"Pending":5,"Processing":60,"Completed":100,"Cancelled":0,"Refunded":0};
+  const colMap={"Pending":"#f59e0b","Processing":"#3b82f6","Completed":"#10b981","Cancelled":"#ef4444","Refunded":"#a855f7"};
+
+  return (
+    <div style={{animation:"fadeIn .4s ease"}}>
+      <PgH title="My Orders" sub={`${orders.length} total`}
+        action={
+          <div style={{display:"flex",background:"rgba(255,255,255,.04)",borderRadius:9,padding:3,border:`1px solid ${C.border}`}}>
+            {[{v:"cards",i:"⊞"},{v:"table",i:"≡"}].map(b=>(
+              <button key={b.v} onClick={()=>setView(b.v)} style={{padding:"7px 14px",borderRadius:7,border:"none",
+                background:view===b.v?"rgba(124,58,237,.25)":"transparent",
+                color:view===b.v?"#c4b5fd":C.muted,cursor:"pointer",fontSize:15,fontWeight:700}}>{b.i}</button>
+            ))}
+          </div>
+        }/>
+      <div style={{display:"flex",gap:7,marginBottom:20,flexWrap:"wrap"}}>
+        {["All","Pending","Processing","Completed","Cancelled"].map(s=>(
+          <button key={s} onClick={()=>setFilter(s)} style={{padding:"6px 14px",borderRadius:20,border:"none",
+            background:filter===s?C.gP:"rgba(255,255,255,.05)",
+            color:filter===s?"#fff":C.muted,fontSize:12,fontWeight:600,cursor:"pointer"}}>
+            {s}{s!=="All"&&<span style={{opacity:.7}}> ({orders.filter(o=>o.status===s).length})</span>}
+          </button>
+        ))}
+      </div>
+      {filtered.length===0&&(
+        <Card style={{padding:50,textAlign:"center"}}>
+          <div style={{fontSize:44,marginBottom:12}}>📭</div>
+          <p style={{color:C.muted}}>No {filter!=="All"?filter.toLowerCase():""} orders yet</p>
+        </Card>
+      )}
+      {view==="cards"&&filtered.map(o=>{
+        const pct=pctMap[o.status]||0;
+        const col=colMap[o.status]||"#6b7280";
+        return (
+          <Card key={o.id} style={{padding:22,marginBottom:14}}>
+            <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:16,flexWrap:"wrap",gap:10}}>
+              <div style={{display:"flex",alignItems:"center",gap:12}}>
+                <div style={{width:46,height:46,borderRadius:12,background:"rgba(124,58,237,.12)",
+                  display:"flex",alignItems:"center",justifyContent:"center",fontSize:24,flexShrink:0}}>{o.icon}</div>
+                <div>
+                  <div style={{fontWeight:800,color:"#c4b5fd",fontSize:14,marginBottom:3}}>{o.service}</div>
+                  <div style={{fontSize:11,color:C.muted}}>{o.platform} · {o.qty.toLocaleString()} units · {o.date}</div>
+                  <div style={{fontSize:10,color:C.muted,fontFamily:"monospace",marginTop:2}}>{o.id}</div>
+                </div>
+              </div>
+              <div style={{display:"flex",flexDirection:"column",alignItems:"flex-end",gap:6}}>
+                <Badge s={o.status}/>
+                <div style={{fontWeight:900,color:C.goldL,fontSize:18}}>{fmt(o.price)}</div>
+              </div>
+            </div>
+            {o.status!=="Cancelled"&&o.status!=="Refunded"&&(
+              <div style={{marginBottom:14}}>
+                <div style={{display:"flex",justifyContent:"space-between",fontSize:11,marginBottom:5}}>
+                  <span style={{color:C.muted}}>Delivery Progress</span>
+                  <span style={{color:col,fontWeight:700}}>{pct}%</span>
+                </div>
+                <div style={{height:8,background:"rgba(255,255,255,.06)",borderRadius:10,overflow:"hidden"}}>
+                  <div style={{height:"100%",width:`${pct}%`,borderRadius:10,
+                    background:`linear-gradient(90deg,${col},${col}bb)`,
+                    boxShadow:`0 0 8px ${col}66`,transition:"width 1.2s ease"}}/>
+                </div>
+                <div style={{display:"flex",justifyContent:"space-between",marginTop:4,fontSize:9,color:C.muted}}>
+                  <span>Order Placed</span><span>Processing</span><span>Delivered ✓</span>
+                </div>
+              </div>
+            )}
+            <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",
+              padding:"9px 12px",background:"rgba(255,255,255,.02)",borderRadius:9,flexWrap:"wrap",gap:8}}>
+              <span style={{fontSize:11,color:"#60a5fa",fontFamily:"monospace",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",maxWidth:"55%"}}>🔗 {o.link||"—"}</span>
+              <div style={{display:"flex",gap:7}}>
+                {o.status==="Pending"&&<button onClick={()=>cancel(o.id)} style={{background:"rgba(239,68,68,.12)",border:"1px solid rgba(239,68,68,.3)",borderRadius:7,padding:"5px 11px",color:"#f87171",fontSize:11,fontWeight:700,cursor:"pointer"}}>✕ Cancel</button>}
+                {o.status==="Completed"&&<button onClick={()=>setPage("neworder")} style={{background:"rgba(16,185,129,.08)",border:"1px solid rgba(16,185,129,.25)",borderRadius:7,padding:"5px 11px",color:"#34d399",fontSize:11,fontWeight:700,cursor:"pointer"}}>🔁 Reorder</button>}
+                <button style={{background:"rgba(124,58,237,.08)",border:"1px solid rgba(124,58,237,.25)",borderRadius:7,padding:"5px 11px",color:"#c4b5fd",fontSize:11,fontWeight:700,cursor:"pointer"}}>💬 Help</button>
+              </div>
+            </div>
+          </Card>
+        );
+      })}
+      {view==="table"&&filtered.length>0&&<Card style={{padding:22}}><OTable orders={filtered} onCancel={cancel}/></Card>}
+    </div>
+  );
+};
+
+// ─── User: Wallet ─────────────────────────────────────────────
+const UserWallet = ({ balance, txns=[], userEmail="" }) => {
+  const [myDeps,setMyDeps]=useState([]);
+  const [walletTab,setWalletTab]=useState("deposits");
+
+  useEffect(()=>{
+    let mounted = true;
+    // Load from Firebase - filter ONLY this user's deposits
+    const load = ()=>{
+      DB.getDepositRequestsFromFirebase().then(all=>{
+        if(mounted){
+          // Strict filter - only show deposits where email exactly matches
+          const myEmail = (userEmail||"").toLowerCase().trim();
+          const mine = all.filter(d=> d.email === myEmail);
+          console.log("👤 My deposits for", myEmail, ":", mine.length, "of", all.length);
+          setMyDeps(mine);
+        }
+      });
+    };
+    load();
+    const iv = setInterval(load, 5000);
+    return ()=>{ mounted=false; clearInterval(iv); };
+  },[userEmail]);
+
+  const depStatusColor={pending:"#fbbf24",approved:"#34d399",rejected:"#f87171"};
+  const depStatusLabel={pending:"⏳ Pending",approved:"✅ Approved",rejected:"❌ Rejected"};
+
+  return (
+  <div style={{animation:"fadeIn .4s ease"}}>
+    <PgH title="Wallet" sub="Balance & transaction history"/>
+    <div className="stat-grid" style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:16,marginBottom:24}}>
+      <StatCard icon="◈" label="Current Balance"  value={fmt(balance)} grad={C.gG}/>
+      <StatCard icon="⬆" label="Total Deposited"  value={fmt(txns.filter(t=>t.amount>0).reduce((s,t)=>s+t.amount,0)||0)} grad={C.gP}/>
+      <StatCard icon="⬇" label="Total Spent"      value={fmt(Math.abs(txns.filter(t=>t.amount<0&&t.type==="Order Payment").reduce((s,t)=>s+t.amount,0)||0))} grad={C.gB}/>
+      <StatCard icon="🔄" label="Refunds"          value={fmt(txns.filter(t=>t.type==="Refund").reduce((s,t)=>s+t.amount,0)||0)} grad={C.gGr}/>
+    </div>
+    <Card style={{padding:22}}>
+      {/* Tab switcher */}
+      <div style={{display:"flex",gap:8,marginBottom:16}}>
+        {[["txns","💳 Transactions"],["deposits","📥 My Deposits"]].map(([t,l])=>(
+          <button key={t} onClick={()=>setWalletTab(t)}
+            style={{padding:"7px 16px",borderRadius:20,fontSize:12,fontWeight:700,cursor:"pointer",
+              background:walletTab===t?C.gP:"rgba(255,255,255,.06)",
+              border:"1px solid "+(walletTab===t?"rgba(124,58,237,.6)":C.border),
+              color:walletTab===t?"#fff":C.muted}}>{l}</button>
+        ))}
+      </div>
+      {walletTab==="deposits"&&(
+        <div>
+          {myDeps.length===0?<div style={{textAlign:"center",color:C.muted,padding:30,fontSize:13}}>No deposit requests yet.<br/>Add funds and your requests will appear here.</div>:
+          myDeps.map(d=>(
+            <div key={d.id} style={{background:"rgba(255,255,255,.03)",border:"1px solid "+C.border,borderRadius:10,padding:"12px 14px",marginBottom:10}}>
+              <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:6}}>
+                <span style={{fontWeight:800,color:C.goldL,fontSize:15}}>₹{d.amount}</span>
+                <span style={{fontSize:11,fontWeight:700,color:depStatusColor[d.status]||C.muted,
+                  background:"rgba(255,255,255,.06)",padding:"3px 10px",borderRadius:20}}>
+                  {depStatusLabel[d.status]||d.status}
+                </span>
+              </div>
+              <div style={{fontSize:11,color:C.muted,marginBottom:4}}>UTR: <span style={{color:"#c4b5fd",fontFamily:"monospace"}}>{d.utr}</span></div>
+              <div style={{fontSize:11,color:C.muted}}>{d.date} · {d.method||"UPI"}</div>
+              {d.status==="pending"&&<div style={{marginTop:6,fontSize:11,color:"#fbbf24"}}>⏳ Admin will verify and credit within 30 minutes</div>}
+              {d.status==="approved"&&<div style={{marginTop:6,fontSize:11,color:"#34d399"}}>✅ Funds added to your wallet!</div>}
+              {d.status==="rejected"&&<div style={{marginTop:6,fontSize:11,color:"#f87171"}}>❌ Rejected. Contact support.</div>}
+            </div>
+          ))}
+        </div>
+      )}
+      {walletTab==="txns"&&<h3 style={{fontWeight:800,fontSize:15,color:"#e8e8f2",marginBottom:18}}>Transaction History</h3>}
+      {walletTab==="txns"&&<table style={{width:"100%",borderCollapse:"collapse",fontSize:12}}>
+        <thead>
+          <tr style={{borderBottom:`1px solid ${C.border}`}}>
+            {["ID","Type","Amount","Date"].map(h=><th key={h} style={{padding:"9px 12px",textAlign:"left",color:C.muted,fontWeight:700,fontSize:10,letterSpacing:".05em"}}>{h}</th>)}
+          </tr>
+        </thead>
+        <tbody>
+          {txns.length===0?<tr><td colSpan={4} style={{padding:30,textAlign:"center",color:C.muted}}>No transactions yet</td></tr>:
+          txns.map((t,i)=>(
+            <tr key={t.id} style={{borderBottom:`1px solid rgba(255,255,255,.04)`,background:i%2?"rgba(255,255,255,.01)":"transparent"}}>
+              <td style={{padding:"11px 12px",color:C.purpleL,fontFamily:"monospace",fontWeight:700,fontSize:11}}>{t.id}</td>
+              <td style={{padding:"11px 12px",color:"#c4b5fd"}}>{t.type}</td>
+              <td style={{padding:"11px 12px",fontWeight:800,fontSize:13,color:t.amount>0?"#34d399":"#f87171"}}>{t.amount>0?"+":""}{fmt(Math.abs(t.amount))}</td>
+              <td style={{padding:"11px 12px",color:C.muted}}>{t.date}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>}
+    </Card>
+  </div>
+  );
+};
+
+// ─── Payment config (internal — not shown to users) ──────────
+const RAZORPAY_KEY  = "rzp_live_SQGxB35luuFH4H";
+const RAZORPAY_LIVE = true;
+
+// Loads Razorpay only when live key is set, otherwise uses built-in flow
+const openRazorpay = ({ amount, userName, userEmail, onSuccess, onFail }) => {
+  if(!RAZORPAY_LIVE || RAZORPAY_KEY==="YOUR_RAZORPAY_KEY_ID"){
+    // Demo mode — no external script needed, works offline too
+    onSuccess({ razorpay_payment_id:"pay_DEMO"+Date.now() });
+    return;
+  }
+  const load = () => {
+    const options = {
+      key: RAZORPAY_KEY, amount: amount*100, currency:"INR",
+      name:"Nexus SMM", description:"Wallet Top-up",
+      handler: onSuccess,
+      prefill:{ name:userName, email:userEmail },
+      theme:{ color:"#7c3aed" },
+      modal:{ ondismiss:()=>onFail("cancelled") },
+    };
+    const rzp = new window.Razorpay(options);
+    rzp.on("payment.failed", r=>onFail(r.error.description));
+    rzp.open();
+  };
+  if(window.Razorpay){ load(); return; }
+  const s=document.createElement("script");
+  s.src="https://checkout.razorpay.com/v1/checkout.js";
+  s.onload=load;
+  s.onerror=()=>onFail("Payment gateway unavailable. Please try UPI manually.");
+  document.head.appendChild(s);
+};
+
+
+
+// ─── QR Code Display (client-side, no external image API) ────
+const QRDisplay = ({ upiId, upiName, amount }) => {
+  const ref = React.useRef(null);
+  React.useEffect(()=>{
+    if(!ref.current) return;
+    ref.current.innerHTML = "";
+    const upiLink = `upi://pay?pa=${upiId}&pn=${encodeURIComponent(upiName)}&am=${amount}&cu=INR&tn=NexusSMM`;
+    try {
+      new QRCode(ref.current, {
+        text: upiLink,
+        width: 200,
+        height: 200,
+        colorDark: "#000000",
+        colorLight: "#ffffff",
+        correctLevel: QRCode.CorrectLevel.M
+      });
+    } catch(e) {
+      // fallback to image API
+      const img = document.createElement('img');
+      img.src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(upiLink)}`;
+      img.style.width = '200px';
+      img.style.height = '200px';
+      ref.current.appendChild(img);
+    }
+  }, [upiId, amount]);
+  return (
+    <div style={{textAlign:"center",marginBottom:14}}>
+      <p style={{color:"#c4b5fd",fontSize:12,fontWeight:600,marginBottom:10}}>📷 Step 1: Scan QR or copy UPI ID below</p>
+      <div style={{display:"inline-block",background:"#fff",padding:10,borderRadius:12,lineHeight:0}}>
+        <div ref={ref}/>
+      </div>
+    </div>
+  );
+};
+
+// ─── UTR Payment Screen ───────────────────────────────────────
+const PaymentUTRScreen = ({ amount, method, qrUrl, userName, userEmail, onBack, onSubmitted }) => {
+  const [utr,setUtr]=useState("");
+  const [submitting,setSubmitting]=useState(false);
+  const [err,setErr]=useState("");
+  const [submitted,setSubmitted]=useState(false);
+
+  const submitUTR = async () => {
+    const u = utr.trim();
+    if(!u){ setErr("Please enter your UTR / Transaction ID"); return; }
+    if(u.length < 6){ setErr("UTR must be at least 6 characters"); return; }
+    setSubmitting(true); setErr("");
+    const req = {
+      id: "DEP-"+Date.now(),
+      email: (userEmail||"").toLowerCase().trim(),
+      userName: userName,
+      amount: parseFloat(amount),
+      utr: u,
+      method: method,
+      status: "pending",
+      date: new Date().toISOString().slice(0,10),
+      createdAt: Date.now(),
+    };
+    try {
+      await DB.addDepositRequest(req);
+      setSubmitting(false);
+      setSubmitted(true);
+    } catch(e) {
+      setSubmitting(false);
+      console.error("Submit UTR failed:", e);
+      setErr("❌ " + (e.message || "Failed to submit. Check internet connection."));
+    }
+  };
+
+  if(submitted) return (
+    <div style={{animation:"fadeIn .4s ease"}}>
+      <PgH title="Request Submitted!" sub="Waiting for admin approval"/>
+      <Card style={{padding:28,textAlign:"center"}}>
+        <div style={{width:72,height:72,borderRadius:"50%",background:"linear-gradient(135deg,#059669,#34d399)",
+          display:"flex",alignItems:"center",justifyContent:"center",fontSize:30,margin:"0 auto 16px"}}>✓</div>
+        <h3 style={{fontFamily:"Syne,sans-serif",fontWeight:900,color:"#34d399",fontSize:20,marginBottom:8}}>
+          Payment Request Sent!
+        </h3>
+        <p style={{color:C.muted,fontSize:13,lineHeight:1.6,marginBottom:20}}>
+          Your deposit request of <strong style={{color:C.goldL}}>₹{amount}</strong> has been submitted.<br/>
+          Admin will verify your UTR and add funds within <strong style={{color:"#f0f0ff"}}>30 minutes</strong>.
+        </p>
+        <div style={{background:"rgba(255,255,255,.04)",borderRadius:10,padding:"12px 16px",marginBottom:20,textAlign:"left"}}>
+          <div style={{display:"flex",justifyContent:"space-between",marginBottom:6}}>
+            <span style={{color:C.muted,fontSize:12}}>Amount</span>
+            <span style={{color:C.goldL,fontWeight:800}}>₹{amount}</span>
+          </div>
+          <div style={{display:"flex",justifyContent:"space-between",marginBottom:6}}>
+            <span style={{color:C.muted,fontSize:12}}>UTR / Txn ID</span>
+            <span style={{color:"#c4b5fd",fontWeight:700,fontSize:12}}>{utr}</span>
+          </div>
+          <div style={{display:"flex",justifyContent:"space-between"}}>
+            <span style={{color:C.muted,fontSize:12}}>Status</span>
+            <span style={{color:"#fbbf24",fontWeight:700,fontSize:12}}>⏳ Pending Approval</span>
+          </div>
+        </div>
+        <Btn v="primary" onClick={onSubmitted} style={{justifyContent:"center",width:"100%"}}>Go to Wallet</Btn>
+      </Card>
+    </div>
+  );
+
+  return (
+    <div style={{animation:"fadeIn .4s ease"}}>
+      <PgH title="Complete Payment" sub={`Pay ₹${amount} & submit your Transaction ID`}/>
+      <Card style={{padding:20}}>
+
+        {/* Steps */}
+        <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:20}}>
+          {["Select Amount","Pay via UPI","Submit UTR"].map((s,i)=>(
+            <React.Fragment key={s}>
+              <div style={{display:"flex",alignItems:"center",gap:5}}>
+                <div style={{width:20,height:20,borderRadius:"50%",
+                  background:i===1||i===2?C.gP:"rgba(255,255,255,.1)",
+                  display:"flex",alignItems:"center",justifyContent:"center",
+                  fontSize:10,fontWeight:800,color:"#fff"}}>{i===0?"✓":i+1}</div>
+                <span style={{fontSize:11,color:i>=1?"#f0f0ff":C.muted,fontWeight:i>=1?600:400}}>{s}</span>
+              </div>
+              {i<2&&<div style={{flex:1,height:1,background:C.border}}/>}
+            </React.Fragment>
+          ))}
+        </div>
+
+        {/* Amount */}
+        <div style={{background:"rgba(124,58,237,.12)",border:"1px solid rgba(124,58,237,.3)",
+          borderRadius:10,padding:"12px 16px",marginBottom:16,display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+          <span style={{color:C.muted,fontSize:13}}>Pay This Amount</span>
+          <span style={{fontFamily:"Syne,sans-serif",fontWeight:900,fontSize:24,color:C.goldL}}>₹{amount}</span>
+        </div>
+
+        {/* QR - generated client side */}
+        <QRDisplay upiId={UPI_ID} upiName={UPI_NAME} amount={amount}/>
+
+        {/* UPI ID copy */}
+        <div style={{background:"rgba(255,255,255,.04)",borderRadius:10,padding:"10px 14px",marginBottom:16,
+          display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+          <div>
+            <div style={{fontSize:10,color:C.muted,marginBottom:2,textTransform:"uppercase",letterSpacing:".06em"}}>UPI ID</div>
+            <div style={{fontWeight:800,color:"#c4b5fd",fontSize:13,letterSpacing:".01em"}}>{UPI_ID}</div>
+          </div>
+          <button onClick={()=>{navigator.clipboard?.writeText(UPI_ID).catch(()=>{}); setErr("✅ UPI ID Copied!");setTimeout(()=>setErr(""),2000);}}
+            style={{background:"rgba(124,58,237,.25)",border:"1px solid rgba(124,58,237,.5)",borderRadius:7,
+              padding:"6px 12px",color:"#c4b5fd",fontSize:11,fontWeight:700,cursor:"pointer"}}>Copy</button>
+        </div>
+
+        {/* Divider */}
+        <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:16}}>
+          <div style={{flex:1,height:1,background:C.border}}/>
+          <span style={{color:C.muted,fontSize:11}}>AFTER PAYING</span>
+          <div style={{flex:1,height:1,background:C.border}}/>
+        </div>
+
+        {/* UTR input */}
+        <div style={{marginBottom:8}}>
+          <label style={{fontSize:12,color:"#c4b5fd",fontWeight:700,display:"block",marginBottom:6}}>
+            📝 Step 2: Enter UTR / Transaction ID
+          </label>
+          <input value={utr} onChange={e=>{setUtr(e.target.value);setErr("");}}
+            placeholder="e.g. 425123456789 or T2506041234"
+            style={{width:"100%",background:"rgba(255,255,255,.06)",border:"1px solid "+(err&&!err.includes("✅")?"#ef4444":C.border),
+              borderRadius:10,padding:"12px 14px",color:"#f0f0ff",fontSize:14,outline:"none",
+              fontFamily:"monospace",letterSpacing:".04em",boxSizing:"border-box"}}/>
+          <p style={{fontSize:11,color:C.muted,marginTop:5,marginBottom:0}}>
+            Find UTR in your GPay/PhonePe/Paytm transaction details
+          </p>
+        </div>
+
+        {err&&<div style={{padding:"8px 12px",borderRadius:8,marginBottom:12,
+          background:err.includes("✅")?"rgba(5,150,105,.15)":"rgba(239,68,68,.1)",
+          border:"1px solid "+(err.includes("✅")?"rgba(5,150,105,.3)":"rgba(239,68,68,.3)"),
+          color:err.includes("✅")?"#34d399":"#f87171",fontSize:12,fontWeight:600}}>{err}</div>}
+
+        <div style={{display:"flex",flexDirection:"column",gap:10,marginTop:4}}>
+          <Btn v="gold" onClick={submitUTR} style={{justifyContent:"center",fontSize:14}}
+            disabled={submitting}>{submitting?"Submitting...":"✅ Submit Payment Request"}</Btn>
+          <Btn v="ghost" onClick={onBack} style={{justifyContent:"center"}}>← Change Amount</Btn>
+        </div>
+
+        <div style={{marginTop:14,background:"rgba(245,200,66,.06)",border:"1px solid rgba(245,200,66,.2)",
+          borderRadius:10,padding:"10px 14px"}}>
+          <p style={{color:C.goldL,fontSize:11,margin:0,lineHeight:1.6}}>
+            ⚡ <strong>How it works:</strong> Pay → Copy UTR from your app → Paste here → Submit.<br/>
+            Admin verifies & credits your wallet within <strong>30 minutes</strong>.
+          </p>
+        </div>
+      </Card>
+    </div>
+  );
+};
+
+
+// ─── Deposit Done Screen ──────────────────────────────────────
+const DepositDoneScreen = ({ amount, setPage }) => {
+  useEffect(()=>{
+    const t = setTimeout(()=>setPage("wallet"), 2500);
+    return ()=>clearTimeout(t);
+  },[]);
+  return (
+    <div style={{display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",minHeight:"60vh",animation:"fadeIn .5s",padding:20}}>
+      <div style={{width:86,height:86,borderRadius:"50%",background:"linear-gradient(135deg,#059669,#34d399)",display:"flex",alignItems:"center",
+        justifyContent:"center",fontSize:36,marginBottom:20,boxShadow:"0 0 40px rgba(52,211,153,.3)"}}>✓</div>
+      <h2 style={{fontFamily:"Syne,sans-serif",fontWeight:900,fontSize:26,color:"#34d399",marginBottom:8,textAlign:"center"}}>Request Submitted!</h2>
+      <p style={{color:"#e8e8f2",fontSize:15,marginBottom:6,textAlign:"center"}}>₹{amount} deposit request sent</p>
+      <p style={{color:C.muted,fontSize:13,textAlign:"center",lineHeight:1.6,marginBottom:20}}>
+        Admin will verify your UTR and add<br/>funds to your wallet within <strong style={{color:"#f0f0ff"}}>30 minutes</strong>
+      </p>
+      <div style={{background:"rgba(255,255,255,.04)",borderRadius:10,padding:"12px 20px",marginBottom:20,textAlign:"center"}}>
+        <p style={{color:"#fbbf24",fontSize:12,fontWeight:700,margin:0}}>⏳ Check "My Deposits" in Wallet to track status</p>
+      </div>
+      <Btn v="primary" onClick={()=>setPage("wallet")} style={{justifyContent:"center"}}>Go to Wallet →</Btn>
+      <div style={{marginTop:12,fontSize:12,color:C.muted}}>Auto-redirecting in 2 seconds...</div>
+    </div>
+  );
+};
+
+// ─── User: Add Funds ──────────────────────────────────────────
+const UserAddFunds = ({ balance, setBalance, setPage, setTxns, userName="User", userEmail="" }) => {
+  const [amount,setAmount]=useState("");
+  const [method,setMethod]=useState("gpay");
+  const [loading,setLoading]=useState(false);
+  const [done,setDone]=useState(false);
+  const [payErr,setPayErr]=useState("");
+  const [showQR,setShowQR]=useState(false);
+  const presets=[100,250,500,1000,2500,5000];
+
+  const handlePay=()=>{
+    const n=parseFloat(amount);
+    if(!n||n<100){ setPayErr("Minimum amount is ₹100"); return; }
+    setPayErr("");
+    setLoading(false);
+    setShowQR(true);
+  };
+
+  if(showQR){
+    if(method==="card"){
+      return (
+        <div style={{animation:"fadeIn .4s ease"}}>
+          <PgH title="Card Payment" sub="Debit / Credit Card"/>
+          <Card style={{padding:28,textAlign:"center"}}>
+            <div style={{fontSize:48,marginBottom:16}}>💳</div>
+            <h3 style={{fontFamily:"Syne,sans-serif",fontWeight:900,color:"#f0f0ff",fontSize:18,marginBottom:10}}>Card Payment</h3>
+            <p style={{color:C.muted,fontSize:13,lineHeight:1.7,marginBottom:20}}>
+              For card payments, please pay via UPI to:<br/>
+              <strong style={{color:"#c4b5fd",fontFamily:"monospace",fontSize:15}}>{UPI_ID}</strong><br/><br/>
+              Then enter your UTR/Transaction ID below to confirm.
+            </p>
+            <Btn v="primary" onClick={()=>{ }} style={{justifyContent:"center",width:"100%",marginBottom:10}}
+              disabled>Card Gateway Coming Soon</Btn>
+            <Btn v="ghost" onClick={()=>setShowQR(false)} style={{justifyContent:"center",width:"100%"}}>← Use UPI Instead</Btn>
+          </Card>
+        </div>
+      );
+    }
+    return <PaymentUTRScreen amount={amount} method={method}
+      userName={userName} userEmail={userEmail}
+      onBack={()=>setShowQR(false)}
+      onSubmitted={()=>{ setShowQR(false); setDone(true); }}
+    />;
+  }
+
+  if(done) return <DepositDoneScreen amount={amount} setPage={setPage}/>;
+
+  return (
+    <div style={{animation:"fadeIn .4s ease"}}>
+      <PgH title="Add Funds" sub="Top up your Nexus wallet instantly"/>
+
+
+
+      <div style={{maxWidth:560}}>
+        <Card gold style={{padding:30}}>
+          {/* Balance display */}
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:24,
+            padding:"14px 18px",background:"rgba(212,160,23,.08)",borderRadius:12,border:"1px solid rgba(212,160,23,.2)"}}>
+            <div>
+              <div style={{fontSize:11,color:C.muted,marginBottom:2}}>CURRENT BALANCE</div>
+              <div style={{fontWeight:900,fontSize:22,background:C.gG,WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent"}}>{fmt(balance)}</div>
+            </div>
+            <div style={{textAlign:"right"}}>
+              <div style={{fontSize:11,color:C.muted,marginBottom:2}}>AFTER TOP-UP</div>
+              <div style={{fontWeight:900,fontSize:22,color:amount&&parseFloat(amount)>=100?"#34d399":C.muted}}>
+                {amount&&parseFloat(amount)>=100 ? fmt(balance+parseFloat(amount)) : "—"}
+              </div>
+            </div>
+          </div>
+
+          {/* Quick presets */}
+          <div style={{fontSize:11,fontWeight:700,color:C.muted,letterSpacing:".07em",marginBottom:10,textTransform:"uppercase"}}>Quick Select Amount</div>
+          <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:9,marginBottom:18}}>
+            {presets.map(p=>(
+              <button key={p} onClick={()=>setAmount(String(p))} style={{padding:"12px 0",borderRadius:11,
+                border:`2px solid ${String(amount)===String(p)?"#d4a017":"rgba(212,160,23,.15)"}`,
+                background:String(amount)===String(p)?"rgba(212,160,23,.18)":"rgba(255,255,255,.03)",
+                color:String(amount)===String(p)?C.goldL:"#888",fontWeight:800,fontSize:15,cursor:"pointer",transition:"all .15s"}}>
+                ₹{p.toLocaleString()}
+              </button>
+            ))}
+          </div>
+
+          <Inp label="Or Enter Custom Amount (min ₹100)" type="number" value={amount}
+            onChange={e=>{ setAmount(e.target.value); setPayErr(""); }} placeholder="e.g. 750" icon="💵"/>
+
+          {/* Payment methods */}
+          <div style={{fontSize:11,fontWeight:700,color:C.muted,letterSpacing:".07em",marginBottom:12,textTransform:"uppercase"}}>Payment Method</div>
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:9,marginBottom:22}}>
+            {[
+              {id:"gpay",      icon:"📱", label:"Google Pay / Paytm / PhonePe", sub:"Tap to open app & scan QR"},
+              {id:"upi",       icon:"🔲", label:"UPI QR Code / UPI ID",           sub:"Scan with any UPI app"},
+              {id:"card",      icon:"💳", label:"Debit / Credit Card",            sub:"Pay via card & send screenshot"},
+              {id:"whatsapp",  icon:"💬", label:"WhatsApp / Other",               sub:"Contact us for any other method"},
+            ].map(m=>(
+              <div key={m.id} onClick={()=>setMethod(m.id)} style={{
+                display:"flex",alignItems:"center",gap:11,padding:"12px 14px",borderRadius:11,cursor:"pointer",
+                border:`2px solid ${method===m.id?"#d4a017":C.border}`,
+                background:method===m.id?"rgba(212,160,23,.1)":"rgba(255,255,255,.02)",transition:"all .18s"}}>
+                <span style={{fontSize:20}}>{m.icon}</span>
+                <div style={{flex:1,overflow:"hidden"}}>
+                  <div style={{fontWeight:700,color:"#e8e8f2",fontSize:12,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{m.label}</div>
+                  <div style={{fontSize:10,color:C.muted}}>{m.sub}</div>
+                </div>
+                {method===m.id&&<span style={{color:C.goldL,fontWeight:900,flexShrink:0}}>✓</span>}
+              </div>
+            ))}
+          </div>
+
+          {/* Recommended badge */}
+          {(method==="gpay"||method==="upi"||method==="card")&&(
+            <div style={{background:"rgba(16,185,129,.07)",border:"1px solid rgba(16,185,129,.2)",borderRadius:10,
+              padding:"10px 14px",marginBottom:18,display:"flex",alignItems:"center",gap:9,fontSize:12}}>
+              <span>✅</span>
+              <span style={{color:"#6ee7b7"}}>
+                {method==="razorpay"?"Send payment screenshot on WhatsApp and funds will be credited within minutes.":
+                 method==="upi"?"Scan the QR code with any UPI app. Funds credited in seconds.":
+                 "Secure card payment with 3D Secure. Instant wallet credit."}
+              </span>
+            </div>
+          )}
+
+          {payErr&&<div style={{background:"rgba(239,68,68,.1)",border:"1px solid rgba(239,68,68,.3)",borderRadius:10,
+            padding:"11px 14px",marginBottom:16,color:"#f87171",fontSize:13}}>⚠ {payErr}</div>}
+
+          <Btn v="gold" onClick={handlePay} loading={loading}
+            disabled={!amount||parseFloat(amount)<100}
+            style={{width:"100%",justifyContent:"center",fontSize:15}} size="lg">
+            {loading
+            ? <span style={{display:"flex",alignItems:"center",gap:8}}>
+                <span style={{width:14,height:14,border:"2px solid rgba(0,0,0,.25)",borderTopColor:"#1a0f00",borderRadius:"50%",animation:"spin .7s linear infinite",display:"inline-block"}}/>
+                Processing Payment...
+              </span>
+            : `💰 Pay ${amount&&parseFloat(amount)>=100?fmt(parseFloat(amount)):"₹0"} Now`}
+          </Btn>
+
+          <div style={{display:"flex",gap:14,justifyContent:"center",marginTop:16,flexWrap:"wrap"}}>
+            {["🔒 256-bit SSL","✅ RBI Compliant","⚡ Instant Credit","🔄 Refund Protected"].map(b=>(
+              <span key={b} style={{fontSize:10,color:C.muted}}>{b}</span>
+            ))}
+          </div>
+        </Card>
+
+
+      </div>
+    </div>
+  );
+};
+
+// ─── User: Services ───────────────────────────────────────────
+const UserServices = ({ setPage }) => {
+  const [pf,setPf]=useState("All");
+  const filtered=pf==="All"?SERVICES:SERVICES.filter(s=>s.platform===pf);
+  return (
+    <div style={{animation:"fadeIn .4s ease"}}>
+      <PgH title="Services" sub="All available services" action={<Btn onClick={()=>setPage("neworder")}>Order Now</Btn>}/>
+      <div style={{display:"flex",gap:8,flexWrap:"wrap",marginBottom:22}}>
+        {PLATFORMS.map(p=><button key={p} onClick={()=>setPf(p)} style={{background:pf===p?C.gP:"rgba(255,255,255,.04)",
+          border:`1px solid ${pf===p?"transparent":C.border}`,borderRadius:8,padding:"7px 15px",
+          color:pf===p?"#fff":C.muted,fontSize:12,fontWeight:600,cursor:"pointer",transition:"all .2s"}}>{p}</button>)}
+      </div>
+      <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(280px,1fr))",gap:15}}>
+        {filtered.map(s=><SvcCard key={s.id} svc={s} onOrder={()=>setPage("neworder")}/>)}
+      </div>
+    </div>
+  );
+};
+
+// ─── User: Support ────────────────────────────────────────────
+const UserSupport = () => {
+  const [tab,setTab]=useState("chat");
+  const [chat,setChat]=useState([{from:"bot",text:"Hi! 👋 How can we help you today? We typically reply in under 5 minutes."}]);
+  const [inp,setInp]=useState("");
+  const [subj,setSubj]=useState("");
+  const [msg,setMsg]=useState("");
+  const [sent,setSent]=useState(false);
+  const chatEnd=useRef(null);
+
+  const send=()=>{
+    if(!inp.trim()) return;
+    setChat(c=>[...c,{from:"user",text:inp}]); setInp("");
+    setTimeout(()=>{
+      const r=["Got it! Let me check that for you 🔍","A support agent will be with you shortly ⚡","Please share your Order ID for faster help!"];
+      setChat(c=>[...c,{from:"bot",text:r[Math.floor(Math.random()*3)]}]);
+    },900);
+  };
+
+  useEffect(()=>{ chatEnd.current?.scrollIntoView({behavior:"smooth"}); },[chat]);
+
+  return (
+    <div style={{animation:"fadeIn .4s ease"}}>
+      <PgH title="Support Center" sub="We're here 24/7 to help"/>
+      <div style={{display:"flex",gap:0,marginBottom:24,background:"rgba(255,255,255,.03)",
+        borderRadius:12,padding:5,width:"fit-content",border:`1px solid ${C.border}`}}>
+        {[{id:"chat",i:"💬",l:"Live Chat"},{id:"ticket",i:"🎫",l:"Open Ticket"},{id:"faq",i:"❓",l:"FAQ"}].map(t=>(
+          <button key={t.id} onClick={()=>setTab(t.id)} style={{display:"flex",alignItems:"center",gap:6,
+            padding:"9px 20px",borderRadius:9,border:"none",
+            background:tab===t.id?"rgba(124,58,237,.2)":"transparent",
+            color:tab===t.id?"#c4b5fd":C.muted,fontWeight:tab===t.id?700:500,fontSize:13,cursor:"pointer"}}>
+            {t.i} {t.l}
+          </button>
+        ))}
+      </div>
+
+      {tab==="chat"&&(
+        <div className="two-col" style={{display:"grid",gridTemplateColumns:"1fr 280px",gap:18}}>
+          <Card style={{display:"flex",flexDirection:"column",height:500,overflow:"hidden"}}>
+            <div style={{padding:"14px 18px",borderBottom:`1px solid ${C.border}`,display:"flex",alignItems:"center",gap:10}}>
+              <div style={{width:9,height:9,borderRadius:"50%",background:"#34d399",boxShadow:"0 0 8px #34d399",animation:"pulse 2s ease infinite"}}/>
+              <span style={{fontWeight:700,color:"#e8e8f2",fontSize:14}}>Live Support</span>
+              <span style={{fontSize:11,color:C.muted,marginLeft:"auto"}}>⚡ &lt;5 min response</span>
+            </div>
+            <div style={{flex:1,overflowY:"auto",padding:18,display:"flex",flexDirection:"column",gap:11}}>
+              {chat.map((m,i)=>(
+                <div key={i} style={{display:"flex",justifyContent:m.from==="user"?"flex-end":"flex-start",alignItems:"flex-end",gap:8}}>
+                  {m.from==="bot"&&<div style={{width:26,height:26,borderRadius:"50%",background:C.gP,display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,flexShrink:0}}>✦</div>}
+                  <div style={{maxWidth:"76%",padding:"10px 14px",fontSize:13,lineHeight:1.55,
+                    borderRadius:m.from==="user"?"16px 16px 4px 16px":"16px 16px 16px 4px",
+                    background:m.from==="user"?C.gP:"rgba(255,255,255,.07)",color:"#e8e8f2"}}>{m.text}</div>
+                </div>
+              ))}
+              <div ref={chatEnd}/>
+            </div>
+            <div style={{padding:14,borderTop:`1px solid ${C.border}`,display:"flex",gap:9}}>
+              <input value={inp} onChange={e=>setInp(e.target.value)} onKeyDown={e=>e.key==="Enter"&&send()}
+                placeholder="Type message..." style={{flex:1,background:"rgba(255,255,255,.04)",
+                  border:`1px solid ${C.border}`,borderRadius:10,padding:"9px 13px",color:C.text,fontSize:13}}/>
+              <Btn size="sm" onClick={send}>→</Btn>
+            </div>
+          </Card>
+          <div style={{display:"flex",flexDirection:"column",gap:14}}>
+            {[
+              {i:"📱",t:"WhatsApp",s:"Fastest · Usually replies in mins",col:C.gGr,
+               action:()=>window.open(`https://wa.me/${WHATSAPP_NUM}?text=Hi%20Nexus%20SMM%2C%20I%20need%20help%20with%20my%20order`,"_blank")},
+              {i:"📧",t:"Email Support",s:SUPPORT_EMAIL,col:C.gB,
+               action:()=>window.open(`mailto:${SUPPORT_EMAIL}?subject=Support%20Request%20-%20Nexus%20SMM&body=Hi%2C%20I%20need%20help%20with...`,"_blank")},
+            ].map(c=>(
+              <Card key={c.t} style={{padding:20,cursor:"pointer"}} onClick={c.action}>
+                <div style={{fontSize:30,marginBottom:10}}>{c.i}</div>
+                <div style={{fontWeight:800,color:"#e8e8f2",marginBottom:5,fontSize:14}}>{c.t}</div>
+                <div style={{fontSize:12,color:C.muted,marginBottom:14}}>{c.s}</div>
+                <Btn v="ghost" size="sm" onClick={c.action}>{c.t==="WhatsApp"?"Open WhatsApp →":"Send Email →"}</Btn>
+              </Card>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {tab==="ticket"&&(
+        <div style={{maxWidth:540}}>
+          {sent&&<div style={{background:"rgba(16,185,129,.1)",border:"1px solid rgba(16,185,129,.3)",borderRadius:11,padding:"13px 16px",marginBottom:18,color:"#34d399",fontWeight:700}}>✓ Ticket submitted! We'll reply within 1 hour.</div>}
+          <Card style={{padding:26}}>
+            <h3 style={{fontWeight:800,fontSize:16,color:"#e8e8f2",marginBottom:20}}>Open a Ticket</h3>
+            <Inp label="Subject" value={subj} onChange={e=>setSubj(e.target.value)} placeholder="e.g. Order not delivered" icon="📝"/>
+            <div style={{marginBottom:16}}>
+              <label style={{display:"block",fontSize:11,fontWeight:700,color:C.muted,letterSpacing:".07em",marginBottom:7,textTransform:"uppercase"}}>Message</label>
+              <textarea value={msg} onChange={e=>setMsg(e.target.value)} rows={5}
+                placeholder="Describe your issue in detail..."
+                style={{width:"100%",background:"rgba(255,255,255,.04)",border:`1px solid ${C.border}`,
+                  borderRadius:11,padding:"11px 14px",color:C.text,fontSize:13,resize:"vertical",fontFamily:"inherit"}}/>
+            </div>
+            <Btn onClick={()=>{ if(subj&&msg){ setSent(true); setSubj(""); setMsg(""); }}} style={{width:"100%",justifyContent:"center"}}>Submit Ticket 🎫</Btn>
+          </Card>
+        </div>
+      )}
+
+      {tab==="faq"&&(
+        <div style={{maxWidth:600}}>
+          {[
+            {q:"How long does delivery take?",a:"Most orders start within minutes. Full delivery: 0–48 hours depending on the service."},
+            {q:"Is it safe for my account?",a:"Yes. We use gradual, natural delivery that follows platform guidelines."},
+            {q:"What if my order doesn't complete?",a:"We offer free refills and refunds. Contact support with your Order ID."},
+            {q:"How do I cancel an order?",a:"Go to My Orders — you can cancel Pending orders before they start processing."},
+            {q:"What payment methods do you accept?",a:"UPI, Google Pay, PhonePe, Debit/Credit cards, Net Banking, and Crypto."},
+            {q:"Do you have a referral program?",a:"Yes! Share your referral code from your Profile page and earn 5% commission on orders."},
+          ].map((f,i)=><FaqItem key={i} q={f.q} a={f.a}/>)}
+        </div>
+      )}
+    </div>
+  );
+};
+
+const FaqItem = ({ q, a }) => {
+  const [open,setOpen]=useState(false);
+  return (
+    <Card style={{marginBottom:10,overflow:"hidden"}}>
+      <div onClick={()=>setOpen(!open)} style={{padding:"14px 20px",cursor:"pointer",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+        <span style={{fontWeight:700,color:"#e8e8f2",fontSize:14}}>{q}</span>
+        <span style={{color:C.purpleL,fontSize:18,transform:open?"rotate(45deg)":"none",transition:"transform .2s",flexShrink:0,marginLeft:12}}>+</span>
+      </div>
+      {open&&<div style={{padding:"0 20px 16px",color:C.muted,fontSize:13,lineHeight:1.7,borderTop:`1px solid ${C.border}`}}><br/>{a}</div>}
+    </Card>
+  );
+};
+
+// ─── User: Profile ────────────────────────────────────────────
+const UserProfile = ({ userName, userEmail, balance, orders, onLogout }) => {
+  const [name,setName]=useState(userName||"");
+  const [email,setEmail]=useState(userEmail||"user@email.com");
+  const [tab,setTab]=useState("profile");
+  const [notif,setNotif]=useState(true);
+  const [twofa,setTwofa]=useState(false);
+  const [affiliate,setAffiliate]=useState(true);
+  const [saved,setSaved]=useState(false);
+  const [copied,setCopied]=useState(false);
+  const refCode=`NEXUS-${(name.slice(0,4)||"USER").toUpperCase()}${Math.floor(Math.random()*8999+1000)}`;
+
+  const comp=orders.filter(o=>o.status==="Completed").length;
+  const spent=orders.reduce((s,o)=>s+o.price,0);
+
+  return (
+    <div style={{animation:"fadeIn .4s ease"}}>
+      <PgH title="My Profile" sub="Account details & settings"/>
+
+      {/* Profile header card */}
+      <Card glow style={{padding:28,marginBottom:24}}>
+        <div style={{display:"flex",alignItems:"center",gap:20,flexWrap:"wrap"}}>
+          <div style={{width:68,height:68,borderRadius:"50%",background:C.gP,
+            display:"flex",alignItems:"center",justifyContent:"center",fontSize:28,fontWeight:900,color:"#fff",
+            boxShadow:"0 0 24px rgba(124,58,237,.4)",flexShrink:0}}>
+            {(name||"U")[0].toUpperCase()}
+          </div>
+          <div style={{flex:1}}>
+            <div style={{fontFamily:"Syne,sans-serif",fontSize:20,fontWeight:900,color:"#f0f0ff",marginBottom:3}}>{name||"User"}</div>
+            <div style={{color:C.muted,fontSize:13,marginBottom:10}}>{email}</div>
+            <div style={{display:"flex",gap:18,flexWrap:"wrap"}}>
+              {[{l:"Balance",v:fmt(balance),c:C.goldL},{l:"Orders",v:orders.length},{l:"Completed",v:comp},{l:"Spent",v:fmt(spent)}].map(x=>(
+                <div key={x.l}>
+                  <div style={{fontSize:16,fontWeight:800,color:x.c||"#c4b5fd"}}>{x.v}</div>
+                  <div style={{fontSize:10,color:C.muted,letterSpacing:".04em"}}>{x.l}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+          <button onClick={onLogout} style={{display:"flex",alignItems:"center",gap:8,padding:"10px 18px",
+            background:"rgba(239,68,68,.1)",border:"1px solid rgba(239,68,68,.25)",
+            borderRadius:10,color:"#f87171",fontSize:13,fontWeight:700,cursor:"pointer",whiteSpace:"nowrap"}}>
+            🚪 Log Out
+          </button>
+        </div>
+      </Card>
+
+      {/* Tabs */}
+      <div style={{display:"flex",gap:0,marginBottom:22,background:"rgba(255,255,255,.03)",
+        borderRadius:11,padding:5,width:"fit-content",border:`1px solid ${C.border}`}}>
+        {[{id:"profile",l:"Edit Profile"},{id:"security",l:"Security"},{id:"referral",l:"Referral"}].map(t=>(
+          <button key={t.id} onClick={()=>setTab(t.id)} style={{padding:"8px 20px",borderRadius:8,border:"none",
+            background:tab===t.id?"rgba(124,58,237,.2)":"transparent",
+            color:tab===t.id?"#c4b5fd":C.muted,fontWeight:tab===t.id?700:500,fontSize:13,cursor:"pointer"}}>
+            {t.l}
+          </button>
+        ))}
+      </div>
+
+      <div style={{maxWidth:520}}>
+        {saved&&<div style={{background:"rgba(16,185,129,.1)",border:"1px solid rgba(16,185,129,.3)",borderRadius:11,padding:"13px 16px",marginBottom:18,color:"#34d399",fontWeight:700,animation:"slideDown .3s ease"}}>✓ Changes saved successfully!</div>}
+
+        {tab==="profile"&&(
+          <Card style={{padding:26}}>
+            <Inp label="Full Name" value={name} onChange={e=>setName(e.target.value)} icon="👤"/>
+            <Inp label="Email Address" type="email" value={email} onChange={e=>setEmail(e.target.value)} icon="📧"/>
+            <Inp label="New Password" type="password" value="" onChange={()=>{}} placeholder="Leave blank to keep current" icon="🔒"/>
+            <Inp label="Phone Number" type="tel" value="" onChange={()=>{}} placeholder="+91 00000 00000" icon="📱"/>
+            <Btn onClick={()=>{ setSaved(true); setTimeout(()=>setSaved(false),3000); }} size="lg">💾 Save Changes</Btn>
+          </Card>
+        )}
+
+        {tab==="security"&&(
+          <Card style={{padding:26}}>
+            {[
+              {l:"Email Notifications",s:"Order updates, deals, promos",v:notif,set:setNotif},
+              {l:"Two-Factor Authentication",s:"Extra security for your account",v:twofa,set:setTwofa},
+              {l:"Affiliate Program",s:"Earn 5% commission on referrals",v:affiliate,set:setAffiliate},
+            ].map(({l,s,v,set})=>(
+              <div key={l} style={{display:"flex",justifyContent:"space-between",alignItems:"center",
+                padding:"14px 0",borderBottom:`1px solid ${C.border}`}}>
+                <div>
+                  <div style={{fontWeight:700,color:"#c4b5fd",fontSize:14,marginBottom:3}}>{l}</div>
+                  <div style={{fontSize:12,color:C.muted}}>{s}</div>
+                </div>
+                <div onClick={()=>set(x=>!x)} style={{width:46,height:25,borderRadius:13,
+                  background:v?C.gP:"rgba(255,255,255,.1)",cursor:"pointer",position:"relative",transition:"all .3s",flexShrink:0}}>
+                  <div style={{position:"absolute",top:2.5,left:v?24:2.5,width:20,height:20,borderRadius:"50%",
+                    background:"#fff",transition:"left .3s",boxShadow:"0 1px 4px rgba(0,0,0,.3)"}}/>
+                </div>
+              </div>
+            ))}
+            <div style={{marginTop:16}}>
+              <Btn onClick={()=>{ setSaved(true); setTimeout(()=>setSaved(false),3000); }}>Save Settings</Btn>
+            </div>
+          </Card>
+        )}
+
+        {tab==="referral"&&(
+          <Card gold style={{padding:26}}>
+            <div style={{fontSize:36,marginBottom:14}}>🤝</div>
+            <h3 style={{fontWeight:900,color:C.goldL,fontSize:18,marginBottom:8}}>Earn with Referrals</h3>
+            <p style={{color:C.muted,fontSize:13,lineHeight:1.6,marginBottom:20}}>
+              Share your unique code. Earn <strong style={{color:C.goldL}}>5% commission</strong> on every order your friends place — automatically added to your wallet.
+            </p>
+            <label style={{display:"block",fontSize:11,fontWeight:700,color:C.muted,letterSpacing:".07em",marginBottom:7,textTransform:"uppercase"}}>Your Referral Code</label>
+            <div style={{display:"flex",gap:10,marginBottom:16}}>
+              <input readOnly value={refCode} style={{flex:1,background:"rgba(255,255,255,.04)",
+                border:"1px solid rgba(212,160,23,.3)",borderRadius:10,padding:"11px 14px",
+                color:C.goldL,fontWeight:800,fontSize:14,fontFamily:"monospace"}}/>
+              <Btn v="gold" size="sm" onClick={()=>navigator.clipboard?.writeText(refCode)}>Copy</Btn>
+            </div>
+            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12}}>
+              {[{l:"Referrals",v:"0"},{l:"Earnings",v:"₹0.00"}].map(x=>(
+                <div key={x.l} style={{background:"rgba(212,160,23,.06)",border:"1px solid rgba(212,160,23,.15)",borderRadius:10,padding:"14px",textAlign:"center"}}>
+                  <div style={{fontSize:22,fontWeight:900,color:C.goldL}}>{x.v}</div>
+                  <div style={{fontSize:11,color:C.muted}}>{x.l}</div>
+                </div>
+              ))}
+            </div>
+          </Card>
+        )}
+      </div>
+    </div>
+  );
+};
+
+// ═══════════════════════════════════════════════════════════════
+//  ADMIN — LOGIN
+// ═══════════════════════════════════════════════════════════════
+const AdminLogin = ({ onAdminLogin, goBack }) => {
+  const [email,setEmail]=useState("");
+  const [pass,setPass]=useState("");
+  const [err,setErr]=useState("");
+  const [loading,setLoading]=useState(false);
+  const [attempts,setAttempts]=useState(0);
+
+  const handle=async()=>{
+    setErr("");
+    if(!email||!pass){ setErr("Please enter both email and password"); return; }
+    if(attempts>=5){ setErr("Too many failed attempts. Please wait and try again."); return; }
+    setLoading(true);
+    try {
+      const auth = await getFirebaseAuth();
+      if(!auth){ setLoading(false); setErr("Auth service unavailable."); return; }
+      const cred = await auth.signInWithEmailAndPassword(email.trim(), pass);
+      setLoading(false);
+      // Only grant admin if this is the admin email — password checked by Firebase
+      if(cred.user.email.toLowerCase().trim() === ADMIN_EMAIL.toLowerCase()) {
+        onAdminLogin();
+      } else {
+        // Sign them out — they logged in as a customer, not admin
+        await auth.signOut();
+        setAttempts(a=>a+1);
+        setErr("This account does not have admin access.");
+        setPass("");
+      }
+    } catch(e) {
+      setLoading(false);
+      setAttempts(a=>a+1);
+      const left = 5-(attempts+1);
+      if(e.code==="auth/user-not-found"||e.code==="auth/wrong-password"||e.code==="auth/invalid-credential")
+        setErr(`Wrong email or password. ${left} attempt${left!==1?"s":""} remaining.`);
+      else if(e.code==="auth/too-many-requests")
+        setErr("Too many attempts. Firebase has temporarily blocked this. Wait a few minutes.");
+      else setErr("Login failed: " + (e.message||"Unknown error"));
+      setPass("");
+    }
+  };
+
+  return (
+    <div style={{minHeight:"100vh",background:C.bg,display:"flex",alignItems:"center",justifyContent:"center",padding:20,position:"relative",overflow:"hidden"}}>
+      <div style={{position:"absolute",top:"50%",left:"50%",transform:"translate(-50%,-50%)",
+        width:700,height:700,borderRadius:"50%",background:"radial-gradient(ellipse,rgba(212,160,23,.07) 0%,transparent 70%)",pointerEvents:"none"}}/>
+      <div style={{width:"100%",maxWidth:430,position:"relative",zIndex:1,animation:"fadeUp .5s ease"}}>
+        {/* Back button */}
+        <button onClick={goBack} style={{display:"flex",alignItems:"center",gap:7,background:"none",border:"none",
+          color:C.muted,fontSize:13,cursor:"pointer",marginBottom:20,padding:0}}
+          onMouseEnter={e=>e.currentTarget.style.color=C.purpleL}
+          onMouseLeave={e=>e.currentTarget.style.color=C.muted}>
+          ← Back to Home
+        </button>
+
+        <Card gold style={{padding:"40px 34px"}}>
+          <div style={{textAlign:"center",marginBottom:28}}>
+            <div style={{width:64,height:64,borderRadius:18,background:C.gG,margin:"0 auto 16px",
+              display:"flex",alignItems:"center",justifyContent:"center",fontSize:28,
+              boxShadow:"0 0 32px rgba(212,160,23,.45)"}}>🔐</div>
+            <h2 style={{fontFamily:"Syne,sans-serif",fontSize:26,fontWeight:900,color:"#f0f0ff",marginBottom:5}}>
+              Admin Panel
+            </h2>
+            <p style={{color:C.muted,fontSize:13}}>Nexus SMM — Control Center</p>
+          </div>
+
+          <div style={{background:"rgba(212,160,23,.07)",border:"1px solid rgba(212,160,23,.2)",
+            borderRadius:11,padding:"11px 14px",marginBottom:22,display:"flex",alignItems:"center",gap:9}}>
+            <span style={{fontSize:16}}>⚠️</span>
+            <span style={{color:"rgba(245,200,66,.7)",fontSize:12}}>Authorized personnel only. All access is logged.</span>
+          </div>
+
+          {err&&<div style={{background:"rgba(239,68,68,.1)",border:"1px solid rgba(239,68,68,.3)",
+            borderRadius:11,padding:"12px 16px",marginBottom:18,color:"#f87171",fontSize:13,animation:"slideDown .2s ease"}}>
+            🚫 {err}
+          </div>}
+
+          <Inp label="Admin Email" type="email" value={email}
+            onChange={e=>setEmail(e.target.value)} placeholder="Enter admin email" icon="📧"/>
+          <Inp label="Password" type="password" value={pass}
+            onChange={e=>setPass(e.target.value)} placeholder="Enter admin password" icon="🔒"/>
+
+          {attempts>0&&<div style={{display:"flex",gap:4,marginBottom:14,marginTop:-8}}>
+            {[1,2,3,4,5].map(i=>(
+              <div key={i} style={{flex:1,height:3,borderRadius:2,background:i<=attempts?"#ef4444":"rgba(255,255,255,.08)"}}/>
+            ))}
+          </div>}
+
+          <Btn v="gold" onClick={handle} loading={loading}
+            disabled={attempts>=5}
+            style={{width:"100%",justifyContent:"center",marginTop:8}} size="lg">
+            Access Admin Dashboard →
+          </Btn>
+          <p style={{textAlign:"center",marginTop:14,fontSize:11,color:C.muted}}>
+            🔒 Secure · Encrypted · Logged
+          </p>
+        </Card>
+      </div>
+    </div>
+  );
+};
+
+// ═══════════════════════════════════════════════════════════════
+//  ADMIN DASHBOARD
+// ═══════════════════════════════════════════════════════════════
+const AdminDash = ({ onLogout }) => {
+  const [page,setPage]=useState("a-overview");
+  const [orders,setOrders]=useState([]);
+  const [USERS,setUSERS_admin]=useState([]);
+  const [announcements,setAnnouncements]=useState(()=>{
+    const saved=DB.getAnnounce(); return saved.length>0?saved:INIT_ANNOUNCEMENTS;
+  });
+  const [lastRefresh,setLastRefresh]=useState(Date.now());
+  const [loadingOrders,setLoadingOrders]=useState(true);
+
+  const loadFromFirebase = async () => {
+    setLoadingOrders(true);
+    const [o, u] = await Promise.all([DB.getOrdersFromFirebase(), DB.getUsersFromFirebase()]);
+    setOrders(o);
+    setUSERS_admin(u);
+    setLastRefresh(Date.now());
+    setLoadingOrders(false);
+  };
+
+  useEffect(()=>{ loadFromFirebase(); },[]);
+
+  useEffect(()=>{
+    const interval=setInterval(()=>{ loadFromFirebase(); },15000);
+    return ()=>clearInterval(interval);
+  },[]);
+
+  const refresh=()=>{ loadFromFirebase(); };
+
+  const NAV=[
+    {id:"a-overview",  label:"Analytics",     icon:"📊"},
+    {id:"a-orders",    label:"All Orders",    icon:"📦"},
+    {id:"a-services",  label:"Services",      icon:"◇"},
+    {id:"a-users",     label:"Users",         icon:"👥"},
+    {id:"a-coupons",   label:"Coupons",       icon:"🎟"},
+    {id:"a-payments",  label:"Payments",      icon:"💰"},
+    {id:"a-announce",  label:"Announcements", icon:"📣"},
+  ];
+
+  const renderPage=()=>{
+    switch(page){
+      case "a-overview": return <AdminOverview orders={orders} users={USERS} refresh={refresh} lastRefresh={lastRefresh}/>;
+      case "a-orders":   return <AdminOrders orders={orders} setOrders={setOrders}/>;
+      case "a-services": return <AdminServices/>;
+      case "a-users":    return <AdminUsers/>;
+      case "a-coupons":  return <AdminCoupons/>;
+      case "a-payments": return <AdminPayments/>;
+      case "a-announce": return <AdminAnnounce announcements={announcements} setAnnouncements={(list)=>{ setAnnouncements(list); DB.setAnnounce(list); }}/>;
+      default:           return <AdminOverview orders={orders} users={USERS}/>;
+    }
+  };
+
+  return (
+    <div style={{display:"flex",minHeight:"100vh",background:C.bg}}>
+      {/* ADMIN SIDEBAR */}
+      <aside className="sidebar" style={{width:224,minHeight:"100vh",
+        background:"linear-gradient(180deg,rgba(212,160,23,.05) 0%,#06060a 100%)",
+        borderRight:"1px solid rgba(212,160,23,.15)",padding:"22px 13px",
+        display:"flex",flexDirection:"column",position:"fixed",left:0,top:0,bottom:0,zIndex:100,
+        overflowY:"auto"}}>
+        <div style={{marginBottom:22,padding:"0 4px"}}><Logo/></div>
+
+        {/* Admin badge */}
+        <div style={{marginBottom:20,padding:"11px 14px",background:"rgba(212,160,23,.08)",
+          borderRadius:12,border:"1px solid rgba(212,160,23,.2)"}}>
+          <div style={{display:"flex",alignItems:"center",gap:10}}>
+            <div style={{width:34,height:34,borderRadius:"50%",background:C.gG,
+              display:"flex",alignItems:"center",justifyContent:"center",fontSize:14,flexShrink:0}}>🔐</div>
+            <div>
+              <div style={{fontWeight:800,color:C.goldL,fontSize:13}}>Administrator</div>
+              <div style={{fontSize:10,color:C.muted,marginTop:1}}>Full Access</div>
+            </div>
+          </div>
+        </div>
+
+        <nav style={{flex:1}}>
+          {NAV.map(item=><NavItem key={item.id} item={item} active={page===item.id} onClick={()=>setPage(item.id)}/>)}
+        </nav>
+
+        <Divider/>
+        <button onClick={onLogout} style={{display:"flex",alignItems:"center",gap:10,padding:"10px 12px",
+          marginTop:10,width:"100%",background:"rgba(239,68,68,.08)",border:"1px solid rgba(239,68,68,.2)",
+          borderRadius:10,color:"#f87171",fontSize:13,fontWeight:600,cursor:"pointer",transition:"all .2s"}}
+          onMouseEnter={e=>{ e.currentTarget.style.background="rgba(239,68,68,.18)"; }}
+          onMouseLeave={e=>{ e.currentTarget.style.background="rgba(239,68,68,.08)"; }}>
+          🚪 Log Out
+        </button>
+      </aside>
+
+      <main className="dash-main" style={{flex:1,marginLeft:224,padding:"28px 32px",minHeight:"100vh",paddingBottom:90}}>
+        {/* Top header with logout — visible on all screen sizes */}
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",
+          marginBottom:24,paddingBottom:18,borderBottom:`1px solid ${C.border}`}}>
+          <div>
+            <div style={{fontSize:10,color:C.muted,letterSpacing:".08em"}}>ADMIN CONTROL CENTER</div>
+            <div style={{fontFamily:"Syne,sans-serif",fontSize:16,fontWeight:800,color:C.goldL,marginTop:2}}>Nexus SMM Platform</div>
+          </div>
+          <div style={{display:"flex",alignItems:"center",gap:10}}>
+            <div style={{padding:"6px 14px",background:"rgba(16,185,129,.1)",border:"1px solid rgba(16,185,129,.25)",
+              borderRadius:20,fontSize:11,color:"#34d399",fontWeight:700,display:"flex",alignItems:"center",gap:6}}>
+              <span style={{width:7,height:7,borderRadius:"50%",background:"#34d399",display:"inline-block",animation:"pulse 2s infinite"}}/>
+              Admin Online
+            </div>
+            <button onClick={onLogout} style={{display:"flex",alignItems:"center",gap:8,padding:"9px 18px",
+              background:"rgba(239,68,68,.1)",border:"1px solid rgba(239,68,68,.3)",
+              borderRadius:10,color:"#f87171",fontSize:13,fontWeight:700,cursor:"pointer",
+              transition:"all .2s",whiteSpace:"nowrap"}}
+              onMouseEnter={e=>{ e.currentTarget.style.background="rgba(239,68,68,.25)"; e.currentTarget.style.transform="translateY(-1px)"; }}
+              onMouseLeave={e=>{ e.currentTarget.style.background="rgba(239,68,68,.1)"; e.currentTarget.style.transform="none"; }}>
+              🚪 Log Out
+            </button>
+          </div>
+        </div>
+        {renderPage()}
+      </main>
+
+      <MobileBar page={page} setPage={setPage} isAdmin={true} onLogout={onLogout}/>
+    </div>
+  );
+};
+
+// ─── Admin: Overview ──────────────────────────────────────────
+const AdminOverview = ({ orders, users=[], refresh, lastRefresh }) => {
+  const USERS=users;
+  const total=orders.reduce((s,o)=>s+o.price,0);
+  const active=orders.filter(o=>["Processing","Pending"].includes(o.status)).length;
+  const done=orders.filter(o=>o.status==="Completed").length;
+
+  return (
+    <div style={{animation:"fadeIn .4s ease"}}>
+      <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:26,flexWrap:"wrap",gap:12}}>
+        <div>
+          <h1 style={{fontSize:24,fontWeight:900,color:"#f0f0ff",fontFamily:"Syne,sans-serif",marginBottom:3}}>Admin Analytics</h1>
+          <p style={{color:C.muted,fontSize:13}}>Platform-wide overview — all user orders visible here</p>
+        </div>
+        <div style={{display:"flex",alignItems:"center",gap:10}}>
+          <span style={{fontSize:11,color:C.muted}}>
+            Last refreshed: {lastRefresh?new Date(lastRefresh).toLocaleTimeString():"—"}
+          </span>
+          <button onClick={refresh} style={{display:"flex",alignItems:"center",gap:6,padding:"8px 16px",
+            background:"rgba(124,58,237,.1)",border:"1px solid rgba(124,58,237,.3)",borderRadius:9,
+            color:"#c4b5fd",fontSize:12,fontWeight:700,cursor:"pointer"}}
+            onMouseEnter={e=>e.currentTarget.style.background="rgba(124,58,237,.2)"}
+            onMouseLeave={e=>e.currentTarget.style.background="rgba(124,58,237,.1)"}>
+            🔄 Refresh Now
+          </button>
+        </div>
+      </div>
+      {/* Live status ticker */}
+      <div style={{display:"flex",gap:10,marginBottom:20,overflowX:"auto",paddingBottom:4}}>
+        {[
+          {i:"🟢",l:"Platform Status",v:"All Systems Live",c:"#34d399"},
+          {i:"👥",l:"Registered Users",v:String(USERS?.length||0),c:"#c4b5fd"},
+          {i:"⚡",l:"Orders Today",v:`${orders.length}`,c:"#60a5fa"},
+          {i:"💰",l:"Revenue Today",v:fmt(total),c:C.goldL},
+          {i:"📦",l:"Pending",v:`${active}`,c:"#fbbf24"},
+        ].map(s=>(
+          <div key={s.l} style={{flexShrink:0,padding:"10px 16px",background:"rgba(255,255,255,.03)",
+            border:`1px solid ${C.border}`,borderRadius:11,display:"flex",alignItems:"center",gap:10}}>
+            <span style={{fontSize:16}}>{s.i}</span>
+            <div>
+              <div style={{fontSize:10,color:C.muted,letterSpacing:".05em"}}>{s.l}</div>
+              <div style={{fontWeight:800,color:s.c,fontSize:14}}>{s.v}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+      <div className="stat-grid" style={{display:"grid",gridTemplateColumns:"repeat(5,1fr)",gap:16,marginBottom:24}}>
+        <StatCard icon="👥" label="Total Users"   value={String(USERS?.length||0)} grad={C.gP}/>
+        <StatCard icon="💰" label="Total Revenue" value={fmt(total)} grad={C.gG}/>
+        <StatCard icon="📦" label="Total Orders"  value={String(orders.length)} grad={C.gB}/>
+        <StatCard icon="⚡" label="Active Orders" value={active} grad="linear-gradient(135deg,#f59e0b,#ef4444)"/>
+        <StatCard icon="✅" label="Completed"     value={done} grad={C.gGr}/>
+      </div>
+      <div className="two-col" style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:20,marginBottom:20}}>
+        <Card style={{padding:22}}>
+          <h3 style={{fontWeight:800,fontSize:15,color:"#e8e8f2",marginBottom:18}}>Orders Overview</h3>
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12,marginBottom:12}}>
+            {[
+              ["Total Orders",orders.length,"#c4b5fd"],
+              ["Total Revenue",fmt(total),C.goldL],
+              ["Active",active,"#fbbf24"],
+              ["Completed",done,"#34d399"],
+            ].map(([l,v,col])=>(
+              <div key={l} style={{background:"rgba(255,255,255,.04)",borderRadius:10,padding:"12px 14px"}}>
+                <div style={{fontSize:11,color:C.muted,marginBottom:4}}>{l}</div>
+                <div style={{fontSize:18,fontWeight:900,color:col}}>{v}</div>
+              </div>
+            ))}
+          </div>
+          <div style={{padding:"10px 12px",background:"rgba(124,58,237,.06)",borderRadius:9}}>
+            <span style={{fontSize:12,color:C.muted}}>Cancelled: </span>
+            <span style={{fontSize:13,fontWeight:700,color:"#f87171"}}>{orders.filter(o=>o.status==="Cancelled").length}</span>
+          </div>
+        </Card>
+        <Card style={{padding:22}}>
+          <h3 style={{fontWeight:800,fontSize:15,color:"#e8e8f2",marginBottom:16}}>Revenue by Platform</h3>
+          {(()=>{
+            const platforms=["Instagram","YouTube","TikTok","Twitter","Facebook","Telegram","Snapchat"];
+            const icons={"Instagram":"📸","YouTube":"▶️","TikTok":"🎵","Twitter":"🐦","Facebook":"📘","Telegram":"✈️","Snapchat":"👻"};
+            const grads={"Instagram":C.gP,"YouTube":C.gB,"TikTok":C.gGr,"Twitter":C.gG};
+            const data=platforms.map(p=>({
+              p, icon:icons[p]||"📱",
+              total:orders.filter(o=>o.service?.includes(p)).reduce((s,o)=>s+o.price,0),
+              count:orders.filter(o=>o.service?.includes(p)).length,
+            })).filter(x=>x.total>0);
+            if(data.length===0) return <div style={{textAlign:"center",color:C.muted,padding:20,fontSize:13}}>No orders yet</div>;
+            const maxV=Math.max(...data.map(x=>x.total));
+            return data.map(({p,icon,total,count})=>(
+              <div key={p} style={{marginBottom:13}}>
+                <div style={{display:"flex",justifyContent:"space-between",marginBottom:5,fontSize:12}}>
+                  <span style={{color:"#c4b5fd",fontWeight:600}}>{icon} {p}</span>
+                  <div style={{display:"flex",gap:10}}>
+                    <span style={{color:C.goldL,fontWeight:700}}>{fmt(total)}</span>
+                    <span style={{color:C.muted}}>{count} orders</span>
+                  </div>
+                </div>
+                <div style={{height:7,background:"rgba(255,255,255,.05)",borderRadius:4,overflow:"hidden"}}>
+                  <div style={{height:"100%",width:`${(total/maxV)*100}%`,background:grads[p]||C.gP,borderRadius:4}}/>
+                </div>
+              </div>
+            ));
+          })()}
+        </Card>
+      </div>
+      <Card style={{padding:22}}>
+        <h3 style={{fontWeight:800,fontSize:15,color:"#e8e8f2",marginBottom:16}}>Recent Orders</h3>
+        <OTable orders={orders}/>
+      </Card>
+    </div>
+  );
+};
+
+// ─── Admin: Orders ────────────────────────────────────────────
+const AdminOrders = ({ orders, setOrders }) => {
+  const [filter,setFilter]=useState("All");
+  const filtered=filter==="All"?orders:orders.filter(o=>o.status===filter);
+  const upd=async(id,status)=>{
+    DB.updateOrder(id,status);
+    const fresh = await DB.getOrdersFromFirebase();
+    setOrders(fresh);
+  };
+
+  return (
+    <div style={{animation:"fadeIn .4s ease"}}>
+      <PgH title="All Orders" sub={`${orders.length} total`}/>
+      <div style={{display:"flex",gap:8,flexWrap:"wrap",marginBottom:20}}>
+        {["All","Pending","Processing","Completed","Cancelled"].map(s=>(
+          <button key={s} onClick={()=>setFilter(s)} style={{background:filter===s?C.gP:"rgba(255,255,255,.04)",
+            border:`1px solid ${filter===s?"transparent":C.border}`,borderRadius:8,padding:"7px 14px",
+            color:filter===s?"#fff":C.muted,fontSize:12,fontWeight:600,cursor:"pointer"}}>
+            {s} {s!=="All"&&`(${orders.filter(o=>o.status===s).length})`}
+          </button>
+        ))}
+      </div>
+      <Card style={{padding:22}}>
+        <div style={{overflowX:"auto"}}>
+          <table style={{width:"100%",borderCollapse:"collapse",fontSize:12}}>
+            <thead>
+              <tr style={{borderBottom:`1px solid ${C.border}`}}>
+                {["Order ID","User","Service","Qty","Price","Link","Status","Date","Actions"].map(h=>(
+                  <th key={h} style={{padding:"9px 12px",textAlign:"left",color:C.muted,fontWeight:700,fontSize:10,letterSpacing:".05em",whiteSpace:"nowrap"}}>{h}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {filtered.map((o,i)=>(
+                <tr key={o.id} style={{borderBottom:`1px solid rgba(255,255,255,.04)`,background:i%2?"rgba(255,255,255,.01)":"transparent"}}>
+                  <td style={{padding:"11px 12px",color:C.purpleL,fontFamily:"monospace",fontWeight:800,fontSize:11}}>{o.id}</td>
+                  <td style={{padding:"11px 12px",color:"#e8e8f2",fontSize:11,whiteSpace:"nowrap"}}>{o.userEmail||o.userName||"—"}</td>
+                  <td style={{padding:"11px 12px"}}><div style={{color:"#c4b5fd",fontWeight:600}}>{o.service}</div><div style={{fontSize:10,color:C.muted}}>{o.platform}</div></td>
+                  <td style={{padding:"11px 12px",color:C.muted}}>{o.qty.toLocaleString()}</td>
+                  <td style={{padding:"11px 12px",color:C.goldL,fontWeight:800}}>{fmt(o.price)}</td>
+                  <td style={{padding:"11px 12px",fontSize:10,maxWidth:120}}>
+                    {o.link?<a href={o.link} target="_blank" rel="noreferrer" style={{color:"#60a5fa",textDecoration:"underline",wordBreak:"break-all"}}>{o.link.length>30?o.link.slice(0,30)+"...":o.link}</a>:<span style={{color:C.muted}}>—</span>}
+                  </td>
+                  <td style={{padding:"11px 12px"}}><Badge s={o.status}/></td>
+                  <td style={{padding:"11px 12px",color:C.muted,fontSize:11}}>{o.date}</td>
+                  <td style={{padding:"11px 12px"}}>
+                    <div style={{display:"flex",gap:5,flexWrap:"wrap"}}>
+                      {o.status==="Pending"   &&<button onClick={()=>upd(o.id,"Processing")} style={{background:"rgba(59,130,246,.15)",border:"1px solid rgba(59,130,246,.3)",borderRadius:6,padding:"5px 10px",color:"#60a5fa",fontSize:10,fontWeight:700,cursor:"pointer"}}>▶ Process</button>}
+                      {o.status==="Processing"&&<button onClick={()=>upd(o.id,"Completed")}  style={{background:"rgba(16,185,129,.15)",border:"1px solid rgba(16,185,129,.3)",borderRadius:6,padding:"5px 10px",color:"#34d399",fontSize:10,fontWeight:700,cursor:"pointer"}}>✓ Complete</button>}
+                      {["Pending","Processing"].includes(o.status)&&<button onClick={()=>upd(o.id,"Cancelled")} style={{background:"rgba(239,68,68,.12)",border:"1px solid rgba(239,68,68,.3)",borderRadius:6,padding:"5px 10px",color:"#f87171",fontSize:10,fontWeight:700,cursor:"pointer"}}>✕ Cancel</button>}
+                      {["Completed","Cancelled"].includes(o.status)&&<button onClick={()=>refundOrder(o)} style={{background:"rgba(168,85,247,.12)",border:"1px solid rgba(168,85,247,.3)",borderRadius:6,padding:"5px 10px",color:"#c084fc",fontSize:10,fontWeight:700,cursor:"pointer"}}>↩ Refund</button>}
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </Card>
+    </div>
+  );
+};
+
+// ─── Admin: Services ──────────────────────────────────────────
+const AdminServices = () => {
+  const [svcs,setSvcs]=useState(SERVICES);
+  const [mode,setMode]=useState(null); // null | "add" | "edit"
+  const [editIdx,setEditIdx]=useState(null);
+  const blank={name:"",platform:"Instagram",cat:"Followers",price:"",min:"1000",max:"100000",desc:"",speed:"0-12 hrs"};
+  const [form,setForm]=useState(blank);
+  const F=(k,v)=>setForm(f=>({...f,[k]:v}));
+
+  const openAdd=()=>{ setForm(blank); setMode("add"); setEditIdx(null); };
+  const openEdit=(s,i)=>{
+    setForm({
+      name:s.name, platform:s.platform, cat:s.cat||"Followers",
+      price:s.tiers?s.tiers[0].price:s.price||"",
+      min:s.min, max:s.max, desc:s.desc||"", speed:s.speed||""
+    });
+    setEditIdx(i); setMode("edit");
+    // Scroll to form
+    setTimeout(()=>document.getElementById("svc-form")?.scrollIntoView({behavior:"smooth"}),50);
+  };
+  const save=()=>{
+    if(!form.name){ alert("Please enter a service name"); return; }
+    const entry={
+      id:Date.now(), icon:"✦",
+      name:form.name, platform:form.platform, cat:form.cat,
+      price:parseFloat(form.price)||0,
+      min:parseInt(form.min)||100, max:parseInt(form.max)||100000,
+      desc:form.desc, speed:form.speed
+    };
+    if(mode==="add"){
+      setSvcs(s=>[...s,entry]);
+    } else {
+      setSvcs(s=>s.map((x,i)=>i===editIdx?{...x,...entry,id:x.id,icon:x.icon,tiers:x.tiers}:x));
+    }
+    setMode(null); setEditIdx(null); setForm(blank);
+  };
+  const del=(i)=>{
+    if(window.confirm("Delete this service? Cannot be undone.")) setSvcs(x=>x.filter((_,j)=>j!==i));
+  };
+
+  return (
+    <div style={{animation:"fadeIn .4s ease"}}>
+      <PgH title="Manage Services" sub={`${svcs.length} active services`}
+        action={
+          <div style={{display:"flex",gap:9}}>
+            {mode&&<Btn v="ghost" onClick={()=>{ setMode(null); setEditIdx(null); }}>✕ Cancel</Btn>}
+            <Btn onClick={openAdd}>+ Add Service</Btn>
+          </div>
+        }/>
+
+      {/* ADD / EDIT FORM */}
+      {mode&&(
+        <Card id="svc-form" glow style={{padding:26,marginBottom:22,border:`1px solid ${mode==="edit"?"rgba(212,160,23,.4)":"rgba(124,58,237,.4)"}`}}>
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:18}}>
+            <h3 style={{fontWeight:800,color:"#e8e8f2",fontSize:15}}>
+              {mode==="edit"?"✏️ Edit Service — "+form.name:"✦ Add New Service"}
+            </h3>
+            {mode==="edit"&&<span style={{fontSize:11,color:C.goldL,background:"rgba(212,160,23,.1)",padding:"3px 10px",borderRadius:20}}>Editing</span>}
+          </div>
+          <div className="two-col" style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:14,marginBottom:16}}>
+            <Inp label="Service Name" value={form.name} onChange={e=>F("name",e.target.value)} placeholder="e.g. Instagram Followers – Indian"/>
+            <div>
+              <label style={{display:"block",fontSize:11,fontWeight:700,color:C.muted,letterSpacing:".07em",marginBottom:7,textTransform:"uppercase"}}>Platform</label>
+              <select value={form.platform} onChange={e=>F("platform",e.target.value)}
+                style={{width:"100%",background:"rgba(255,255,255,.05)",border:`1px solid ${C.border}`,borderRadius:10,padding:"10px 13px",color:C.text,fontSize:13}}>
+                {["Instagram","YouTube","TikTok","Twitter","Telegram","Facebook","Snapchat"].map(p=><option key={p} value={p}>{p}</option>)}
+              </select>
+            </div>
+            <div>
+              <label style={{display:"block",fontSize:11,fontWeight:700,color:C.muted,letterSpacing:".07em",marginBottom:7,textTransform:"uppercase"}}>Category</label>
+              <select value={form.cat} onChange={e=>F("cat",e.target.value)}
+                style={{width:"100%",background:"rgba(255,255,255,.05)",border:`1px solid ${C.border}`,borderRadius:10,padding:"10px 13px",color:C.text,fontSize:13}}>
+                {["Followers","Likes","Views","Comments","Engagement"].map(c=><option key={c} value={c}>{c}</option>)}
+              </select>
+            </div>
+            <Inp label="Price ₹ (per 1000 units)" value={String(form.price)} onChange={e=>F("price",e.target.value)} placeholder="e.g. 349"/>
+            <Inp label="Min Quantity" value={String(form.min)} onChange={e=>F("min",e.target.value)} placeholder="1000"/>
+            <Inp label="Max Quantity" value={String(form.max)} onChange={e=>F("max",e.target.value)} placeholder="100000"/>
+            <Inp label="Delivery Speed" value={form.speed} onChange={e=>F("speed",e.target.value)} placeholder="0–12 hrs"/>
+            <Inp label="Description" value={form.desc} onChange={e=>F("desc",e.target.value)} placeholder="Short service description"/>
+          </div>
+          <div style={{display:"flex",gap:11}}>
+            <Btn v={mode==="edit"?"gold":"primary"} onClick={save}>
+              {mode==="edit"?"✓ Save Changes":"✓ Add Service"}
+            </Btn>
+            <Btn v="ghost" onClick={()=>{ setMode(null); setEditIdx(null); setForm(blank); }}>Cancel</Btn>
+          </div>
+        </Card>
+      )}
+
+      <Card style={{padding:22}}>
+        <div style={{overflowX:"auto"}}>
+          <table style={{width:"100%",borderCollapse:"collapse",fontSize:12}}>
+            <thead>
+              <tr style={{borderBottom:`1px solid ${C.border}`}}>
+                {["Service","Platform","Price","Min","Max","Speed","Actions"].map(h=>(
+                  <th key={h} style={{padding:"9px 12px",textAlign:"left",color:C.muted,fontWeight:700,fontSize:10,letterSpacing:".05em"}}>{h}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {svcs.map((s,i)=>(
+                <tr key={s.id||i} style={{borderBottom:`1px solid rgba(255,255,255,.04)`,
+                  background:editIdx===i?"rgba(212,160,23,.04)":i%2?"rgba(255,255,255,.01)":"transparent",
+                  transition:"background .2s"}}>
+                  <td style={{padding:"11px 12px"}}>
+                    <div style={{fontWeight:700,color:"#c4b5fd"}}>{s.name}</div>
+                    <div style={{fontSize:10,color:C.muted}}>{s.cat}</div>
+                    {s.badge&&<span style={{fontSize:9,color:C.goldL,background:"rgba(212,160,23,.1)",borderRadius:10,padding:"1px 6px"}}>{s.badge}</span>}
+                  </td>
+                  <td style={{padding:"11px 12px"}}><span style={{display:"flex",alignItems:"center",gap:6}}><span>{s.icon}</span><span style={{color:C.muted}}>{s.platform}</span></span></td>
+                  <td style={{padding:"11px 12px",color:C.goldL,fontWeight:800}}>{s.tiers?"From ₹"+s.tiers[0].price:"₹"+(s.price||0)}</td>
+                  <td style={{padding:"11px 12px",color:C.muted}}>{(s.min||0).toLocaleString()}</td>
+                  <td style={{padding:"11px 12px",color:C.muted}}>{(s.max||0).toLocaleString()}</td>
+                  <td style={{padding:"11px 12px",color:C.muted,fontSize:11}}>{s.speed}</td>
+                  <td style={{padding:"11px 12px"}}>
+                    <div style={{display:"flex",gap:6}}>
+                      <button onClick={()=>openEdit(s,i)}
+                        style={{background:editIdx===i?"rgba(212,160,23,.25)":"rgba(212,160,23,.1)",
+                          border:`1px solid rgba(212,160,23,${editIdx===i?.5:.25})`,
+                          borderRadius:6,padding:"5px 11px",color:C.goldL,fontSize:10,fontWeight:700,cursor:"pointer"}}>
+                        ✏ Edit
+                      </button>
+                      <button onClick={()=>setSvcs(s=>s.map((x,j)=>j===i?{...x,disabled:!x.disabled}:x))}
+                        style={{background:`rgba(${s.disabled?"16,185,129":"245,158,11"},.1)`,
+                          border:`1px solid rgba(${s.disabled?"16,185,129":"245,158,11"},.25)`,
+                          borderRadius:6,padding:"5px 10px",
+                          color:s.disabled?"#34d399":"#fbbf24",fontSize:10,fontWeight:700,cursor:"pointer"}}>
+                        {s.disabled?"✅ Enable":"⏸ Pause"}
+                      </button>
+                      <button onClick={()=>del(i)}
+                        style={{background:"rgba(239,68,68,.1)",border:"1px solid rgba(239,68,68,.25)",
+                          borderRadius:6,padding:"5px 10px",color:"#f87171",fontSize:10,fontWeight:700,cursor:"pointer"}}>
+                        🗑 Del
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </Card>
+    </div>
+  );
+};
+
+// ─── Admin: Users ─────────────────────────────────────────────
+const AdminUsers = () => {
+  const [USERS,setUSERS]=useState([]);
+  useEffect(()=>{ DB.getUsersFromFirebase().then(u=>setUSERS(u)); },[]);
+  const [viewUser,setViewUser]=useState(null);
+  const [refundUser,setRefundUser]=useState(null);
+  const [refundAmt,setRefundAmt]=useState("");
+  const [search,setSearch]=useState("");
+
+  const refresh=()=>{ DB.getUsersFromFirebase().then(u=>setUSERS(u)); };
+
+  const ban=async(id)=>{
+    const user=USERS.find(u=>u.id===id);
+    if(user) DB.updateUserBalance(user.email, user.balance||0); // triggers Firebase user doc update
+    getFS().then(_bfs=>{ if(_bfs&&user) _bfs.collection("users").doc(user.email.replace(/[@.]/g,"_")).update({status:"Suspended"}).catch(console.error); });
+    const fresh = await DB.getUsersFromFirebase();
+    setUSERS(fresh);
+  };
+  const unban=async(id)=>{
+    const user=USERS.find(u=>u.id===id);
+    getFS().then(_ufs=>{ if(_ufs&&user) _ufs.collection("users").doc(user.email.replace(/[@.]/g,"_")).update({status:"Active"}).catch(console.error); });
+    const fresh = await DB.getUsersFromFirebase();
+    setUSERS(fresh);
+  };
+  const doRefund=async()=>{
+    const amt=parseFloat(refundAmt);
+    if(!amt||amt<=0){ alert("Enter a valid amount"); return; }
+    try {
+      const users = await DB.getUsersFromFirebase();
+      const latest = users.find(u=>u.email===refundUser.email);
+      const newBal = parseFloat(((latest?.balance||refundUser.balance||0)+amt).toFixed(2));
+      await DB.updateUserBalanceAsync(refundUser.email, newBal);
+      DB.addTxn({id:"TXN-"+Date.now(),type:"Deposit",amount:amt,email:refundUser.email,date:today(),userName:refundUser.name,ref:"Manual-Admin"});
+      setRefundUser(null); setRefundAmt("");
+      alert(`✅ ₹${amt} added to ${refundUser.name}'s wallet!\nNew balance: ₹${newBal}`);
+      const fresh = await DB.getUsersFromFirebase();
+      setUSERS(fresh);
+    } catch(e) {
+      alert("❌ Error adding balance: " + e.message);
+    }
+  };
+
+  const userOrders=(email)=>DB.getOrders().filter(o=>o.userEmail===email);
+
+  const filteredUsers = search ? USERS.filter(u=>
+    u.email?.toLowerCase().includes(search.toLowerCase()) ||
+    u.name?.toLowerCase().includes(search.toLowerCase())
+  ) : USERS;
+
+  return (
+    <div style={{animation:"fadeIn .4s ease"}}>
+      <PgH title="Users" sub={`${filteredUsers.length}${search?" found":""} of ${USERS.length} registered users`}
+        action={<button onClick={refresh} style={{padding:"8px 16px",background:"rgba(124,58,237,.1)",border:`1px solid rgba(124,58,237,.3)`,borderRadius:9,color:"#c4b5fd",fontSize:12,fontWeight:700,cursor:"pointer"}}>🔄 Refresh</button>}/>
+
+      {/* View User Modal */}
+      {viewUser&&(
+        <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,.7)",zIndex:1000,display:"flex",alignItems:"center",justifyContent:"center",padding:20}} onClick={()=>setViewUser(null)}>
+          <div onClick={e=>e.stopPropagation()} style={{width:"100%",maxWidth:520,maxHeight:"85vh",overflowY:"auto"}}>
+            <Card glow style={{padding:26}}>
+              <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:20}}>
+                <h3 style={{fontWeight:800,color:"#e8e8f2",fontSize:16}}>👤 {viewUser.name}</h3>
+                <button onClick={()=>setViewUser(null)} style={{background:"rgba(255,255,255,.06)",border:"none",borderRadius:8,padding:"6px 12px",color:C.muted,cursor:"pointer",fontSize:13}}>✕ Close</button>
+              </div>
+              <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12,marginBottom:20}}>
+                {[{l:"Email",v:viewUser.email},{l:"User ID",v:viewUser.id},{l:"Balance",v:fmt(viewUser.balance||0)},{l:"Total Orders",v:userOrders(viewUser.email).length},{l:"Joined",v:viewUser.joined},{l:"Status",v:viewUser.status}].map(({l,v})=>(
+                  <div key={l} style={{padding:"11px 14px",background:"rgba(255,255,255,.03)",borderRadius:9}}>
+                    <div style={{fontSize:10,color:C.muted,marginBottom:3}}>{l}</div>
+                    <div style={{fontWeight:700,color:"#e8e8f2",fontSize:13}}>{v}</div>
+                  </div>
+                ))}
+              </div>
+              <h4 style={{fontWeight:700,color:C.muted,fontSize:11,letterSpacing:".07em",marginBottom:12}}>RECENT ORDERS</h4>
+              {userOrders(viewUser.email).length===0
+                ? <p style={{color:C.muted,fontSize:12}}>No orders yet</p>
+                : userOrders(viewUser.email).slice(0,4).map(o=>(
+                  <div key={o.id} style={{display:"flex",justifyContent:"space-between",padding:"9px 12px",background:"rgba(255,255,255,.03)",borderRadius:8,marginBottom:7}}>
+                    <div>
+                      <div style={{fontSize:12,fontWeight:600,color:"#c4b5fd"}}>{o.service}</div>
+                      <div style={{fontSize:10,color:C.muted}}>{o.qty?.toLocaleString()} units · {o.date}</div>
+                    </div>
+                    <div style={{textAlign:"right"}}>
+                      <div style={{fontWeight:800,color:C.goldL,fontSize:13}}>{fmt(o.price)}</div>
+                      <Badge s={o.status}/>
+                    </div>
+                  </div>
+                ))
+              }
+              <div style={{display:"flex",gap:9,marginTop:16}}>
+                <Btn v="gold" onClick={()=>{ setRefundUser(viewUser); setViewUser(null); }} style={{flex:1,justifyContent:"center"}}>💰 Add Wallet Balance</Btn>
+                <Btn v="ghost" onClick={()=>{ viewUser.status==="Active"?ban(viewUser.id):unban(viewUser.id); setViewUser(null); }}
+                  style={{flex:1,justifyContent:"center",color:"#f87171"}}>
+                  {viewUser.status==="Active"?"🚫 Ban User":"✅ Unban User"}
+                </Btn>
+              </div>
+            </Card>
+          </div>
+        </div>
+      )}
+
+      {/* Refund Modal */}
+      {refundUser&&(
+        <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,.7)",zIndex:1000,display:"flex",alignItems:"center",justifyContent:"center",padding:20}} onClick={()=>setRefundUser(null)}>
+          <div onClick={e=>e.stopPropagation()} style={{width:"100%",maxWidth:380}}>
+            <Card gold style={{padding:26}}>
+              <h3 style={{fontWeight:800,color:C.goldL,fontSize:15,marginBottom:5}}>💰 Add Wallet Balance</h3>
+              <p style={{color:C.muted,fontSize:12,marginBottom:18}}>Adding balance to: <strong style={{color:"#e8e8f2"}}>{refundUser.name}</strong></p>
+              <Inp label="Amount (₹)" type="number" value={refundAmt} onChange={e=>setRefundAmt(e.target.value)} placeholder="e.g. 500" icon="₹"/>
+              <div style={{display:"flex",gap:9}}>
+                <Btn v="gold" onClick={doRefund} style={{flex:1,justifyContent:"center"}}>✓ Add Balance</Btn>
+                <Btn v="ghost" onClick={()=>setRefundUser(null)} style={{flex:1,justifyContent:"center"}}>Cancel</Btn>
+              </div>
+            </Card>
+          </div>
+        </div>
+      )}
+
+      {USERS.length===0?(
+        <Card style={{padding:40,textAlign:"center"}}>
+          <div style={{fontSize:44,marginBottom:12}}>👥</div>
+          <p style={{color:"#e8e8f2",fontWeight:700,marginBottom:6}}>No users yet</p>
+          <p style={{color:C.muted,fontSize:13}}>Users will appear here when they sign up on your platform</p>
+        </Card>
+      ):(
+      <Card style={{padding:22}}>
+        <div style={{overflowX:"auto"}}>
+          <table style={{width:"100%",borderCollapse:"collapse",fontSize:12}}>
+            <thead>
+              <tr style={{borderBottom:`1px solid ${C.border}`}}>
+                {["User","Email","Balance","Orders","Joined","Status","Actions"].map(h=>(
+                  <th key={h} style={{padding:"9px 12px",textAlign:"left",color:C.muted,fontWeight:700,fontSize:10,letterSpacing:".05em"}}>{h}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {filteredUsers.map((u,i)=>(
+                <tr key={u.id} style={{borderBottom:`1px solid rgba(255,255,255,.04)`,background:i%2?"rgba(255,255,255,.01)":"transparent"}}>
+                  <td style={{padding:"11px 12px"}}>
+                    <div style={{display:"flex",alignItems:"center",gap:10}}>
+                      <div style={{width:32,height:32,borderRadius:"50%",background:C.gP,display:"flex",alignItems:"center",justifyContent:"center",fontSize:13,fontWeight:800,color:"#fff",flexShrink:0}}>{(u.name||"?")[0].toUpperCase()}</div>
+                      <div><div style={{fontWeight:700,color:"#e8e8f2",fontSize:12}}>{u.name}</div><div style={{fontSize:10,color:C.muted,fontFamily:"monospace"}}>{u.id}</div></div>
+                    </div>
+                  </td>
+                  <td style={{padding:"11px 12px",color:"#60a5fa",fontSize:11}}>{u.email}</td>
+                  <td style={{padding:"11px 12px",color:C.goldL,fontWeight:800}}>{fmt(u.balance||0)}</td>
+                  <td style={{padding:"11px 12px",color:C.muted,textAlign:"center"}}>{userOrders(u.email).length}</td>
+                  <td style={{padding:"11px 12px",color:C.muted,fontSize:11}}>{u.joined}</td>
+                  <td style={{padding:"11px 12px"}}><Badge s={u.status||"Active"}/></td>
+                  <td style={{padding:"11px 12px"}}>
+                    <div style={{display:"flex",gap:5}}>
+                      <button onClick={()=>setViewUser(u)} style={{background:"rgba(124,58,237,.12)",border:"1px solid rgba(124,58,237,.3)",borderRadius:6,padding:"5px 10px",color:"#c4b5fd",fontSize:10,fontWeight:700,cursor:"pointer"}}>👁 View</button>
+                      <button onClick={()=>setRefundUser(u)} style={{background:"rgba(212,160,23,.1)",border:"1px solid rgba(212,160,23,.25)",borderRadius:6,padding:"5px 10px",color:C.goldL,fontSize:10,fontWeight:700,cursor:"pointer"}}>💰 Add Balance</button>
+                      <button onClick={()=>u.status==="Active"?ban(u.id):unban(u.id)}
+                        style={{background:`rgba(${u.status==="Active"?"239,68,68":"16,185,129"},.1)`,
+                          border:`1px solid rgba(${u.status==="Active"?"239,68,68":"16,185,129"},.25)`,
+                          borderRadius:6,padding:"5px 10px",
+                          color:u.status==="Active"?"#f87171":"#34d399",
+                          fontSize:10,fontWeight:700,cursor:"pointer"}}>
+                        {u.status==="Active"?"🚫 Ban":"✅ Unban"}
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </Card>
+      )}
+    </div>
+  );
+};
+
+// ─── Admin: Coupons ───────────────────────────────────────────
+const AdminCoupons = () => {
+  const [coupons,setCoupons]=useState([
+    {code:"NEXUS20",disc:20,limit:100,used:34,expires:"2025-07-01"},
+    {code:"SAVE10", disc:10,limit:500,used:123,expires:"2025-08-31"},
+    {code:"FIRST50",disc:50,limit:50, used:12, expires:"2025-06-30"},
+  ]);
+  const [form,setForm]=useState({code:"",disc:"",limit:"",expires:""});
+  const F=(k,v)=>setForm(f=>({...f,[k]:v}));
+  const add=()=>{
+    if(!form.code||!form.disc) return;
+    setCoupons(c=>[...c,{...form,disc:parseInt(form.disc),limit:parseInt(form.limit)||100,used:0}]);
+    setForm({code:"",disc:"",limit:"",expires:""});
+  };
+
+  return (
+    <div style={{animation:"fadeIn .4s ease"}}>
+      <PgH title="Coupon System" sub="Manage discount codes (codes are hidden from users)"/>
+      <div className="two-col" style={{display:"grid",gridTemplateColumns:"1fr 340px",gap:22}}>
+        <Card style={{padding:22}}>
+          <div style={{overflowX:"auto"}}>
+            <table style={{width:"100%",borderCollapse:"collapse",fontSize:12}}>
+              <thead>
+                <tr style={{borderBottom:`1px solid ${C.border}`}}>
+                  {["Code","Discount","Used / Limit","Expires","Action"].map(h=>(
+                    <th key={h} style={{padding:"9px 12px",textAlign:"left",color:C.muted,fontWeight:700,fontSize:10,letterSpacing:".05em"}}>{h}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {coupons.map((c,i)=>(
+                  <tr key={c.code} style={{borderBottom:`1px solid rgba(255,255,255,.04)`}}>
+                    <td style={{padding:"11px 12px",color:C.goldL,fontWeight:900,fontFamily:"monospace",fontSize:13}}>{c.code}</td>
+                    <td style={{padding:"11px 12px"}}><span style={{background:"rgba(16,185,129,.1)",color:"#34d399",border:"1px solid rgba(16,185,129,.3)",borderRadius:6,padding:"3px 9px",fontWeight:800,fontSize:11}}>{c.disc}% OFF</span></td>
+                    <td style={{padding:"11px 12px",color:C.muted}}>{c.used} / {c.limit}</td>
+                    <td style={{padding:"11px 12px",color:C.muted,fontSize:11}}>{c.expires}</td>
+                    <td style={{padding:"11px 12px"}}><button onClick={()=>setCoupons(x=>x.filter((_,j)=>j!==i))} style={{background:"rgba(239,68,68,.12)",border:"1px solid rgba(239,68,68,.3)",borderRadius:6,padding:"4px 10px",color:"#f87171",fontSize:10,fontWeight:700,cursor:"pointer"}}>Delete</button></td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </Card>
+        <Card gold style={{padding:26}}>
+          <h3 style={{fontWeight:800,color:"#e8e8f2",marginBottom:20,fontSize:15}}>Create Coupon</h3>
+          {[{l:"Coupon Code",k:"code",ph:"PROMO25"},{l:"Discount %",k:"disc",ph:"25"},{l:"Usage Limit",k:"limit",ph:"100"},{l:"Expiry Date",k:"expires",ph:"2025-12-31"}].map(({l,k,ph})=>(
+            <Inp key={k} label={l} value={form[k]} onChange={e=>F(k,e.target.value)} placeholder={ph}/>
+          ))}
+          <Btn v="gold" onClick={add} style={{width:"100%",justifyContent:"center"}}>🎟 Create Coupon</Btn>
+          <p style={{fontSize:11,color:C.muted,marginTop:12,textAlign:"center"}}>Codes are only visible here — never shown to users</p>
+        </Card>
+      </div>
+    </div>
+  );
+};
+
+
+// ─── Admin: Payments ─────────────────────────────────────────
+const AdminPayments = () => {
+  const [deps,setDeps]=useState([]);
+  const [tab,setTab]=useState("pending");
+  const [loading,setLoading]=useState(true);
+
+  useEffect(()=>{
+    DB.getDepositRequestsFromFirebase().then(d=>{ setDeps(d); setLoading(false); });
+    const iv=setInterval(()=>DB.getDepositRequestsFromFirebase().then(setDeps),15000);
+    return()=>clearInterval(iv);
+  },[]);
+
+  const approve = async(dep) => {
+    if(!window.confirm(`Approve ₹${dep.amount} for ${dep.userName}\n(${dep.email})\nUTR: ${dep.utr}\n\nConfirm?`)) return;
+    try {
+      const fs = await getFS();
+      if(!fs){ alert("❌ Firebase not connected!"); return; }
+      const key = dep.email.toLowerCase().trim().replace(/[@.]/g,"_");
+
+      // Read current balance
+      let currentBal = 0;
+      const wSnap = await fs.collection("wallets").doc(key).get();
+      if(wSnap.exists) currentBal = wSnap.data().balance || 0;
+
+      const newBal = parseFloat((currentBal + dep.amount).toFixed(2));
+
+      // Write wallet
+      await fs.collection("wallets").doc(key).set({balance:newBal, email:dep.email.toLowerCase().trim(), ts:Date.now()});
+
+      // Verify
+      const wSnap2 = await fs.collection("wallets").doc(key).get();
+      const confirmedBal = wSnap2.exists ? wSnap2.data().balance : "ERROR";
+      if(confirmedBal === "ERROR") throw new Error("Wallet write failed - doc not found");
+
+      // Mark deposit approved - use dep.id (which is now always set)
+      const depositDocId = dep.id || dep._docId;
+      if(!depositDocId) throw new Error("Deposit ID missing - cannot update status");
+      await fs.collection("deposits").doc(depositDocId).set({status:"approved"},{merge:true});
+
+      setDeps(d=>d.map(x=>x.id===dep.id?{...x,status:"approved"}:x));
+      alert(`✅ DONE!\nCustomer: ${dep.userName}\nAdded: ₹${dep.amount}\nNew balance: ₹${confirmedBal}\nKey: ${key}`);
+    } catch(e) {
+      alert("❌ APPROVE FAILED!\nError: " + e.message + "\n\nPlease screenshot this and share.");
+    }
+  };
+
+  const reject = async(dep) => {
+    if(!window.confirm(`Reject deposit of ₹${dep.amount} from ${dep.userName}?`)) return;
+    const depId = dep.id || dep._docId;
+    if(!depId){ alert("❌ Deposit ID missing"); return; }
+    try {
+      const fs=await getFS(); if(!fs) return;
+      await fs.collection("deposits").doc(depId).set({status:"rejected"},{merge:true});
+    } catch(e){ alert("❌ Error: "+e.message); return; }
+    setDeps(d=>d.map(x=>x.id===dep.id?{...x,status:"rejected"}:x));
+  };
+
+  const pending = deps.filter(d=>d.status==="pending");
+  const approved = deps.filter(d=>d.status==="approved");
+  const rejected = deps.filter(d=>d.status==="rejected");
+  const shown = tab==="pending"?pending:tab==="approved"?approved:rejected;
+  const statCol={pending:"#fbbf24",approved:"#34d399",rejected:"#f87171"};
+
+  return (
+    <div style={{animation:"fadeIn .4s ease"}}>
+      <PgH title="Payment Approvals" sub="Verify UTR and approve wallet deposits"/>
+      <div style={{marginBottom:16,display:"flex",gap:10,flexWrap:"wrap"}}>
+        <button onClick={async()=>{
+          try{
+            const fs=await getFS();
+            if(!fs){alert("❌ Firebase not connected!");return;}
+            await fs.collection("_test").doc("ping").set({ok:true,ts:Date.now()});
+            const s=await fs.collection("_test").doc("ping").get();
+            alert("✅ Firebase Working!\nProject: "+FIREBASE_CONFIG.projectId+"\nRead/Write: OK\n"+JSON.stringify(s.data()));
+          }catch(e){alert("❌ Firebase Error:\n"+e.message);}
+        }} style={{padding:"8px 16px",background:"rgba(52,211,153,.15)",border:"1px solid rgba(52,211,153,.4)",
+          borderRadius:8,color:"#34d399",fontSize:12,fontWeight:700,cursor:"pointer"}}>
+          🔥 Test Firebase
+        </button>
+        <button onClick={async()=>{
+          setLoading(true);
+          const d=await DB.getDepositRequestsFromFirebase();
+          setDeps(d); setLoading(false);
+          alert("Loaded "+d.length+" deposit(s) from Firebase");
+        }} style={{padding:"8px 16px",background:"rgba(124,58,237,.15)",border:"1px solid rgba(124,58,237,.4)",
+          borderRadius:8,color:"#c4b5fd",fontSize:12,fontWeight:700,cursor:"pointer"}}>
+          🔄 Force Reload
+        </button>
+        <button onClick={async()=>{
+          if(!window.confirm("Delete all invalid/old deposits from Firebase?")) return;
+          const fs=await getFS(); if(!fs){alert("No Firebase");return;}
+          const snap=await fs.collection("deposits").get();
+          let deleted=0;
+          for(const d of snap.docs){
+            const data=d.data();
+            // Delete if no email, no utr, or no id field in data
+            if(!data.email || !data.utr){
+              await d.ref.delete();
+              deleted++;
+            }
+          }
+          alert("Cleaned "+deleted+" invalid deposits. Reloading...");
+          DB.getDepositRequestsFromFirebase().then(setDeps);
+        }} style={{padding:"8px 16px",background:"rgba(239,68,68,.1)",border:"1px solid rgba(239,68,68,.3)",
+          borderRadius:8,color:"#f87171",fontSize:12,fontWeight:700,cursor:"pointer"}}>
+          🗑️ Clean Invalid Deposits
+        </button>
+      </div>
+
+      <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:14,marginBottom:22}}>
+        {[["⏳","Pending",pending.length,"#fbbf24"],["✅","Approved",approved.length,"#34d399"],["❌","Rejected",rejected.length,"#f87171"]].map(([ic,lb,val,col])=>(
+          <Card key={lb} style={{padding:16,textAlign:"center",cursor:"pointer",border:tab===lb.toLowerCase()?"1px solid "+col:"1px solid "+C.border}}
+            onClick={()=>setTab(lb.toLowerCase())}>
+            <div style={{fontSize:24,marginBottom:6}}>{ic}</div>
+            <div style={{fontSize:22,fontWeight:900,color:col,fontFamily:"Syne,sans-serif"}}>{val}</div>
+            <div style={{fontSize:11,color:C.muted,marginTop:2}}>{lb}</div>
+          </Card>
+        ))}
+      </div>
+
+      {loading?<Card style={{padding:30,textAlign:"center",color:C.muted}}>Loading deposits...</Card>:
+       shown.length===0?<Card style={{padding:30,textAlign:"center",color:C.muted}}>No {tab} deposits</Card>:
+       shown.map(dep=>(
+        <Card key={dep.id} style={{padding:18,marginBottom:12}}>
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",flexWrap:"wrap",gap:12}}>
+            <div style={{flex:1}}>
+              <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:8}}>
+                <div style={{width:36,height:36,borderRadius:"50%",background:C.gP,
+                  display:"flex",alignItems:"center",justifyContent:"center",fontWeight:900,color:"#fff",fontSize:14}}>
+                  {(dep.userName||"U")[0].toUpperCase()}</div>
+                <div>
+                  <div style={{fontWeight:800,color:"#f0f0ff",fontSize:14}}>{dep.userName}</div>
+                  <div style={{fontSize:11,color:C.muted}}>{dep.email}</div>
+                </div>
+                <div style={{marginLeft:"auto",padding:"3px 10px",borderRadius:20,fontSize:11,fontWeight:700,
+                  background:"rgba(255,255,255,.06)",color:statCol[dep.status]||C.muted}}>
+                  {dep.status==="pending"?"⏳ Pending":dep.status==="approved"?"✅ Approved":"❌ Rejected"}
+                </div>
+              </div>
+              <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(120px,1fr))",gap:8}}>
+                {[["Amount","₹"+dep.amount,C.goldL],["UTR / Txn ID",dep.utr,"#c4b5fd"],
+                  ["Method",dep.method||"UPI",C.muted],["Date",dep.date,C.muted]].map(([l,v,col])=>(
+                  <div key={l} style={{background:"rgba(255,255,255,.04)",borderRadius:8,padding:"8px 10px"}}>
+                    <div style={{fontSize:10,color:C.muted,marginBottom:2,textTransform:"uppercase"}}>{l}</div>
+                    <div style={{fontSize:12,fontWeight:700,color:col,fontFamily:l==="UTR / Txn ID"?"monospace":"inherit"}}>{v}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            {dep.status==="pending"&&(
+              <div style={{display:"flex",gap:8,flexDirection:"column",minWidth:110}}>
+                <button onClick={()=>approve(dep)}
+                  style={{background:"rgba(5,150,105,.15)",border:"1px solid rgba(5,150,105,.4)",borderRadius:8,
+                    padding:"8px 14px",color:"#34d399",fontSize:12,fontWeight:800,cursor:"pointer"}}>✅ Approve</button>
+                <button onClick={()=>reject(dep)}
+                  style={{background:"rgba(239,68,68,.1)",border:"1px solid rgba(239,68,68,.3)",borderRadius:8,
+                    padding:"8px 14px",color:"#f87171",fontSize:12,fontWeight:800,cursor:"pointer"}}>❌ Reject</button>
+              </div>
+            )}
+          </div>
+        </Card>
+      ))}
+    </div>
+  );
+};
+
+
+const AdminAnnounce = ({ announcements, setAnnouncements }) => {
+  const [form,setForm]=useState({title:"",body:"",type:"Offer"});
+  const [showForm,setShowForm]=useState(true);
+  const F=(k,v)=>setForm(f=>({...f,[k]:v}));
+  const add=()=>{
+    if(!form.title.trim()||!form.body.trim()){ alert("Please fill in both Title and Message"); return; }
+    setAnnouncements(p=>[{id:Date.now(),...form,date:today()},...p]);
+    setForm({title:"",body:"",type:"Offer"});
+    alert("✅ Announcement published! Users can see it now.");
+  };
+  const typeColor={Offer:C.goldL,Notice:"#60a5fa",Update:"#34d399"};
+  const typeIcon={Offer:"🎁",Notice:"📢",Update:"🆕"};
+
+  return (
+    <div style={{animation:"fadeIn .4s ease"}}>
+      <PgH title="Announcements" sub="Publish messages that appear on every user's dashboard"
+        action={
+          <Btn onClick={()=>setShowForm(s=>!s)}>
+            {showForm?"✕ Hide Form":"✦ New Announcement"}
+          </Btn>
+        }/>
+
+      {/* CREATE FORM — shown at top, collapsible */}
+      {showForm&&(
+        <Card glow style={{padding:26,marginBottom:24}}>
+          <h3 style={{fontWeight:800,color:"#e8e8f2",marginBottom:18,fontSize:15}}>📣 Create Announcement</h3>
+
+          {/* Type selector */}
+          <div style={{fontSize:11,fontWeight:700,color:C.muted,letterSpacing:".07em",marginBottom:9,textTransform:"uppercase"}}>Type</div>
+          <div style={{display:"flex",gap:9,marginBottom:18}}>
+            {["Offer","Notice","Update"].map(t=>(
+              <button key={t} onClick={()=>F("type",t)} style={{flex:1,padding:"10px 0",borderRadius:10,
+                border:`2px solid ${form.type===t?"#7c3aed":C.border}`,
+                background:form.type===t?"rgba(124,58,237,.18)":"rgba(255,255,255,.02)",
+                color:form.type===t?"#c4b5fd":C.muted,fontWeight:700,fontSize:13,cursor:"pointer",
+                display:"flex",flexDirection:"column",alignItems:"center",gap:3}}>
+                <span style={{fontSize:18}}>{typeIcon[t]}</span>
+                <span>{t}</span>
+              </button>
+            ))}
+          </div>
+
+          <Inp label="Title" value={form.title} onChange={e=>F("title",e.target.value)} placeholder="e.g. 🎉 Special Diwali Offer — 20% Off All Services!"/>
+
+          <div style={{marginBottom:18}}>
+            <label style={{display:"block",fontSize:11,fontWeight:700,color:C.muted,marginBottom:7,
+              letterSpacing:".07em",textTransform:"uppercase"}}>Message</label>
+            <textarea value={form.body} onChange={e=>F("body",e.target.value)} rows={4}
+              placeholder="Write your message to users — e.g. Get 20% off all Instagram services today only! Use code DIWALI20 at checkout."
+              style={{width:"100%",background:"rgba(255,255,255,.04)",border:`1px solid ${C.border}`,
+                borderRadius:11,padding:"13px 14px",color:C.text,fontSize:13,
+                resize:"vertical",fontFamily:"inherit",lineHeight:1.6}}/>
+          </div>
+
+          {/* Preview */}
+          {form.title&&(
+            <div style={{marginBottom:18,padding:"14px 16px",borderRadius:11,
+              background:`${typeColor[form.type]}0d`,border:`1px solid ${typeColor[form.type]}33`}}>
+              <div style={{fontSize:10,color:typeColor[form.type],fontWeight:800,letterSpacing:".08em",marginBottom:6}}>
+                PREVIEW — how users will see it:
+              </div>
+              <div style={{fontWeight:700,color:"#e8e8f2",fontSize:13,marginBottom:3}}>{form.title}</div>
+              <div style={{fontSize:12,color:C.muted}}>{form.body||"(message preview)"}</div>
+            </div>
+          )}
+
+          <Btn onClick={add} style={{width:"100%",justifyContent:"center",fontSize:15}} size="lg">
+            📣 Publish to All Users Now
+          </Btn>
+          <p style={{fontSize:11,color:C.muted,marginTop:10,textAlign:"center"}}>
+            Appears on every user's Overview page immediately
+          </p>
+        </Card>
+      )}
+
+      {/* PUBLISHED ANNOUNCEMENTS LIST */}
+      <div style={{fontSize:11,fontWeight:700,color:C.muted,letterSpacing:".08em",marginBottom:14,textTransform:"uppercase"}}>
+        Published ({announcements.length})
+      </div>
+
+      {announcements.length===0&&(
+        <Card style={{padding:44,textAlign:"center"}}>
+          <div style={{fontSize:44,marginBottom:12}}>📭</div>
+          <p style={{color:"#e8e8f2",fontWeight:700,marginBottom:6}}>No announcements published yet</p>
+          <p style={{color:C.muted,fontSize:13}}>Use the form above to create your first announcement.<br/>It will appear on all user dashboards instantly.</p>
+        </Card>
+      )}
+
+      {announcements.map(p=>(
+        <Card key={p.id} style={{padding:20,marginBottom:12,borderLeft:`3px solid ${typeColor[p.type]||C.border}`}}>
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",flexWrap:"wrap",gap:10}}>
+            <div style={{flex:1}}>
+              <div style={{display:"flex",alignItems:"center",gap:9,marginBottom:8}}>
+                <span style={{fontSize:12,fontWeight:800,color:typeColor[p.type],
+                  background:`${typeColor[p.type]}18`,border:`1px solid ${typeColor[p.type]}40`,
+                  borderRadius:20,padding:"3px 12px",letterSpacing:".06em"}}>
+                  {typeIcon[p.type]} {p.type.toUpperCase()}
+                </span>
+                <span style={{fontSize:11,color:C.muted}}>{p.date}</span>
+              </div>
+              <div style={{fontWeight:800,color:"#e8e8f2",fontSize:14,marginBottom:5}}>{p.title}</div>
+              <div style={{color:C.muted,fontSize:13,lineHeight:1.6}}>{p.body}</div>
+            </div>
+            <button onClick={()=>{ if(window.confirm("Delete this announcement?")) setAnnouncements(x=>x.filter(a=>a.id!==p.id)); }}
+              style={{background:"rgba(239,68,68,.1)",border:"1px solid rgba(239,68,68,.2)",
+                borderRadius:8,padding:"7px 14px",color:"#f87171",fontSize:12,fontWeight:700,
+                cursor:"pointer",flexShrink:0,whiteSpace:"nowrap"}}>
+              🗑 Delete
+            </button>
+          </div>
+        </Card>
+      ))}
+    </div>
+  );
+};
+
+// ═══════════════════════════════════════════════════════════════
+//  ROOT
+// ═══════════════════════════════════════════════════════════════
+function App() {
+  // Restore session on page refresh
+  const savedScreen = sessionStorage.getItem("nx_screen")||"landing";
+  const savedName   = sessionStorage.getItem("nx_name")||"";
+  const savedEmail  = sessionStorage.getItem("nx_email")||"";
+
+  const [screen,setScreen]=useState(savedScreen);
+  const [userName,setUserName]=useState(savedName);
+  const [userEmail,setUserEmail]=useState(savedEmail);
+
+  const loginUser=(name,email="")=>{
+    const normEmail = (email||"").toLowerCase().trim();
+    setUserName(name);
+    setUserEmail(normEmail);
+    sessionStorage.setItem("nx_screen","user");
+    sessionStorage.setItem("nx_name",name);
+    sessionStorage.setItem("nx_email",normEmail);
+    // Create user record in Firebase if first time (never overwrites balance)
+    DB.addUser({
+      id:"USR-"+Date.now(),
+      name: name||(normEmail.split("@")[0]),
+      email: normEmail,
+      balance:0,
+      orders:0,
+      joined:today(),
+      status:"Active",
+    });
+    setScreen("user");
+  };
+  const loginAdmin=()=>{ sessionStorage.setItem("nx_screen","admin"); setScreen("admin"); };
+  const logout=()=>{
+    sessionStorage.clear();
+    setScreen("landing"); setUserName(""); setUserEmail("");
+  };
+
+  return (
+    <>
+      <GS/>
+      {screen==="landing"    && <Landing goLogin={()=>setScreen("login")} goSignup={()=>setScreen("signup")} goAdmin={()=>setScreen("adminlogin")}/>}
+      {screen==="signup"     && <Signup goLogin={()=>setScreen("login")} onSuccess={(n,e)=>loginUser(n,e)}/>}
+      {screen==="login"      && <Login goSignup={()=>setScreen("signup")} onUserLogin={(n,e)=>loginUser(n,e)} onAdminLogin={()=>setScreen("adminlogin")}/>}
+      {screen==="adminlogin" && <AdminLogin onAdminLogin={loginAdmin} goBack={()=>setScreen("landing")}/>}
+      {screen==="user"       && <UserDash userName={userName||"User"} userEmail={userEmail} onLogout={logout}/>}
+      {screen==="admin"      && <AdminDash onLogout={logout}/>}
+    </>
+  );
+}
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(React.createElement(App));
+  </script>
+</body>
+</html>
