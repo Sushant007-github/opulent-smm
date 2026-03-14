@@ -174,7 +174,11 @@ const FIREBASE_CONFIG = {
   messagingSenderId: "204100385620",
   appId:             "1:204100385620:web:8b2942518dc6cb9bf6e6c1",
 };
-const FIREBASE_LIVE = true; // Set true after pasting real config above
+const FIREBASE_LIVE = true;
+// ─── Firestore Collections Used ───────────────────────────
+// wallets, deposits, orders, users, transactions, config,
+// services, tickets, refills, notifications, _test
+// ──────────────────────────────────────────────────────────
 
 // ─── Firebase init ───────────────────────────────────────────
 const waitForFirebase = () => new Promise((resolve, reject) => {
@@ -334,6 +338,19 @@ const DB = {
     getFS().then(fs=>{ if(fs) fs.collection("deposits").doc(id).set({status},{merge:true}).catch(console.error); });
   },
 
+  async pushNotification(userEmail, type, title, body, action=""){
+    if(!FIREBASE_LIVE||!userEmail) return;
+    try{
+      const fs=await getFS(); if(!fs) return;
+      const id="NOTIF-"+Date.now();
+      await fs.collection("notifications").doc(id).set({
+        id, userEmail:userEmail.toLowerCase().trim(),
+        type, title, body, action,
+        date:today(), createdAt:Date.now(), read:false
+      });
+    }catch(e){ console.error("Notif failed:",e); }
+  },
+
   async getBalanceFromFirebase(email){
     if(!FIREBASE_LIVE || !email) return 0;
     try{
@@ -348,7 +365,8 @@ const DB = {
   // ── Transactions ──────────────────────────────────────────────
   getTxns(email){ return this._get(this.K.txns).filter(t=>!email||t.email===email); },
   addTxn(txn){
-    getFS().then(fs=>{ if(fs) fs.collection("transactions").add(txn).catch(console.error); });
+    const withTs = {...txn, createdAt: txn.createdAt||Date.now()};
+    getFS().then(fs=>{ if(fs) fs.collection("transactions").add(withTs).catch(console.error); });
   },
 
   // ── Announcements ─────────────────────────────────────────────
@@ -638,7 +656,7 @@ const Logo = () => (
 const Divider = () => <div style={{height:1,background:C.border,margin:"6px 0"}}/>;
 
 // ─── Sidebar Nav Item ─────────────────────────────────────────
-const NavItem = ({ item, active, onClick }) => {
+const NavItem = ({ item, active, onClick, badge=0 }) => {
   const [h,setH]=useState(false);
   return (
     <button onClick={onClick} onMouseEnter={()=>setH(true)} onMouseLeave={()=>setH(false)}
@@ -647,9 +665,10 @@ const NavItem = ({ item, active, onClick }) => {
         background:active?"linear-gradient(135deg,rgba(124,58,237,.25),rgba(168,85,247,.12))":h?"rgba(255,255,255,.04)":"transparent",
         borderLeft:`2px solid ${active?"#7c3aed":"transparent"}`,
         color:active?"#c4b5fd":h?"#a0a0b8":C.muted,
-        fontSize:13,fontWeight:active?700:500,cursor:"pointer",transition:"all .18s",textAlign:"left" }}>
+        fontSize:13,fontWeight:active?700:500,cursor:"pointer",transition:"all .18s",textAlign:"left",position:"relative" }}>
       <span style={{fontSize:15,opacity:active?1:.6}}>{item.icon}</span>
-      {item.label}
+      <span style={{flex:1}}>{item.label}</span>
+      {badge>0&&<span className="notif-badge" style={{minWidth:18,height:18,borderRadius:9,background:"#ef4444",color:"#fff",fontSize:9,fontWeight:900,display:"flex",alignItems:"center",justifyContent:"center",padding:"0 5px"}}>{badge>9?"9+":badge}</span>}
     </button>
   );
 };
@@ -1315,7 +1334,19 @@ const UserDash = ({ userName, userEmail, onLogout }) => {
             if(newStatus!==order.status){
               await fs.collection("orders").where("id","==",order.id).get()
                 .then(snap=>snap.forEach(d=>d.ref.update({status:newStatus})));
-              if(newStatus==="Completed") Toast.success(`✅ Order ${order.id} completed!`);
+              if(newStatus==="Completed"){
+                Toast.success(`✅ Order ${order.id} completed!`);
+                // Push notification
+                try{
+                  const nid="NOTIF-"+Date.now();
+                  await (await getFS())?.collection("notifications").doc(nid).set({
+                    id:nid,userEmail:(userEmail||"").toLowerCase().trim(),type:"order_completed",
+                    title:"✅ Order Completed!",
+                    body:`Your order for ${order.service} has been delivered successfully.`,
+                    date:today(),createdAt:Date.now(),read:false,action:"orders"
+                  });
+                }catch{}
+              }
             }
           }catch{}
         }
@@ -1385,7 +1416,7 @@ const UserDash = ({ userName, userEmail, onLogout }) => {
       case "wallet":    return <UserWallet balance={balance} txns={txns} userEmail={userEmail}/>;
       case "addfunds":  return <UserAddFunds balance={balance} setBalance={setBalanceSync} setPage={setPage} setTxns={addTxnSync} userName={userName} userEmail={userEmail}/>;
       case "services":  return <UserServices setPage={setPage}/>;
-      case "support":   return <UserSupport/>;
+      case "support":   return <UserSupport userEmail={userEmail} userName={userName}/>;
       case "settings":  return <UserProfile userName={userName} userEmail={userEmail} balance={balance} orders={orders} onLogout={onLogout}/>;
       default:          return <UserOverview orders={orders} balance={balance} setPage={setPage} userName={userName} announcements={announcements} userEmail={userEmail}/>;
     }
@@ -1441,6 +1472,97 @@ const UserDash = ({ userName, userEmail, onLogout }) => {
   );
 };
 
+
+// ─── Notification Bell ────────────────────────────────────────
+const NotifBell = ({ userEmail, setPage }) => {
+  const [notifs,setNotifs]=useState([]);
+  const [open,setOpen]=useState(false);
+  const [unread,setUnread]=useState(0);
+  const ref=useRef(null);
+
+  useEffect(()=>{
+    if(!userEmail) return;
+    const load=async()=>{
+      try{
+        const fs=await getFS(); if(!fs) return;
+        const snap=await fs.collection("notifications")
+          .where("userEmail","==",userEmail.toLowerCase().trim())
+          .get();
+        const list=snap.docs.map(d=>({id:d.id,...d.data()}))
+          .sort((a,b)=>(b.createdAt||0)-(a.createdAt||0))
+          .slice(0,20);
+        setNotifs(list);
+        setUnread(list.filter(n=>!n.read).length);
+      }catch{}
+    };
+    load();
+    const iv=setInterval(load,15000);
+    return()=>clearInterval(iv);
+  },[userEmail]);
+
+  const markRead=async()=>{
+    if(unread===0) return;
+    try{
+      const fs=await getFS(); if(!fs) return;
+      const batch=notifs.filter(n=>!n.read);
+      for(const n of batch){
+        await fs.collection("notifications").doc(n.id).update({read:true});
+      }
+      setNotifs(p=>p.map(n=>({...n,read:true})));
+      setUnread(0);
+    }catch{}
+  };
+
+  useEffect(()=>{
+    const handler=(e)=>{ if(ref.current&&!ref.current.contains(e.target)) setOpen(false); };
+    document.addEventListener("mousedown",handler);
+    return()=>document.removeEventListener("mousedown",handler);
+  },[]);
+
+  const typeIcon={deposit_approved:"💰",order_completed:"✅",order_cancelled:"❌",info:"ℹ️"};
+
+  return (
+    <div ref={ref} style={{position:"relative"}}>
+      <div onClick={()=>{ setOpen(o=>!o); if(!open) markRead(); }}
+        style={{width:38,height:38,borderRadius:10,background:"rgba(255,255,255,.05)",
+          border:`1px solid ${C.border}`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:17,cursor:"pointer"}}>
+        🔔
+        {unread>0&&<div style={{position:"absolute",top:-4,right:-4,minWidth:16,height:16,
+          borderRadius:8,background:"#ef4444",display:"flex",alignItems:"center",justifyContent:"center",
+          fontSize:9,fontWeight:900,color:"#fff",border:"2px solid #06060a",padding:"0 3px",animation:"popIn .3s ease"}}>{unread>9?"9+":unread}</div>}
+      </div>
+      {open&&(
+        <div style={{position:"absolute",right:0,top:46,width:320,maxHeight:400,overflowY:"auto",
+          background:"#09090f",border:"1px solid rgba(124,58,237,.35)",borderRadius:14,
+          boxShadow:"0 16px 48px rgba(0,0,0,.6)",zIndex:500}}>
+          <div style={{padding:"14px 16px",borderBottom:`1px solid ${C.border}`,display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+            <span style={{fontWeight:800,color:"#e8e8f2",fontSize:14}}>🔔 Notifications</span>
+            {unread>0&&<span style={{fontSize:11,color:C.muted}}>{unread} unread</span>}
+          </div>
+          {notifs.length===0?(
+            <div style={{padding:30,textAlign:"center",color:C.muted,fontSize:13}}>No notifications yet</div>
+          ):notifs.map(n=>(
+            <div key={n.id} style={{padding:"12px 16px",borderBottom:`1px solid ${C.border}`,
+              background:n.read?"transparent":"rgba(124,58,237,.06)",
+              cursor:"pointer",transition:"background .15s"}}
+              onClick={()=>{ setOpen(false); if(n.action) setPage(n.action); }}>
+              <div style={{display:"flex",gap:10,alignItems:"flex-start"}}>
+                <span style={{fontSize:18,flexShrink:0}}>{typeIcon[n.type]||"📢"}</span>
+                <div style={{flex:1}}>
+                  <div style={{fontWeight:n.read?500:700,color:"#e8e8f2",fontSize:13,marginBottom:2}}>{n.title}</div>
+                  <div style={{fontSize:11,color:C.muted,lineHeight:1.4}}>{n.body}</div>
+                  <div style={{fontSize:10,color:C.muted,marginTop:4}}>{n.date}</div>
+                </div>
+                {!n.read&&<div style={{width:7,height:7,borderRadius:"50%",background:"#7c3aed",flexShrink:0,marginTop:3}}/>}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
 // ─── User: Overview ───────────────────────────────────────────
 const UserOverview = ({ orders, balance, setPage, userName, announcements, userEmail="" }) => {
   const comp=orders.filter(o=>o.status==="Completed").length;
@@ -1456,13 +1578,7 @@ const UserOverview = ({ orders, balance, setPage, userName, announcements, userE
         </div>
         <div style={{display:"flex",gap:10,alignItems:"center"}}>
           {/* Notification bell */}
-          <div style={{position:"relative",cursor:"pointer"}}>
-            <div style={{width:38,height:38,borderRadius:10,background:"rgba(255,255,255,.05)",
-              border:`1px solid ${C.border}`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:17}}>🔔</div>
-            {announcements.length>0&&<div style={{position:"absolute",top:-4,right:-4,width:16,height:16,
-              borderRadius:"50%",background:"#ef4444",display:"flex",alignItems:"center",justifyContent:"center",
-              fontSize:9,fontWeight:900,color:"#fff",border:"2px solid #06060a"}}>{announcements.length}</div>}
-          </div>
+          <NotifBell userEmail={userEmail} setPage={setPage}/>
           <Btn onClick={()=>setPage("neworder")}>✦ New Order</Btn>
         </div>
       </div>
@@ -1549,6 +1665,7 @@ const UserOverview = ({ orders, balance, setPage, userName, announcements, userE
           {icon:"💬",label:"Support",   sub:"Chat with our team",          page:"support", grad:C.gGr},
           {icon:"◇",label:"Services",  sub:"Browse all services",          page:"services",grad:"linear-gradient(135deg,#6366f1,#8b5cf6)"},
           {icon:"👤",label:"Profile",   sub:"Account settings & referral", page:"settings",grad:"linear-gradient(135deg,#0f766e,#14b8a6)"},
+          {icon:"🎫",label:"Support",   sub:"Tickets & help center",         page:"support", grad:"linear-gradient(135deg,#7c3aed,#6d28d9)"},
         ].map(q=>(
           <Card key={q.label} onClick={()=>setPage(q.page)} style={{padding:18,cursor:"pointer",display:"flex",alignItems:"center",gap:13,transition:"transform .18s,box-shadow .18s"}}
             onMouseEnter={e=>{ e.currentTarget.style.transform="translateY(-2px)"; e.currentTarget.style.boxShadow="0 8px 30px rgba(0,0,0,.4)"; }}
@@ -1900,8 +2017,9 @@ const UserNewOrder = ({ orders, addOrderSync, balance, setBalance, setPage }) =>
 // ─── User: My Orders ──────────────────────────────────────────
 const UserOrders = ({ orders, setOrders, userEmail="" }) => {
   const cancel=async(id)=>{
+    if(!window.confirm("Cancel this order?")) return;
     DB.updateOrder(id,"Cancelled");
-    // Reload from Firebase to get accurate state
+    Toast.info("Order cancellation requested...");
     setTimeout(async()=>{
       const all = await DB.getOrdersFromFirebase();
       const norm = (userEmail||"").toLowerCase().trim();
@@ -1910,7 +2028,9 @@ const UserOrders = ({ orders, setOrders, userEmail="" }) => {
   };
   const [view,setView]=useState("cards");
   const [filter,setFilter]=useState("All");
-  const filtered=filter==="All"?orders:orders.filter(o=>o.status===filter);
+  const [search,setSearch]=useState("");
+  const filtered=(filter==="All"?orders:orders.filter(o=>o.status===filter))
+    .filter(o=>!search||o.service?.toLowerCase().includes(search.toLowerCase())||o.id?.toLowerCase().includes(search.toLowerCase()));
   const pctMap={"Pending":5,"Processing":60,"Completed":100,"Cancelled":0,"Refunded":0};
   const colMap={"Pending":"#f59e0b","Processing":"#3b82f6","Completed":"#10b981","Cancelled":"#ef4444","Refunded":"#a855f7"};
 
@@ -2003,24 +2123,34 @@ const UserOrders = ({ orders, setOrders, userEmail="" }) => {
 // ─── User: Wallet ─────────────────────────────────────────────
 const UserWallet = ({ balance, txns=[], userEmail="" }) => {
   const [myDeps,setMyDeps]=useState([]);
+  const [myTxns,setMyTxns]=useState([]);
   const [walletTab,setWalletTab]=useState("deposits");
+  const [txnLoading,setTxnLoading]=useState(true);
 
   useEffect(()=>{
     let mounted = true;
-    // Load from Firebase - filter ONLY this user's deposits
-    const load = ()=>{
+    const loadDeps = ()=>{
       DB.getDepositRequestsFromFirebase().then(all=>{
-        if(mounted){
-          // Strict filter - only show deposits where email exactly matches
-          const myEmail = (userEmail||"").toLowerCase().trim();
-          const mine = all.filter(d=> d.email === myEmail);
-          console.log("👤 My deposits for", myEmail, ":", mine.length, "of", all.length);
-          setMyDeps(mine);
-        }
+        if(!mounted) return;
+        const myEmail = (userEmail||"").toLowerCase().trim();
+        setMyDeps(all.filter(d=> d.email === myEmail));
       });
     };
-    load();
-    const iv = setInterval(load, 5000);
+    const loadTxns = async()=>{
+      try{
+        const fs=await getFS(); if(!fs){setTxnLoading(false);return;}
+        const snap=await fs.collection("transactions")
+          .where("email","==",userEmail.toLowerCase().trim())
+          .get();
+        if(mounted){
+          const list=snap.docs.map(d=>d.data()).sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
+          setMyTxns(list); setTxnLoading(false);
+        }
+      }catch(e){ if(mounted) setTxnLoading(false); }
+    };
+    loadDeps();
+    loadTxns();
+    const iv = setInterval(loadDeps, 5000);
     return ()=>{ mounted=false; clearInterval(iv); };
   },[userEmail]);
 
@@ -2032,14 +2162,14 @@ const UserWallet = ({ balance, txns=[], userEmail="" }) => {
     <PgH title="Wallet" sub="Balance & transaction history"/>
     <div className="stat-grid" style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:16,marginBottom:24}}>
       <StatCard icon="◈" label="Current Balance"  value={fmt(balance)} grad={C.gG}/>
-      <StatCard icon="⬆" label="Total Deposited"  value={fmt(txns.filter(t=>t.amount>0).reduce((s,t)=>s+t.amount,0)||0)} grad={C.gP}/>
-      <StatCard icon="⬇" label="Total Spent"      value={fmt(Math.abs(txns.filter(t=>t.amount<0&&t.type==="Order Payment").reduce((s,t)=>s+t.amount,0)||0))} grad={C.gB}/>
-      <StatCard icon="🔄" label="Refunds"          value={fmt(txns.filter(t=>t.type==="Refund").reduce((s,t)=>s+t.amount,0)||0)} grad={C.gGr}/>
+      <StatCard icon="⬆" label="Total Deposited"  value={fmt(myDeps.filter(d=>d.status==="approved").reduce((s,d)=>s+Number(d.amount||0),0))} grad={C.gP}/>
+      <StatCard icon="📥" label="Pending Deposits" value={fmt(myDeps.filter(d=>d.status==="pending").reduce((s,d)=>s+Number(d.amount||0),0))} grad={C.gB}/>
+      <StatCard icon="📋" label="Total Deposits"   value={myDeps.length} grad={C.gGr}/>
     </div>
     <Card style={{padding:22}}>
       {/* Tab switcher */}
       <div style={{display:"flex",gap:8,marginBottom:16}}>
-        {[["txns","💳 Transactions"],["deposits","📥 My Deposits"]].map(([t,l])=>(
+        {[["deposits","📥 Deposits"],["txns","💳 Transactions"],["history","📊 History"]].map(([t,l])=>(
           <button key={t} onClick={()=>setWalletTab(t)}
             style={{padding:"7px 16px",borderRadius:20,fontSize:12,fontWeight:700,cursor:"pointer",
               background:walletTab===t?C.gP:"rgba(255,255,255,.06)",
@@ -2072,25 +2202,45 @@ const UserWallet = ({ balance, txns=[], userEmail="" }) => {
           ))}
         </div>
       )}
-      {walletTab==="txns"&&<h3 style={{fontWeight:800,fontSize:15,color:"#e8e8f2",marginBottom:18}}>Transaction History</h3>}
-      {walletTab==="txns"&&<table style={{width:"100%",borderCollapse:"collapse",fontSize:12}}>
-        <thead>
-          <tr style={{borderBottom:`1px solid ${C.border}`}}>
+      {walletTab==="txns"&&(
+        txnLoading?<CardSkel/>:
+        myTxns.length===0?<div style={{textAlign:"center",color:C.muted,padding:30,fontSize:13}}>
+          <div style={{fontSize:36,marginBottom:8}}>📊</div>No transactions yet
+        </div>:
+        <table style={{width:"100%",borderCollapse:"collapse",fontSize:12}}>
+          <thead><tr style={{borderBottom:`1px solid ${C.border}`}}>
             {["ID","Type","Amount","Date"].map(h=><th key={h} style={{padding:"9px 12px",textAlign:"left",color:C.muted,fontWeight:700,fontSize:10,letterSpacing:".05em"}}>{h}</th>)}
-          </tr>
-        </thead>
-        <tbody>
-          {txns.length===0?<tr><td colSpan={4} style={{padding:30,textAlign:"center",color:C.muted}}>No transactions yet</td></tr>:
-          txns.map((t,i)=>(
-            <tr key={t.id} style={{borderBottom:`1px solid rgba(255,255,255,.04)`,background:i%2?"rgba(255,255,255,.01)":"transparent"}}>
-              <td style={{padding:"11px 12px",color:C.purpleL,fontFamily:"monospace",fontWeight:700,fontSize:11}}>{t.id}</td>
-              <td style={{padding:"11px 12px",color:"#c4b5fd"}}>{t.type}</td>
-              <td style={{padding:"11px 12px",fontWeight:800,fontSize:13,color:t.amount>0?"#34d399":"#f87171"}}>{t.amount>0?"+":""}{fmt(Math.abs(t.amount))}</td>
-              <td style={{padding:"11px 12px",color:C.muted}}>{t.date}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>}
+          </tr></thead>
+          <tbody>
+            {myTxns.map((t,i)=>(
+              <tr key={t.id||i} style={{borderBottom:`1px solid rgba(255,255,255,.04)`,background:i%2?"rgba(255,255,255,.01)":"transparent"}}>
+                <td style={{padding:"11px 12px",color:C.purpleL,fontFamily:"monospace",fontWeight:700,fontSize:11}}>{t.id}</td>
+                <td style={{padding:"11px 12px",color:"#c4b5fd"}}>{t.type}</td>
+                <td style={{padding:"11px 12px",fontWeight:800,fontSize:13,color:(t.amount||0)>0?"#34d399":"#f87171"}}>{(t.amount||0)>0?"+":""}{fmt(Math.abs(t.amount||0))}</td>
+                <td style={{padding:"11px 12px",color:C.muted}}>{t.date}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+      {walletTab==="history"&&(
+        <div>
+          <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(160px,1fr))",gap:12,marginBottom:20}}>
+            {[
+              {l:"Total Deposited",v:fmt(myDeps.filter(d=>d.status==="approved").reduce((s,d)=>s+Number(d.amount||0),0)),c:"#34d399"},
+              {l:"Pending Deposits",v:fmt(myDeps.filter(d=>d.status==="pending").reduce((s,d)=>s+Number(d.amount||0),0)),c:"#fbbf24"},
+              {l:"Total Deposits",v:myDeps.length,c:C.purpleL},
+              {l:"Approved",v:myDeps.filter(d=>d.status==="approved").length,c:"#34d399"},
+            ].map(s=>(
+              <div key={s.l} style={{background:"rgba(255,255,255,.04)",borderRadius:12,padding:"14px 16px",textAlign:"center"}}>
+                <div style={{fontSize:20,fontWeight:900,color:s.c,marginBottom:4}}>{s.v}</div>
+                <div style={{fontSize:11,color:C.muted}}>{s.l}</div>
+              </div>
+            ))}
+          </div>
+          <p style={{color:C.muted,fontSize:12,textAlign:"center"}}>Full deposit history is shown in the Deposits tab.</p>
+        </div>
+      )}
     </Card>
   </div>
   );
@@ -2175,13 +2325,23 @@ const PaymentUTRScreen = ({ amount, method, qrUrl, userName, userEmail, onBack, 
   const submitUTR = async () => {
     const u = utr.trim();
     if(!u){ setErr("Please enter your UTR / Transaction ID"); return; }
-    if(u.length < 6){ setErr("UTR must be at least 6 characters"); return; }
+    if(u.length < 10 || u.length > 16){ setErr("UTR must be 10–16 characters. Check your payment app for the correct reference number."); return; }
+    if(!/^[A-Za-z0-9]+$/.test(u)){ setErr("UTR must contain only letters and numbers."); return; }
     setSubmitting(true); setErr("");
+    // 🛡️ Anti-spam: 5-minute cooldown per user
+    const cooldownKey = "nx_dep_ts_" + (userEmail||"").replace(/[@.]/g,"_");
+    const lastDep = parseInt(sessionStorage.getItem(cooldownKey)||"0");
+    if(Date.now() - lastDep < 5*60*1000){
+      setSubmitting(false);
+      const wait = Math.ceil((5*60*1000-(Date.now()-lastDep))/60000);
+      setErr(`⏳ Please wait ${wait} more minute${wait!==1?"s":""} before submitting another deposit.`);
+      return;
+    }
     // 🛡️ Duplicate UTR fraud detection
     const alreadyUsed = await UTRGuard.isUsed(u);
     if(alreadyUsed){
       setSubmitting(false);
-      setErr("❌ This UTR has already been submitted. Each transaction can only be used once. Contact support if you believe this is an error.");
+      setErr("❌ This UTR has already been used. Each transaction can only be submitted once. Contact support if this is an error.");
       return;
     }
     const req = {
@@ -2199,6 +2359,8 @@ const PaymentUTRScreen = ({ amount, method, qrUrl, userName, userEmail, onBack, 
       await DB.addDepositRequest(req);
       setSubmitting(false);
       setSubmitted(true);
+      const cooldownKey2 = "nx_dep_ts_" + (userEmail||"").replace(/[@.]/g,"_");
+      sessionStorage.setItem(cooldownKey2, String(Date.now()));
     } catch(e) {
       setSubmitting(false);
       console.error("Submit UTR failed:", e);
@@ -2520,34 +2682,76 @@ const UserServices = ({ setPage }) => {
 };
 
 // ─── User: Support ────────────────────────────────────────────
-const UserSupport = () => {
-  const [tab,setTab]=useState("chat");
-  const [chat,setChat]=useState([{from:"bot",text:"Hi! 👋 How can we help you today? We typically reply in under 5 minutes."}]);
-  const [inp,setInp]=useState("");
-  const [subj,setSubj]=useState("");
-  const [msg,setMsg]=useState("");
-  const [sent,setSent]=useState(false);
-  const chatEnd=useRef(null);
+const UserSupport = ({ userEmail="", userName="" }) => {
+  const [tab,setTab]=useState("tickets");
+  const [tickets,setTickets]=useState([]);
+  const [loading,setLoading]=useState(true);
+  const [form,setForm]=useState({subject:"",category:"Order Issue",message:""});
+  const [submitting,setSubmitting]=useState(false);
+  const [viewTicket,setViewTicket]=useState(null);
+  const [reply,setReply]=useState("");
+  const F=(k,v)=>setForm(f=>({...f,[k]:v}));
+  const CATS=["Order Issue","Payment Issue","Refill Request","Service Problem","General Query"];
 
-  const send=()=>{
-    if(!inp.trim()) return;
-    setChat(c=>[...c,{from:"user",text:inp}]); setInp("");
-    setTimeout(()=>{
-      const r=["Got it! Let me check that for you 🔍","A support agent will be with you shortly ⚡","Please share your Order ID for faster help!"];
-      setChat(c=>[...c,{from:"bot",text:r[Math.floor(Math.random()*3)]}]);
-    },900);
+  const loadTickets=async()=>{
+    setLoading(true);
+    try{
+      const fs=await getFS(); if(!fs){setLoading(false);return;}
+      const snap=await fs.collection("tickets")
+        .where("userEmail","==",userEmail.toLowerCase().trim())
+        .get();
+      const list=snap.docs.map(d=>({id:d.id,...d.data()}))
+        .sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
+      setTickets(list);
+    }catch(e){console.error(e);}
+    setLoading(false);
   };
 
-  useEffect(()=>{ chatEnd.current?.scrollIntoView({behavior:"smooth"}); },[chat]);
+  useEffect(()=>{ if(userEmail) loadTickets(); },[userEmail]);
+
+  const submit=async()=>{
+    if(!form.subject.trim()||!form.message.trim()){Toast.error("Please fill subject and message");return;}
+    setSubmitting(true);
+    try{
+      const fs=await getFS(); if(!fs) throw new Error("No connection");
+      const tid="TKT-"+Date.now();
+      await fs.collection("tickets").doc(tid).set({
+        id:tid, userEmail:userEmail.toLowerCase().trim(), userName,
+        subject:sanitize(form.subject), category:form.category,
+        message:sanitize(form.message),
+        status:"Open", createdAt:Date.now(), date:today(),
+        replies:[]
+      });
+      setForm({subject:"",category:"Order Issue",message:""});
+      Toast.success("✅ Ticket submitted! We'll reply within 1 hour.");
+      loadTickets(); setTab("tickets");
+    }catch(e){Toast.error("Failed: "+e.message);}
+    setSubmitting(false);
+  };
+
+  const sendReply=async()=>{
+    if(!reply.trim()||!viewTicket) return;
+    try{
+      const fs=await getFS(); if(!fs) return;
+      const newReplies=[...(viewTicket.replies||[]),{from:"user",text:sanitize(reply),ts:Date.now()}];
+      await fs.collection("tickets").doc(viewTicket.id).update({replies:newReplies,status:"Awaiting Reply"});
+      setViewTicket({...viewTicket,replies:newReplies});
+      setReply(""); Toast.success("Reply sent!");
+      loadTickets();
+    }catch(e){Toast.error("Failed: "+e.message);}
+  };
+
+  const statCol={Open:"#60a5fa","Awaiting Reply":"#fbbf24",Resolved:"#34d399",Closed:"#6b7280"};
 
   return (
     <div className="page-enter" style={{animation:"fadeIn .4s ease"}}>
-      <PgH title="Support Center" sub="We're here 24/7 to help"/>
+      <PgH title="Support Center" sub="Get help with orders, payments and more"
+        action={<Btn onClick={()=>setTab("new")}>+ New Ticket</Btn>}/>
       <div style={{display:"flex",gap:0,marginBottom:24,background:"rgba(255,255,255,.03)",
         borderRadius:12,padding:5,width:"fit-content",border:`1px solid ${C.border}`}}>
-        {[{id:"chat",i:"💬",l:"Live Chat"},{id:"ticket",i:"🎫",l:"Open Ticket"},{id:"faq",i:"❓",l:"FAQ"}].map(t=>(
+        {[{id:"tickets",i:"🎫",l:"My Tickets"},{id:"new",i:"✦",l:"New Ticket"},{id:"contact",i:"📱",l:"Contact"},{id:"faq",i:"❓",l:"FAQ"}].map(t=>(
           <button key={t.id} onClick={()=>setTab(t.id)} style={{display:"flex",alignItems:"center",gap:6,
-            padding:"9px 20px",borderRadius:9,border:"none",
+            padding:"9px 18px",borderRadius:9,border:"none",
             background:tab===t.id?"rgba(124,58,237,.2)":"transparent",
             color:tab===t.id?"#c4b5fd":C.muted,fontWeight:tab===t.id?700:500,fontSize:13,cursor:"pointer"}}>
             {t.i} {t.l}
@@ -2555,77 +2759,141 @@ const UserSupport = () => {
         ))}
       </div>
 
-      {tab==="chat"&&(
-        <div className="two-col" style={{display:"grid",gridTemplateColumns:"1fr 280px",gap:18}}>
-          <Card style={{display:"flex",flexDirection:"column",height:500,overflow:"hidden"}}>
-            <div style={{padding:"14px 18px",borderBottom:`1px solid ${C.border}`,display:"flex",alignItems:"center",gap:10}}>
-              <div style={{width:9,height:9,borderRadius:"50%",background:"#34d399",boxShadow:"0 0 8px #34d399",animation:"pulse 2s ease infinite"}}/>
-              <span style={{fontWeight:700,color:"#e8e8f2",fontSize:14}}>Live Support</span>
-              <span style={{fontSize:11,color:C.muted,marginLeft:"auto"}}>⚡ &lt;5 min response</span>
-            </div>
-            <div style={{flex:1,overflowY:"auto",padding:18,display:"flex",flexDirection:"column",gap:11}}>
-              {chat.map((m,i)=>(
-                <div key={i} style={{display:"flex",justifyContent:m.from==="user"?"flex-end":"flex-start",alignItems:"flex-end",gap:8}}>
-                  {m.from==="bot"&&<div style={{width:26,height:26,borderRadius:"50%",background:C.gP,display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,flexShrink:0}}>✦</div>}
-                  <div style={{maxWidth:"76%",padding:"10px 14px",fontSize:13,lineHeight:1.55,
-                    borderRadius:m.from==="user"?"16px 16px 4px 16px":"16px 16px 16px 4px",
-                    background:m.from==="user"?C.gP:"rgba(255,255,255,.07)",color:"#e8e8f2"}}>{m.text}</div>
-                </div>
+      {/* TICKET LIST */}
+      {tab==="tickets"&&(
+        <div>
+          {loading?<div style={{display:"flex",flexDirection:"column",gap:10}}>{[1,2].map(i=><CardSkel key={i}/>)}</div>:
+          tickets.length===0?(
+            <Card style={{padding:40,textAlign:"center"}}>
+              <div style={{fontSize:44,marginBottom:12}}>🎫</div>
+              <p style={{color:"#e8e8f2",fontWeight:700,marginBottom:6}}>No tickets yet</p>
+              <p style={{color:C.muted,fontSize:13,marginBottom:16}}>Need help? Create a support ticket and we'll respond within 1 hour.</p>
+              <Btn onClick={()=>setTab("new")}>Create Your First Ticket →</Btn>
+            </Card>
+          ):(
+            <div style={{display:"flex",flexDirection:"column",gap:12}}>
+              {tickets.map(t=>(
+                <Card key={t.id} style={{padding:18,cursor:"pointer",border:`1px solid ${viewTicket?.id===t.id?"rgba(124,58,237,.4)":C.border}`}}
+                  onClick={()=>setViewTicket(t)}>
+                  <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",flexWrap:"wrap",gap:10}}>
+                    <div style={{flex:1}}>
+                      <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:4}}>
+                        <span style={{fontWeight:800,color:"#e8e8f2",fontSize:14}}>{t.subject}</span>
+                        <span style={{fontSize:10,padding:"2px 8px",borderRadius:20,background:`${statCol[t.status]||"#888"}20`,color:statCol[t.status]||"#888",fontWeight:700,border:`1px solid ${statCol[t.status]||"#888"}40`}}>{t.status}</span>
+                      </div>
+                      <div style={{fontSize:11,color:C.muted}}>{t.category} · {t.date} · {(t.replies||[]).length} replies</div>
+                    </div>
+                    <span style={{color:C.purpleL,fontSize:12}}>View →</span>
+                  </div>
+                </Card>
               ))}
-              <div ref={chatEnd}/>
             </div>
-            <div style={{padding:14,borderTop:`1px solid ${C.border}`,display:"flex",gap:9}}>
-              <input value={inp} onChange={e=>setInp(e.target.value)} onKeyDown={e=>e.key==="Enter"&&send()}
-                placeholder="Type message..." style={{flex:1,background:"rgba(255,255,255,.04)",
-                  border:`1px solid ${C.border}`,borderRadius:10,padding:"9px 13px",color:C.text,fontSize:13}}/>
-              <Btn size="sm" onClick={send}>→</Btn>
+          )}
+          {/* Ticket detail panel */}
+          {viewTicket&&(
+            <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,.75)",zIndex:1000,display:"flex",alignItems:"flex-end",justifyContent:"center",padding:0}}
+              onClick={()=>setViewTicket(null)}>
+              <div onClick={e=>e.stopPropagation()} style={{width:"100%",maxWidth:640,maxHeight:"85vh",display:"flex",flexDirection:"column",background:"#09090f",borderRadius:"20px 20px 0 0",border:"1px solid rgba(124,58,237,.3)"}}>
+                <div style={{padding:"18px 22px",borderBottom:`1px solid ${C.border}`,display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+                  <div>
+                    <div style={{fontWeight:800,color:"#e8e8f2",fontSize:15}}>{viewTicket.subject}</div>
+                    <div style={{fontSize:11,color:C.muted,marginTop:2}}>{viewTicket.category} · {viewTicket.date}</div>
+                  </div>
+                  <button onClick={()=>setViewTicket(null)} style={{background:"rgba(255,255,255,.06)",border:"none",borderRadius:8,padding:"6px 12px",color:C.muted,cursor:"pointer"}}>✕</button>
+                </div>
+                <div style={{flex:1,overflowY:"auto",padding:18,display:"flex",flexDirection:"column",gap:12}}>
+                  {/* Original message */}
+                  <div style={{background:"rgba(124,58,237,.08)",borderRadius:12,padding:"12px 16px"}}>
+                    <div style={{fontSize:10,color:C.purpleL,fontWeight:700,marginBottom:6}}>YOUR MESSAGE</div>
+                    <div style={{fontSize:13,color:"#d4d4e8",lineHeight:1.6}}>{viewTicket.message}</div>
+                  </div>
+                  {/* Replies */}
+                  {(viewTicket.replies||[]).map((r,i)=>(
+                    <div key={i} style={{
+                      background:r.from==="admin"?"rgba(212,160,23,.08)":"rgba(255,255,255,.04)",
+                      border:`1px solid ${r.from==="admin"?"rgba(212,160,23,.2)":C.border}`,
+                      borderRadius:12,padding:"12px 16px"}}>
+                      <div style={{fontSize:10,fontWeight:700,marginBottom:6,color:r.from==="admin"?C.goldL:C.purpleL}}>
+                        {r.from==="admin"?"🔐 ADMIN REPLY":"YOU"} · {new Date(r.ts).toLocaleString("en-IN",{dateStyle:"short",timeStyle:"short"})}
+                      </div>
+                      <div style={{fontSize:13,color:"#d4d4e8",lineHeight:1.6}}>{r.text}</div>
+                    </div>
+                  ))}
+                </div>
+                {viewTicket.status!=="Closed"&&(
+                  <div style={{padding:14,borderTop:`1px solid ${C.border}`,display:"flex",gap:9}}>
+                    <input value={reply} onChange={e=>setReply(e.target.value)}
+                      onKeyDown={e=>e.key==="Enter"&&sendReply()}
+                      placeholder="Type a reply..." style={{flex:1,background:"rgba(255,255,255,.04)",
+                        border:`1px solid ${C.border}`,borderRadius:10,padding:"10px 13px",color:C.text,fontSize:13}}/>
+                    <Btn size="sm" onClick={sendReply}>Send →</Btn>
+                  </div>
+                )}
+              </div>
             </div>
-          </Card>
-          <div style={{display:"flex",flexDirection:"column",gap:14}}>
-            {[
-              {i:"📱",t:"WhatsApp",s:"Fastest · Usually replies in mins",col:C.gGr,
-               action:()=>window.open(`https://wa.me/${WHATSAPP_NUM}?text=Hi%20Nexus%20SMM%2C%20I%20need%20help%20with%20my%20order`,"_blank")},
-              {i:"📧",t:"Email Support",s:SUPPORT_EMAIL,col:C.gB,
-               action:()=>window.open(`mailto:${SUPPORT_EMAIL}?subject=Support%20Request%20-%20Nexus%20SMM&body=Hi%2C%20I%20need%20help%20with...`,"_blank")},
-            ].map(c=>(
-              <Card key={c.t} style={{padding:20,cursor:"pointer"}} onClick={c.action}>
-                <div style={{fontSize:30,marginBottom:10}}>{c.i}</div>
-                <div style={{fontWeight:800,color:"#e8e8f2",marginBottom:5,fontSize:14}}>{c.t}</div>
-                <div style={{fontSize:12,color:C.muted,marginBottom:14}}>{c.s}</div>
-                <Btn v="ghost" size="sm" onClick={c.action}>{c.t==="WhatsApp"?"Open WhatsApp →":"Send Email →"}</Btn>
-              </Card>
-            ))}
-          </div>
+          )}
         </div>
       )}
 
-      {tab==="ticket"&&(
-        <div style={{maxWidth:540}}>
-          {sent&&<div style={{background:"rgba(16,185,129,.1)",border:"1px solid rgba(16,185,129,.3)",borderRadius:11,padding:"13px 16px",marginBottom:18,color:"#34d399",fontWeight:700}}>✓ Ticket submitted! We'll reply within 1 hour.</div>}
-          <Card style={{padding:26}}>
-            <h3 style={{fontWeight:800,fontSize:16,color:"#e8e8f2",marginBottom:20}}>Open a Ticket</h3>
-            <Inp label="Subject" value={subj} onChange={e=>setSubj(e.target.value)} placeholder="e.g. Order not delivered" icon="📝"/>
+      {/* NEW TICKET */}
+      {tab==="new"&&(
+        <div style={{maxWidth:560}}>
+          <Card glow style={{padding:26}}>
+            <h3 style={{fontWeight:800,fontSize:16,color:"#e8e8f2",marginBottom:20}}>✦ Create Support Ticket</h3>
             <div style={{marginBottom:16}}>
-              <label style={{display:"block",fontSize:11,fontWeight:700,color:C.muted,letterSpacing:".07em",marginBottom:7,textTransform:"uppercase"}}>Message</label>
-              <textarea value={msg} onChange={e=>setMsg(e.target.value)} rows={5}
-                placeholder="Describe your issue in detail..."
-                style={{width:"100%",background:"rgba(255,255,255,.04)",border:`1px solid ${C.border}`,
-                  borderRadius:11,padding:"11px 14px",color:C.text,fontSize:13,resize:"vertical",fontFamily:"inherit"}}/>
+              <label style={{display:"block",fontSize:11,fontWeight:700,color:C.muted,letterSpacing:".07em",marginBottom:8,textTransform:"uppercase"}}>Category</label>
+              <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
+                {CATS.map(c=>(
+                  <button key={c} onClick={()=>F("category",c)} style={{padding:"7px 14px",borderRadius:20,border:`1px solid ${form.category===c?"rgba(124,58,237,.6)":C.border}`,background:form.category===c?"rgba(124,58,237,.15)":"transparent",color:form.category===c?"#c4b5fd":C.muted,fontSize:11,fontWeight:700,cursor:"pointer"}}>
+                    {c}
+                  </button>
+                ))}
+              </div>
             </div>
-            <Btn onClick={()=>{ if(subj&&msg){ setSent(true); setSubj(""); setMsg(""); }}} style={{width:"100%",justifyContent:"center"}}>Submit Ticket 🎫</Btn>
+            <Inp label="Subject" value={form.subject} onChange={e=>F("subject",e.target.value)} placeholder="Brief description of your issue" icon="📝"/>
+            <div style={{marginBottom:16}}>
+              <label style={{display:"block",fontSize:11,fontWeight:700,color:C.muted,letterSpacing:".07em",marginBottom:7,textTransform:"uppercase"}}>Describe Your Issue</label>
+              <textarea value={form.message} onChange={e=>F("message",e.target.value)} rows={5}
+                placeholder="Please include your Order ID, UTR, or any relevant details..."
+                style={{width:"100%",background:"rgba(255,255,255,.04)",border:`1px solid ${C.border}`,borderRadius:11,padding:"11px 14px",color:C.text,fontSize:13,resize:"vertical",fontFamily:"inherit",boxSizing:"border-box"}}/>
+            </div>
+            <div style={{display:"flex",gap:10}}>
+              <Btn onClick={submit} loading={submitting} style={{flex:1,justifyContent:"center"}} size="lg">Submit Ticket 🎫</Btn>
+              <Btn v="ghost" onClick={()=>window.open(`https://wa.me/${WHATSAPP_NUM}?text=Hi+Nexus+SMM+I+need+help`,"_blank")}>WhatsApp</Btn>
+            </div>
           </Card>
         </div>
       )}
 
+      {/* CONTACT */}
+      {tab==="contact"&&(
+        <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(240px,1fr))",gap:16,maxWidth:700}}>
+          {[
+            {i:"📱",t:"WhatsApp Support",s:"Fastest response — usually under 5 mins",btn:"Open WhatsApp →",action:()=>window.open(`https://wa.me/${WHATSAPP_NUM}?text=Hi Nexus SMM, I need help!`,"_blank"),grad:C.gGr},
+            {i:"📧",t:"Email Support",s:SUPPORT_EMAIL,btn:"Send Email →",action:()=>window.open(`mailto:${SUPPORT_EMAIL}?subject=Support - Nexus SMM`,"_blank"),grad:C.gB},
+            {i:"🎫",t:"Open Ticket",s:"For detailed issues — reply within 1 hour",btn:"Create Ticket →",action:()=>setTab("new"),grad:C.gP},
+          ].map(c=>(
+            <Card key={c.t} style={{padding:26,cursor:"pointer"}} onClick={c.action}>
+              <div style={{fontSize:36,marginBottom:14}}>{c.i}</div>
+              <div style={{fontWeight:800,color:"#e8e8f2",fontSize:15,marginBottom:6}}>{c.t}</div>
+              <div style={{fontSize:12,color:C.muted,marginBottom:18,lineHeight:1.5}}>{c.s}</div>
+              <Btn v="ghost" size="sm" onClick={c.action}>{c.btn}</Btn>
+            </Card>
+          ))}
+        </div>
+      )}
+
+      {/* FAQ */}
       {tab==="faq"&&(
         <div style={{maxWidth:600}}>
           {[
-            {q:"How long does delivery take?",a:"Most orders start within minutes. Full delivery: 0–48 hours depending on the service."},
-            {q:"Is it safe for my account?",a:"Yes. We use gradual, natural delivery that follows platform guidelines."},
-            {q:"What if my order doesn't complete?",a:"We offer free refills and refunds. Contact support with your Order ID."},
-            {q:"How do I cancel an order?",a:"Go to My Orders — you can cancel Pending orders before they start processing."},
-            {q:"What payment methods do you accept?",a:"UPI, Google Pay, PhonePe, Debit/Credit cards, Net Banking, and Crypto."},
-            {q:"Do you have a referral program?",a:"Yes! Share your referral code from your Profile page and earn 5% commission on orders."},
+            {q:"How long does delivery take?",a:"Most orders start within 0–30 minutes. Full delivery completes in 1–48 hours depending on quantity and service type."},
+            {q:"Is it safe for my Instagram/YouTube account?",a:"Yes — we use safe delivery methods that never require your password. All engagement is from real-looking accounts."},
+            {q:"What if my order doesn't deliver completely?",a:"We offer free refills within 30 days. Go to My Orders → click Refill, or open a support ticket with your Order ID."},
+            {q:"How do I add money to my wallet?",a:"Go to Add Funds → choose amount → pay via UPI QR → enter UTR number. Admin verifies and credits within 30 minutes."},
+            {q:"What payment methods do you accept?",a:"All UPI apps: Google Pay, PhonePe, Paytm, BHIM, and direct bank transfer. No credit card needed."},
+            {q:"How do I cancel an order?",a:"Go to My Orders — pending orders can be cancelled before processing starts. Once processing, cancellation may not be possible."},
+            {q:"Do you offer reseller accounts?",a:"Yes! Contact us on WhatsApp for reseller pricing and API access. We offer up to 40% reseller discounts."},
           ].map((f,i)=><FaqItem key={i} q={f.q} a={f.a}/>)}
         </div>
       )}
@@ -2917,6 +3185,7 @@ const AdminDash = ({ onLogout }) => {
     {id:"a-payments",  label:"Payments",      icon:"💰"},
     {id:"a-suppliers", label:"Suppliers",     icon:"🔌"},
     {id:"a-markup",    label:"Pricing",       icon:"💹"},
+    {id:"a-tickets",   label:"Tickets",       icon:"🎫"},
     {id:"a-announce",  label:"Announcements", icon:"📣"},
   ];
 
@@ -3159,10 +3428,34 @@ const AdminOverview = ({ orders, users=[], refresh, lastRefresh }) => {
           })}
         </Card>
       </div>
-      <Card style={{padding:22}}>
-        <h3 style={{fontWeight:800,fontSize:15,color:"#e8e8f2",marginBottom:16}}>Recent Orders</h3>
-        <OTable orders={orders.slice(0,10)}/>
-      </Card>
+      <div className="two-col" style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:20,marginBottom:20}}>
+        <Card style={{padding:22}}>
+          <h3 style={{fontWeight:800,fontSize:15,color:"#e8e8f2",marginBottom:16}}>👑 Top Users by Spending</h3>
+          {(()=>{
+            const topUsers=[...orders.reduce((m,o)=>{
+              const k=o.userEmail||o.userName||"Unknown";
+              const e=m.get(k)||{email:k,count:0,spent:0};
+              m.set(k,{...e,count:e.count+1,spent:e.spent+o.price});
+              return m;
+            },new Map()).values()].sort((a,b)=>b.spent-a.spent).slice(0,6);
+            if(!topUsers.length) return <p style={{color:C.muted,fontSize:12}}>No orders yet</p>;
+            return topUsers.map((u,i)=>(
+              <div key={i} style={{display:"flex",alignItems:"center",gap:10,padding:"9px 0",borderBottom:`1px solid ${C.border}`}}>
+                <div style={{width:24,height:24,borderRadius:"50%",background:C.gP,display:"flex",alignItems:"center",justifyContent:"center",fontSize:10,fontWeight:900,color:"#fff",flexShrink:0}}>{i+1}</div>
+                <div style={{flex:1,overflow:"hidden"}}>
+                  <div style={{fontSize:12,fontWeight:700,color:"#60a5fa",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{u.email}</div>
+                  <div style={{fontSize:10,color:C.muted}}>{u.count} orders</div>
+                </div>
+                <span style={{color:C.goldL,fontWeight:800,fontSize:13,whiteSpace:"nowrap"}}>{fmt(u.spent)}</span>
+              </div>
+            ));
+          })()}
+        </Card>
+        <Card style={{padding:22}}>
+          <h3 style={{fontWeight:800,fontSize:15,color:"#e8e8f2",marginBottom:16}}>📋 Recent Orders</h3>
+          <OTable orders={orders.slice(0,5)}/>
+        </Card>
+      </div>
     </div>
   );
 };
@@ -3842,17 +4135,191 @@ const AdminMarkup = () => {
   );
 };
 
+
+// ─── Admin: Support Tickets ───────────────────────────────────
+const AdminTickets = () => {
+  const [tickets,setTickets]=useState([]);
+  const [loading,setLoading]=useState(true);
+  const [filter,setFilter]=useState("Open");
+  const [viewTicket,setViewTicket]=useState(null);
+  const [reply,setReply]=useState("");
+  const [sending,setSending]=useState(false);
+
+  const load=async()=>{
+    setLoading(true);
+    try{
+      const fs=await getFS(); if(!fs){setLoading(false);return;}
+      const snap=await fs.collection("tickets").get();
+      const list=snap.docs.map(d=>({id:d.id,...d.data()}))
+        .sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
+      setTickets(list);
+    }catch(e){console.error(e);}
+    setLoading(false);
+  };
+
+  useEffect(()=>{ load(); },[]);
+
+  const sendReply=async()=>{
+    if(!reply.trim()||!viewTicket) return;
+    setSending(true);
+    try{
+      const fs=await getFS(); if(!fs) throw new Error("No Firebase");
+      const newReplies=[...(viewTicket.replies||[]),{from:"admin",text:sanitize(reply),ts:Date.now()}];
+      await fs.collection("tickets").doc(viewTicket.id).update({
+        replies:newReplies, status:"Resolved", resolvedAt:Date.now()
+      });
+      const updated={...viewTicket,replies:newReplies,status:"Resolved"};
+      setViewTicket(updated);
+      setTickets(t=>t.map(x=>x.id===viewTicket.id?updated:x));
+      setReply(""); Toast.success("Reply sent!");
+    }catch(e){Toast.error("Failed: "+e.message);}
+    setSending(false);
+  };
+
+  const close=async(id)=>{
+    const fs=await getFS(); if(!fs) return;
+    await fs.collection("tickets").doc(id).update({status:"Closed"});
+    setTickets(t=>t.map(x=>x.id===id?{...x,status:"Closed"}:x));
+    if(viewTicket?.id===id) setViewTicket({...viewTicket,status:"Closed"});
+    Toast.info("Ticket closed");
+  };
+
+  const statCol={Open:"#60a5fa","Awaiting Reply":"#fbbf24",Resolved:"#34d399",Closed:"#6b7280"};
+  const filtered=filter==="All"?tickets:tickets.filter(t=>t.status===filter);
+
+  return (
+    <div className="page-enter" style={{animation:"fadeIn .4s ease"}}>
+      <PgH title="Support Tickets" sub={`${tickets.length} total · ${tickets.filter(t=>t.status==="Open"||t.status==="Awaiting Reply").length} open`}
+        action={<button onClick={load} style={{padding:"8px 16px",background:"rgba(124,58,237,.1)",border:"1px solid rgba(124,58,237,.3)",borderRadius:9,color:"#c4b5fd",fontSize:12,fontWeight:700,cursor:"pointer"}}>🔄 Refresh</button>}/>
+
+      <div style={{display:"flex",gap:8,flexWrap:"wrap",marginBottom:20}}>
+        {["All","Open","Awaiting Reply","Resolved","Closed"].map(s=>(
+          <button key={s} onClick={()=>setFilter(s)} style={{padding:"7px 16px",borderRadius:20,border:`1px solid ${filter===s?"rgba(124,58,237,.6)":C.border}`,background:filter===s?"rgba(124,58,237,.15)":"transparent",color:filter===s?"#c4b5fd":C.muted,fontSize:12,fontWeight:700,cursor:"pointer"}}>
+            {s} {s!=="All"&&<span style={{opacity:.7}}>({tickets.filter(t=>t.status===s).length})</span>}
+          </button>
+        ))}
+      </div>
+
+      {loading?<div style={{display:"flex",flexDirection:"column",gap:10}}>{[1,2,3].map(i=><CardSkel key={i}/>)}</div>:
+      filtered.length===0?<Card style={{padding:30,textAlign:"center",color:C.muted}}>No {filter.toLowerCase()} tickets</Card>:(
+        <div style={{display:"flex",flexDirection:"column",gap:10}}>
+          {filtered.map(t=>(
+            <Card key={t.id} style={{padding:18,cursor:"pointer",border:`1px solid ${viewTicket?.id===t.id?"rgba(124,58,237,.4)":C.border}`}}
+              onClick={()=>setViewTicket(t)}>
+              <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",flexWrap:"wrap",gap:10}}>
+                <div style={{flex:1}}>
+                  <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:5}}>
+                    <span style={{fontWeight:800,color:"#e8e8f2",fontSize:14}}>{t.subject}</span>
+                    <span style={{fontSize:10,padding:"2px 8px",borderRadius:20,background:`${statCol[t.status]||"#888"}20`,color:statCol[t.status]||"#888",fontWeight:700}}>{t.status}</span>
+                  </div>
+                  <div style={{fontSize:11,color:C.muted}}>
+                    <span style={{color:"#60a5fa"}}>{t.userEmail}</span> · {t.category} · {t.date} · {(t.replies||[]).length} replies
+                  </div>
+                </div>
+                <div style={{display:"flex",gap:7}}>
+                  {t.status!=="Closed"&&<button onClick={e=>{e.stopPropagation();close(t.id);}} style={{background:"rgba(239,68,68,.1)",border:"1px solid rgba(239,68,68,.25)",borderRadius:6,padding:"5px 10px",color:"#f87171",fontSize:10,fontWeight:700,cursor:"pointer"}}>Close</button>}
+                </div>
+              </div>
+            </Card>
+          ))}
+        </div>
+      )}
+
+      {/* Ticket Detail Modal */}
+      {viewTicket&&(
+        <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,.75)",zIndex:1000,display:"flex",alignItems:"flex-end",justifyContent:"center"}}
+          onClick={()=>setViewTicket(null)}>
+          <div onClick={e=>e.stopPropagation()} style={{width:"100%",maxWidth:680,maxHeight:"85vh",display:"flex",flexDirection:"column",background:"#09090f",borderRadius:"20px 20px 0 0",border:"1px solid rgba(124,58,237,.3)"}}>
+            <div style={{padding:"18px 22px",borderBottom:`1px solid ${C.border}`,display:"flex",justifyContent:"space-between",alignItems:"flex-start"}}>
+              <div>
+                <div style={{fontWeight:800,color:"#e8e8f2",fontSize:15,marginBottom:3}}>{viewTicket.subject}</div>
+                <div style={{fontSize:11,color:C.muted}}>{viewTicket.userEmail} · {viewTicket.category}</div>
+              </div>
+              <div style={{display:"flex",gap:8,alignItems:"center"}}>
+                <span style={{fontSize:10,padding:"3px 10px",borderRadius:20,background:`${statCol[viewTicket.status]||"#888"}20`,color:statCol[viewTicket.status]||"#888",fontWeight:700}}>{viewTicket.status}</span>
+                <button onClick={()=>setViewTicket(null)} style={{background:"rgba(255,255,255,.06)",border:"none",borderRadius:8,padding:"6px 12px",color:C.muted,cursor:"pointer"}}>✕</button>
+              </div>
+            </div>
+            <div style={{flex:1,overflowY:"auto",padding:18,display:"flex",flexDirection:"column",gap:12}}>
+              <div style={{background:"rgba(124,58,237,.08)",borderRadius:12,padding:"12px 16px"}}>
+                <div style={{fontSize:10,color:C.purpleL,fontWeight:700,marginBottom:6}}>CUSTOMER MESSAGE</div>
+                <div style={{fontSize:13,color:"#d4d4e8",lineHeight:1.6}}>{viewTicket.message}</div>
+              </div>
+              {(viewTicket.replies||[]).map((r,i)=>(
+                <div key={i} style={{background:r.from==="admin"?"rgba(212,160,23,.08)":"rgba(255,255,255,.04)",border:`1px solid ${r.from==="admin"?"rgba(212,160,23,.25)":C.border}`,borderRadius:12,padding:"12px 16px"}}>
+                  <div style={{fontSize:10,fontWeight:700,marginBottom:6,color:r.from==="admin"?C.goldL:C.purpleL}}>
+                    {r.from==="admin"?"🔐 YOUR REPLY":"CUSTOMER"} · {new Date(r.ts).toLocaleString("en-IN",{dateStyle:"short",timeStyle:"short"})}
+                  </div>
+                  <div style={{fontSize:13,color:"#d4d4e8",lineHeight:1.6}}>{r.text}</div>
+                </div>
+              ))}
+            </div>
+            {viewTicket.status!=="Closed"&&(
+              <div style={{padding:14,borderTop:`1px solid ${C.border}`,display:"flex",gap:9}}>
+                <input value={reply} onChange={e=>setReply(e.target.value)}
+                  onKeyDown={e=>e.key==="Enter"&&sendReply()}
+                  placeholder="Type admin reply..." style={{flex:1,background:"rgba(255,255,255,.04)",border:`1px solid ${C.border}`,borderRadius:10,padding:"10px 13px",color:C.text,fontSize:13}}/>
+                <Btn v="gold" size="sm" onClick={sendReply} loading={sending}>Reply →</Btn>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+
+// ─── SEO Tools (sitemap + robots) ────────────────────────────
+const SEOTools = () => {
+  const siteUrl = "https://nexus-smm.vercel.app";
+  const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>${siteUrl}/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
+  <url><loc>${siteUrl}/#svc</loc><changefreq>daily</changefreq><priority>0.9</priority></url>
+</urlset>`;
+  const robots = `User-agent: *
+Allow: /
+Sitemap: ${siteUrl}/sitemap.xml`;
+
+  const download=(content,name,type)=>{
+    const blob=new Blob([content],{type});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement("a");
+    a.href=url; a.download=name; a.click();
+    URL.revokeObjectURL(url);
+    Toast.success(`Downloaded ${name}`);
+  };
+
+  return (
+    <Card style={{padding:22,marginBottom:20}}>
+      <h3 style={{fontWeight:800,fontSize:14,color:"#e8e8f2",marginBottom:14}}>🔍 SEO Tools</h3>
+      <div style={{display:"flex",gap:10,flexWrap:"wrap"}}>
+        <Btn v="ghost" size="sm" onClick={()=>download(sitemap,"sitemap.xml","application/xml")}>⬇ sitemap.xml</Btn>
+        <Btn v="ghost" size="sm" onClick={()=>download(robots,"robots.txt","text/plain")}>⬇ robots.txt</Btn>
+      </div>
+      <p style={{fontSize:11,color:C.muted,marginTop:10}}>Upload these files to your GitHub repo root for better SEO indexing.</p>
+    </Card>
+  );
+};
+
 // ─── Admin: Payments ─────────────────────────────────────────
 const AdminPayments = () => {
   const [deps,setDeps]=useState([]);
   const [tab,setTab]=useState("pending");
   const [loading,setLoading]=useState(true);
+  const [search,setSearch]=useState("");
 
+  const loadDeps=()=>DB.getDepositRequestsFromFirebase().then(d=>{ setDeps(d); setLoading(false); });
   useEffect(()=>{
-    DB.getDepositRequestsFromFirebase().then(d=>{ setDeps(d); setLoading(false); });
-    const iv=setInterval(()=>DB.getDepositRequestsFromFirebase().then(setDeps),15000);
+    loadDeps();
+    const iv=setInterval(loadDeps,15000);
     return()=>clearInterval(iv);
   },[]);
+
+  const totalPending=deps.filter(d=>d.status==="pending").reduce((s,d)=>s+Number(d.amount||0),0);
+  const totalApproved=deps.filter(d=>d.status==="approved").reduce((s,d)=>s+Number(d.amount||0),0);
+  const searchedDeps=search?deps.filter(d=>d.email?.includes(search)||d.utr?.includes(search)||d.userName?.toLowerCase().includes(search.toLowerCase())):deps;
 
   const approve = async(dep) => {
     if(!window.confirm(`Approve ₹${dep.amount} for ${dep.userName}\n(${dep.email})\nUTR: ${dep.utr}\n\nConfirm?`)) return;
@@ -3899,9 +4366,9 @@ const AdminPayments = () => {
     setDeps(d=>d.map(x=>x.id===dep.id?{...x,status:"rejected"}:x));
   };
 
-  const pending = deps.filter(d=>d.status==="pending");
-  const approved = deps.filter(d=>d.status==="approved");
-  const rejected = deps.filter(d=>d.status==="rejected");
+  const pending = searchedDeps.filter(d=>d.status==="pending");
+  const approved = searchedDeps.filter(d=>d.status==="approved");
+  const rejected = searchedDeps.filter(d=>d.status==="rejected");
   const shown = tab==="pending"?pending:tab==="approved"?approved:rejected;
   const statCol={pending:"#fbbf24",approved:"#34d399",rejected:"#f87171"};
 
@@ -3951,6 +4418,19 @@ const AdminPayments = () => {
         </button>
       </div>
 
+      {/* Payment stats */}
+      <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(160px,1fr))",gap:14,marginBottom:18}}>
+        {[["⏳","Pending Amount",`₹${totalPending.toFixed(2)}`,"#fbbf24"],[" ✅","Approved Amount",`₹${totalApproved.toFixed(2)}`,"#34d399"],["📋","Total Requests",deps.length,"#c4b5fd"]].map(([ic,lb,val,col])=>(
+          <div key={lb} style={{background:"rgba(255,255,255,.04)",borderRadius:11,padding:"14px 16px",textAlign:"center"}}>
+            <div style={{fontSize:18,fontWeight:900,color:col}}>{val}</div>
+            <div style={{fontSize:11,color:C.muted,marginTop:3}}>{lb}</div>
+          </div>
+        ))}
+      </div>
+      {/* Search */}
+      <input value={search} onChange={e=>setSearch(e.target.value)}
+        placeholder="🔍 Search by email, name or UTR..."
+        style={{width:"100%",background:"rgba(255,255,255,.04)",border:`1px solid ${C.border}`,borderRadius:10,padding:"10px 14px",color:C.text,fontSize:13,marginBottom:14,boxSizing:"border-box"}}/>
       <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:14,marginBottom:22}}>
         {[["⏳","Pending",pending.length,"#fbbf24"],["✅","Approved",approved.length,"#34d399"],["❌","Rejected",rejected.length,"#f87171"]].map(([ic,lb,val,col])=>(
           <Card key={lb} style={{padding:16,textAlign:"center",cursor:"pointer",border:tab===lb.toLowerCase()?"1px solid "+col:"1px solid "+C.border}}
