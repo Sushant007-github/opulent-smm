@@ -55,96 +55,139 @@ const BUSINESS_NAME  = "Nexus SMM";
 // IG Views:     1k=₹100, 5k=₹479,  10k=₹799,  20k=₹1998
 // IG Likes:     1k=₹100, 5k=₹250,  10k=₹500,  20k=₹1800
 const SERVICES = [
-  // ── INSTAGRAM ──────────────────────────────────────────────────
-  { id:1,  platform:"Instagram", icon:"📸", name:"Instagram Followers – Indian Stable",
-    desc:"100% Indian stable followers. Gradual natural delivery. No-drop guarantee. Safe for all accounts.",
-    speed:"0–12 hrs", min:1000, max:100000,
-    tiers:[{qty:1000,price:349},{qty:5000,price:1339},{qty:10000,price:2699},{qty:20000,price:6999}],
-    cat:"Followers", badge:"🔥 Best Seller" },
+  // ── INSTAGRAM ────────────────────────────────────────────────────
+  { id:1, platform:"Instagram", icon:"📸", name:"Instagram Followers – Indian Stable",
+    desc:"100% Indian stable followers. Gradual natural delivery. No-drop guarantee for 30 days. Safe for all account types.",
+    speed:"0–12 hrs", min:1000, max:100000, cat:"Followers", badge:"🔥 Best Seller",
+    quality:["Non Drop","Refill Available","High Quality"], speedTag:"Normal",
+    tiers:[{qty:1000,price:149},{qty:5000,price:699},{qty:10000,price:1299},{qty:20000,price:2399}] },
 
-  { id:2,  platform:"Instagram", icon:"📸", name:"Instagram Likes – Indian Stable",
-    desc:"Real Indian likes. Instant start. Pushes your post to the Explore page for more organic reach.",
-    speed:"0–1 hr",   min:1000, max:50000,
-    tiers:[{qty:1000,price:100},{qty:5000,price:250},{qty:10000,price:500},{qty:20000,price:1800}],
-    cat:"Likes", badge:"⚡ Instant" },
+  { id:2, platform:"Instagram", icon:"📸", name:"Instagram Followers – HQ Premium",
+    desc:"Premium quality Indian followers with high retention. Best for personal brands and verified accounts.",
+    speed:"0–6 hrs", min:500, max:50000, cat:"Followers", badge:"💎 Premium",
+    quality:["High Quality","Non Drop","Refill Available"], speedTag:"Fast",
+    tiers:[{qty:500,price:99},{qty:1000,price:179},{qty:5000,price:849},{qty:10000,price:1599}] },
 
-  { id:3,  platform:"Instagram", icon:"📸", name:"Instagram Reel Views – Indian Stable",
-    desc:"Indian reel views. Boosts your reel to Explore & For You pages. Great for viral growth.",
-    speed:"0–2 hrs",  min:1000, max:500000,
-    tiers:[{qty:1000,price:100},{qty:5000,price:479},{qty:10000,price:799},{qty:15000,price:979},{qty:20000,price:1998}],
-    cat:"Views", badge:"📈 Trending" },
+  { id:3, platform:"Instagram", icon:"📸", name:"Instagram Likes – Indian Stable",
+    desc:"Real Indian likes. Instant start. Pushes post to Explore page for organic reach boost.",
+    speed:"0–30 min", min:100, max:50000, cat:"Likes", badge:"⚡ Instant",
+    quality:["High Quality","Non Drop"], speedTag:"Instant",
+    tiers:[{qty:1000,price:29},{qty:5000,price:99},{qty:10000,price:179},{qty:50000,price:799}] },
 
-  { id:4,  platform:"Instagram", icon:"📸", name:"Instagram Story Views – Indian",
-    desc:"Boost your story views from Indian accounts. Improves reach and profile visibility.",
-    speed:"0–1 hr",   min:1000, max:200000,
-    tiers:[{qty:1000,price:100},{qty:5000,price:479},{qty:10000,price:799},{qty:20000,price:1998}],
-    cat:"Views" },
+  { id:4, platform:"Instagram", icon:"📸", name:"Instagram Reel Views – Indian",
+    desc:"Indian reel views. Boosts your reel to Explore & For You pages. Best for viral growth strategy.",
+    speed:"0–2 hrs", min:1000, max:500000, cat:"Views", badge:"📈 Trending",
+    quality:["High Quality","Non Drop"], speedTag:"Fast",
+    tiers:[{qty:1000,price:12},{qty:5000,price:45},{qty:10000,price:79},{qty:50000,price:349},{qty:100000,price:599}] },
 
-  { id:5,  platform:"Instagram", icon:"📸", name:"Instagram Comments – Custom",
+  { id:5, platform:"Instagram", icon:"📸", name:"Instagram Story Views",
+    desc:"Boost story views from Indian accounts. Improves reach and profile visibility significantly.",
+    speed:"0–1 hr", min:1000, max:200000, cat:"Views",
+    quality:["High Quality"], speedTag:"Instant",
+    tiers:[{qty:1000,price:12},{qty:5000,price:45},{qty:10000,price:79},{qty:50000,price:349}] },
+
+  { id:6, platform:"Instagram", icon:"📸", name:"Instagram Comments – Custom",
     desc:"Positive custom comments from Indian-looking profiles. You provide the comment text.",
-    speed:"0–6 hrs",  min:10,   max:1000, price:18.00, cat:"Comments" },
+    speed:"0–6 hrs", min:10, max:1000, price:5, cat:"Comments",
+    quality:["High Quality"], speedTag:"Normal" },
 
-  { id:6,  platform:"Instagram", icon:"📸", name:"Instagram Saves – Indian",
-    desc:"Post saves from real Indian accounts. Saves are a top ranking signal on Instagram.",
-    speed:"0–3 hrs",  min:500,  max:20000, price:0.80, cat:"Engagement" },
+  { id:7, platform:"Instagram", icon:"📸", name:"Instagram Saves – Indian",
+    desc:"Post saves from real Indian accounts. Saves are a top ranking signal on Instagram algorithm.",
+    speed:"0–3 hrs", min:500, max:20000, price:0.15, cat:"Engagement",
+    quality:["High Quality"], speedTag:"Normal" },
 
-  // ── YOUTUBE ─────────────────────────────────────────────────────
-  { id:7,  platform:"YouTube", icon:"▶️", name:"YouTube Views – Indian HQ",
-    desc:"High-retention Indian views with watch time boost. Helps reach monetization thresholds.",
-    speed:"1–24 hrs", min:500, max:500000, price:0.55, cat:"Views" },
+  // ── YOUTUBE ──────────────────────────────────────────────────────
+  { id:8, platform:"YouTube", icon:"▶️", name:"YouTube Views – Indian HQ",
+    desc:"High-retention Indian views with watch time boost. Helps reach monetization thresholds faster.",
+    speed:"1–24 hrs", min:1000, max:500000, cat:"Views", badge:"🏆 Top Rated",
+    quality:["High Quality","Non Drop"], speedTag:"Normal",
+    tiers:[{qty:1000,price:69},{qty:5000,price:299},{qty:10000,price:549}] },
 
-  { id:8,  platform:"YouTube", icon:"▶️", name:"YouTube Subscribers – Indian",
-    desc:"Real Indian subscribers. Grows your channel credibility and helps monetize faster.",
-    speed:"1–48 hrs", min:100, max:50000, price:3.50, cat:"Followers" },
+  { id:9, platform:"YouTube", icon:"▶️", name:"YouTube Subscribers – Indian",
+    desc:"Real Indian subscribers. Grows channel credibility and helps monetize faster.",
+    speed:"1–48 hrs", min:100, max:50000, price:3.50, cat:"Followers",
+    quality:["High Quality","Refill Available"], speedTag:"Normal" },
 
-  { id:9,  platform:"YouTube", icon:"▶️", name:"YouTube Likes – Indian",
-    desc:"Boost your video with Indian likes. Increases trust and ranking in search.",
-    speed:"1–12 hrs", min:100, max:50000, price:1.20, cat:"Likes" },
+  { id:10, platform:"YouTube", icon:"▶️", name:"YouTube Likes – Indian",
+    desc:"Boost your video with Indian likes. Increases trust and ranking in search results.",
+    speed:"1–12 hrs", min:100, max:50000, price:1.20, cat:"Likes",
+    quality:["High Quality"], speedTag:"Fast" },
 
-  // ── TIKTOK ──────────────────────────────────────────────────────
-  { id:10, platform:"TikTok", icon:"🎵", name:"TikTok Views – Worldwide",
-    desc:"Push your content to For You pages worldwide. Fast delivery, no password needed.",
-    speed:"0–6 hrs", min:1000, max:1000000, price:0.09, cat:"Views" },
+  // ── TELEGRAM ─────────────────────────────────────────────────────
+  { id:11, platform:"Telegram", icon:"✈️", name:"Telegram Members – Indian",
+    desc:"Real Indian members for your Telegram channel or group. Boosts credibility and trust.",
+    speed:"0–12 hrs", min:100, max:200000, cat:"Members", badge:"🇮🇳 Indian",
+    quality:["High Quality","Non Drop"], speedTag:"Normal",
+    tiers:[{qty:1000,price:149},{qty:5000,price:599},{qty:10000,price:1099}] },
 
-  { id:11, platform:"TikTok", icon:"🎵", name:"TikTok Followers – Global",
-    desc:"Grow your TikTok presence fast with real-looking followers.",
-    speed:"0–12 hrs", min:100, max:100000, price:1.50, cat:"Followers" },
+  { id:12, platform:"Telegram", icon:"✈️", name:"Telegram Post Views",
+    desc:"Increase view count on your Telegram posts and channels. Instant delivery.",
+    speed:"0–30 min", min:500, max:500000, price:0.05, cat:"Views",
+    quality:["High Quality"], speedTag:"Instant" },
 
-  { id:12, platform:"TikTok", icon:"🎵", name:"TikTok Likes – Global",
-    desc:"Instant likes for your TikTok videos. Safe and fast delivery.",
-    speed:"0–2 hrs", min:100, max:100000, price:0.50, cat:"Likes" },
+  // ── TIKTOK ───────────────────────────────────────────────────────
+  { id:13, platform:"TikTok", icon:"🎵", name:"TikTok Views – Worldwide",
+    desc:"Push content to For You pages worldwide. Fast delivery, no password needed.",
+    speed:"0–6 hrs", min:1000, max:1000000, price:0.09, cat:"Views",
+    quality:["High Quality"], speedTag:"Fast" },
 
-  // ── TWITTER / X ─────────────────────────────────────────────────
-  { id:13, platform:"Twitter", icon:"🐦", name:"Twitter / X Followers",
-    desc:"Boost your credibility with a higher follower count. Gradual delivery.",
-    speed:"1–24 hrs", min:100, max:50000, price:1.80, cat:"Followers" },
+  { id:14, platform:"TikTok", icon:"🎵", name:"TikTok Followers – Global",
+    desc:"Grow your TikTok presence fast with real-looking followers worldwide.",
+    speed:"0–12 hrs", min:100, max:100000, price:1.50, cat:"Followers",
+    quality:["High Quality","Non Drop"], speedTag:"Normal" },
 
-  { id:14, platform:"Twitter", icon:"🐦", name:"Twitter / X Likes",
-    desc:"Engagement boost for your tweets and posts. Fast delivery.",
-    speed:"0–6 hrs", min:50, max:20000, price:0.55, cat:"Likes" },
+  { id:15, platform:"TikTok", icon:"🎵", name:"TikTok Likes – Global",
+    desc:"Instant likes for your TikTok videos. Safe and fast delivery guaranteed.",
+    speed:"0–2 hrs", min:100, max:100000, price:0.50, cat:"Likes",
+    quality:["High Quality"], speedTag:"Instant" },
 
-  // ── TELEGRAM ────────────────────────────────────────────────────
-  { id:15, platform:"Telegram", icon:"✈️", name:"Telegram Members – Indian",
-    desc:"Real Indian members for your Telegram channel or group. Boosts credibility.",
-    speed:"0–12 hrs", min:100, max:200000, price:0.90, cat:"Followers" },
-
-  // ── FACEBOOK ────────────────────────────────────────────────────
+  // ── FACEBOOK ─────────────────────────────────────────────────────
   { id:16, platform:"Facebook", icon:"👍", name:"Facebook Page Likes – Indian",
-    desc:"Indian page likes for your Facebook business page. Looks 100% natural.",
-    speed:"1–48 hrs", min:100, max:50000, price:1.10, cat:"Likes" },
+    desc:"Indian page likes for your Facebook business page. Looks 100% natural and organic.",
+    speed:"1–48 hrs", min:100, max:50000, price:1.10, cat:"Likes",
+    quality:["High Quality","Non Drop"], speedTag:"Normal" },
 
-  // ── SNAPCHAT ────────────────────────────────────────────────────
-  { id:17, platform:"Snapchat", icon:"👻", name:"Snapchat Followers",
-    desc:"Grow your Snapchat audience with real-looking followers.",
-    speed:"0–24 hrs", min:100, max:10000, price:2.20, cat:"Followers" },
+  { id:17, platform:"Facebook", icon:"👍", name:"Facebook Post Likes",
+    desc:"Boost engagement on your Facebook posts with real-looking likes.",
+    speed:"0–6 hrs", min:100, max:20000, price:0.80, cat:"Likes",
+    quality:["High Quality"], speedTag:"Fast" },
+
+  // ── TWITTER ──────────────────────────────────────────────────────
+  { id:18, platform:"Twitter", icon:"🐦", name:"Twitter / X Followers",
+    desc:"Boost your credibility with a higher follower count. Gradual natural delivery.",
+    speed:"1–24 hrs", min:100, max:50000, price:1.80, cat:"Followers",
+    quality:["High Quality"], speedTag:"Normal" },
+
+  { id:19, platform:"Twitter", icon:"🐦", name:"Twitter / X Likes",
+    desc:"Engagement boost for your tweets and posts. Fast delivery worldwide.",
+    speed:"0–6 hrs", min:50, max:20000, price:0.55, cat:"Likes",
+    quality:["High Quality"], speedTag:"Fast" },
 ];
 
-const PLATFORMS = ["All","Instagram","YouTube","TikTok","Twitter","Telegram","Facebook","Snapchat"];
+const PLATFORMS = ["All","Instagram","YouTube","TikTok","Telegram","Facebook","Twitter"];
+const SERVICE_CATS = ["All","Followers","Likes","Views","Comments","Members","Engagement"];
+const QUALITY_TAGS = ["High Quality","Non Drop","Refill Available"];
+const SPEED_TAGS   = ["Instant","Fast","Normal"];
 
 // Internal coupons – never shown to user, only validated on entry
 const VALID_COUPONS = { "NEXUS20":20, "SAVE10":10, "FIRST50":50 };
 
 const fmt = (n) => "₹" + parseFloat(n).toFixed(2);
+
+// ─── Marketing Config ─────────────────────────────────────────
+const FIRST_DEPOSIT_BONUS_PCT = 20; // 20% bonus on first deposit
+const REFERRAL_COMMISSION_PCT = 5;  // 5% commission on referrals
+const FREE_TRIAL_AMOUNT = 10;       // ₹10 free trial credit for new signups
+
+// ─── Influencer Level System ──────────────────────────────────
+const INFLUENCER_LEVELS = [
+  { level:"Bronze",  icon:"🥉", minFollowers:1000,   reward:"50 Free Followers",   rewardQty:50,   color:"#cd7f32", bg:"rgba(205,127,50,.15)" },
+  { level:"Silver",  icon:"🥈", minFollowers:5000,   reward:"100 Free Followers",  rewardQty:100,  color:"#c0c0c0", bg:"rgba(192,192,192,.15)" },
+  { level:"Gold",    icon:"🥇", minFollowers:10000,  reward:"200 Free Followers",  rewardQty:200,  color:"#ffd700", bg:"rgba(255,215,0,.15)" },
+  { level:"Diamond", icon:"💎", minFollowers:50000,  reward:"500 Free Followers",  rewardQty:500,  color:"#60a5fa", bg:"rgba(96,165,250,.15)" },
+  { level:"VIP",     icon:"👑", minFollowers:100000, reward:"1000 Free Followers", rewardQty:1000, color:"#a855f7", bg:"rgba(168,85,247,.15)" },
+  { level:"VVIP",    icon:"💫", minFollowers:500000, reward:"3000 Free Followers", rewardQty:3000, color:"#f5c842", bg:"rgba(245,200,66,.15)" },
+];
 
 // ── Wipe any old localStorage data once ──────────────────────
 (()=>{ try{ Object.keys(localStorage).filter(k=>k.startsWith("nx_")).forEach(k=>localStorage.removeItem(k)); }catch{} })();
@@ -177,7 +220,7 @@ const FIREBASE_CONFIG = {
 const FIREBASE_LIVE = true;
 // ─── Firestore Collections Used ───────────────────────────
 // wallets, deposits, orders, users, transactions, config,
-// services, tickets, refills, notifications, _test
+// services, tickets, refills, notifications, influencers, _test
 // ──────────────────────────────────────────────────────────
 
 // ─── Firebase init ───────────────────────────────────────────
@@ -265,12 +308,18 @@ const DB = {
 
   addUser(user){
     if(!FIREBASE_LIVE) return;
-    getFS().then(fs=>{
+    getFS().then(async fs=>{
       if(!fs) return;
       const key=user.email.toLowerCase().trim().replace(/[@.]/g,"_");
-      fs.collection("users").doc(key).get().then(snap=>{
-        if(!snap.exists) fs.collection("users").doc(key).set({...user,balance:0});
-      }).catch(console.error);
+      const snap = await fs.collection("users").doc(key).get().catch(()=>null);
+      if(snap && !snap.exists){
+        await fs.collection("users").doc(key).set({...user,balance:FREE_TRIAL_AMOUNT}).catch(console.error);
+        // Give free trial credit
+        const wKey=user.email.toLowerCase().trim().replace(/[@.]/g,"_");
+        await fs.collection("wallets").doc(wKey).set({
+          balance:FREE_TRIAL_AMOUNT, email:user.email.toLowerCase().trim(), ts:Date.now()
+        }).catch(console.error);
+      }
     });
   },
 
@@ -805,6 +854,47 @@ const PgH = ({ title, sub, action }) => (
   </div>
 );
 
+
+// ─── Live Activity Feed ────────────────────────────────────────
+const LIVE_ACTIVITIES = [
+  {user:"Rahul S.", action:"Ordered 5K Instagram Followers", time:"2 min ago", icon:"📸"},
+  {user:"Priya M.", action:"Added ₹500 to wallet", time:"3 min ago", icon:"💰"},
+  {user:"Arjun K.", action:"Ordered 10K YouTube Views", time:"5 min ago", icon:"▶️"},
+  {user:"Sneha R.", action:"Ordered 1K Telegram Members", time:"7 min ago", icon:"✈️"},
+  {user:"Vikram P.", action:"Ordered 50K Instagram Likes", time:"9 min ago", icon:"❤️"},
+  {user:"Ananya G.", action:"Completed Instagram Reel Views", time:"11 min ago", icon:"📈"},
+  {user:"Ravi T.", action:"Ordered 5K YouTube Subscribers", time:"13 min ago", icon:"▶️"},
+  {user:"Meera J.", action:"Added ₹1000 to wallet", time:"15 min ago", icon:"💰"},
+];
+
+const LiveActivity = () => {
+  const [idx,setIdx]=useState(0);
+  useEffect(()=>{
+    const t=setInterval(()=>setIdx(i=>(i+1)%LIVE_ACTIVITIES.length),2500);
+    return()=>clearInterval(t);
+  },[]);
+  const item=LIVE_ACTIVITIES[idx];
+  return (
+    <div style={{maxWidth:600,margin:"0 auto"}}>
+      <div key={idx} style={{background:"rgba(255,255,255,.04)",border:`1px solid ${C.border}`,borderRadius:14,padding:"16px 22px",display:"flex",alignItems:"center",gap:14,animation:"fadeIn .4s ease"}}>
+        <div style={{width:44,height:44,borderRadius:12,background:C.gP,display:"flex",alignItems:"center",justifyContent:"center",fontSize:20,flexShrink:0}}>{item.icon}</div>
+        <div style={{flex:1}}>
+          <div style={{fontWeight:700,color:"#e8e8f2",fontSize:14,marginBottom:2}}>
+            <span style={{color:"#c4b5fd"}}>{item.user}</span> {item.action}
+          </div>
+          <div style={{fontSize:11,color:"#34d399"}}>✓ {item.time}</div>
+        </div>
+        <div style={{width:9,height:9,borderRadius:"50%",background:"#34d399",animation:"pulse 1.5s infinite",flexShrink:0}}/>
+      </div>
+      <div style={{display:"flex",justifyContent:"center",gap:5,marginTop:12}}>
+        {LIVE_ACTIVITIES.map((_,i)=>(
+          <div key={i} style={{width:i===idx?20:6,height:6,borderRadius:3,background:i===idx?"#7c3aed":"rgba(255,255,255,.15)",transition:"all .3s"}}/>
+        ))}
+      </div>
+    </div>
+  );
+};
+
 // ═══════════════════════════════════════════════════════════════
 //  LANDING PAGE
 // ═══════════════════════════════════════════════════════════════
@@ -931,6 +1021,90 @@ const Landing = ({ goLogin, goSignup, goAdmin }) => {
               </Card>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* LIVE ORDER ACTIVITY */}
+      <section style={{padding:"60px 5%",borderTop:`1px solid ${C.border}`}}>
+        <div style={{maxWidth:1100,margin:"0 auto"}}>
+          <div style={{textAlign:"center",marginBottom:36}}>
+            <div style={{display:"inline-flex",alignItems:"center",gap:8,background:"rgba(52,211,153,.1)",border:"1px solid rgba(52,211,153,.25)",borderRadius:20,padding:"6px 16px",marginBottom:14}}>
+              <span style={{width:8,height:8,borderRadius:"50%",background:"#34d399",animation:"pulse 1.5s infinite",display:"inline-block"}}/>
+              <span style={{fontSize:12,fontWeight:700,color:"#34d399"}}>LIVE ORDER ACTIVITY</span>
+            </div>
+            <h2 style={{fontFamily:"Syne,sans-serif",fontSize:30,fontWeight:900,color:"#f0f0ff",marginBottom:6}}>Orders Happening Right Now</h2>
+            <p style={{color:C.muted,fontSize:13}}>Join thousands of creators already growing with Nexus SMM</p>
+          </div>
+          <LiveActivity/>
+        </div>
+      </section>
+
+      {/* TRENDING SERVICES */}
+      <section style={{padding:"60px 5%",background:"rgba(255,255,255,.012)",borderTop:`1px solid ${C.border}`}}>
+        <div style={{maxWidth:1100,margin:"0 auto"}}>
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:32}}>
+            <div>
+              <h2 style={{fontFamily:"Syne,sans-serif",fontSize:30,fontWeight:900,background:"linear-gradient(135deg,#f5c842,#d4a017)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",marginBottom:6}}>🔥 Trending Services</h2>
+              <p style={{color:C.muted,fontSize:13}}>Most popular services this week</p>
+            </div>
+            <Btn onClick={goSignup} v="ghost" size="sm">View All →</Btn>
+          </div>
+          <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(280px,1fr))",gap:16}}>
+            {SERVICES.filter(s=>s.badge).slice(0,6).map(s=><SvcCard key={s.id} svc={s} onOrder={goSignup}/>)}
+          </div>
+        </div>
+      </section>
+
+      {/* DAILY DEALS */}
+      <section style={{padding:"60px 5%",borderTop:`1px solid ${C.border}`}}>
+        <div style={{maxWidth:1100,margin:"0 auto"}}>
+          <div style={{textAlign:"center",marginBottom:36}}>
+            <h2 style={{fontFamily:"Syne,sans-serif",fontSize:30,fontWeight:900,background:C.gP,WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",marginBottom:6}}>⚡ Today's Special Deals</h2>
+            <p style={{color:C.muted,fontSize:13}}>Limited time offers — grab before they expire!</p>
+          </div>
+          <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(280px,1fr))",gap:16}}>
+            {[
+              {icon:"📸",title:"Instagram Starter Pack",desc:"1K Followers + 5K Likes + 10K Views",price:"₹249",original:"₹499",discount:"50%",badge:"🔥 HOT"},
+              {icon:"▶️",title:"YouTube Growth Bundle",desc:"5K Views + 500 Likes + 100 Subscribers",price:"₹399",original:"₹699",discount:"43%",badge:"⚡ Fast"},
+              {icon:"✈️",title:"Telegram Boost Pack",desc:"2K Members + 10K Post Views",price:"₹349",original:"₹599",discount:"42%",badge:"💎 Value"},
+            ].map((d,i)=>(
+              <Card key={i} gold style={{padding:22,position:"relative",overflow:"hidden"}}>
+                <div style={{position:"absolute",top:12,right:12,background:"#ef4444",color:"#fff",borderRadius:20,padding:"3px 10px",fontSize:10,fontWeight:800}}>{d.discount} OFF</div>
+                <div style={{fontSize:32,marginBottom:12}}>{d.icon}</div>
+                <div style={{fontWeight:800,color:"#f0f0ff",fontSize:15,marginBottom:6}}>{d.title} <span style={{fontSize:10,background:"rgba(245,200,66,.15)",color:C.goldL,borderRadius:20,padding:"2px 8px",fontWeight:700}}>{d.badge}</span></div>
+                <div style={{color:C.muted,fontSize:12,marginBottom:14,lineHeight:1.5}}>{d.desc}</div>
+                <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:16}}>
+                  <span style={{fontSize:22,fontWeight:900,color:C.goldL}}>{d.price}</span>
+                  <span style={{fontSize:14,color:C.muted,textDecoration:"line-through"}}>{d.original}</span>
+                </div>
+                <Btn v="gold" onClick={goSignup} style={{width:"100%",justifyContent:"center"}} size="sm">Grab Deal →</Btn>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* FIRST DEPOSIT BONUS BANNER */}
+      <section style={{padding:"50px 5%",background:"linear-gradient(135deg,rgba(124,58,237,.08),rgba(168,85,247,.05))",borderTop:`1px solid rgba(124,58,237,.2)`}}>
+        <div style={{maxWidth:760,margin:"0 auto",textAlign:"center"}}>
+          <div style={{fontSize:48,marginBottom:14}}>🎁</div>
+          <h2 style={{fontFamily:"Syne,sans-serif",fontSize:34,fontWeight:900,color:"#f0f0ff",marginBottom:10}}>
+            {FIRST_DEPOSIT_BONUS_PCT}% Bonus on Your First Deposit!
+          </h2>
+          <p style={{color:C.muted,fontSize:15,marginBottom:28,lineHeight:1.7}}>
+            New users get <strong style={{color:C.purpleL}}>{FIRST_DEPOSIT_BONUS_PCT}% extra balance</strong> on their first deposit.<br/>
+            Deposit ₹500 and get ₹{500+Math.round(500*FIRST_DEPOSIT_BONUS_PCT/100)} in your wallet — free ₹{Math.round(500*FIRST_DEPOSIT_BONUS_PCT/100)} bonus!
+          </p>
+          <div style={{display:"flex",gap:12,justifyContent:"center",flexWrap:"wrap",marginBottom:20}}>
+            {[{l:"₹100 deposit",v:`Get ₹${100+Math.round(100*FIRST_DEPOSIT_BONUS_PCT/100)}`},{l:"₹500 deposit",v:`Get ₹${500+Math.round(500*FIRST_DEPOSIT_BONUS_PCT/100)}`},{l:"₹1000 deposit",v:`Get ₹${1000+Math.round(1000*FIRST_DEPOSIT_BONUS_PCT/100)}`}].map(x=>(
+              <div key={x.l} style={{background:"rgba(124,58,237,.12)",border:"1px solid rgba(124,58,237,.3)",borderRadius:12,padding:"12px 20px",textAlign:"center"}}>
+                <div style={{fontSize:12,color:C.muted,marginBottom:3}}>{x.l}</div>
+                <div style={{fontSize:18,fontWeight:900,color:"#c4b5fd"}}>{x.v}</div>
+              </div>
+            ))}
+          </div>
+          <Btn onClick={goSignup} size="lg" style={{animation:"glow 2.5s ease infinite"}}>Claim Bonus Now →</Btn>
+          <p style={{fontSize:11,color:C.muted,marginTop:10}}>*First deposit only. Minimum ₹100.</p>
         </div>
       </section>
 
@@ -1078,7 +1252,7 @@ const SvcCard = ({ svc, onOrder }) => (
       <span style={{fontSize:28,flexShrink:0}}>{svc.icon}</span>
     </div>
     <p style={{color:C.muted,fontSize:12,lineHeight:1.6,marginBottom:16}}>{svc.desc}</p>
-    <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:8,marginBottom:16}}>
+    <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:8,marginBottom:12}}>
       {[{l:"Speed",v:svc.speed},{l:"Min Qty",v:(svc.min||0).toLocaleString()},{l:"Price",v:svc.tiers?"From ₹"+svc.tiers[0].price:`₹${svc.price}/unit`}].map(({l,v})=>(
         <div key={l} style={{background:"rgba(255,255,255,.04)",borderRadius:8,padding:"7px 8px",textAlign:"center"}}>
           <div style={{fontSize:9,color:C.muted,letterSpacing:".05em",marginBottom:2}}>{l}</div>
@@ -1086,6 +1260,18 @@ const SvcCard = ({ svc, onOrder }) => (
         </div>
       ))}
     </div>
+    {svc.quality&&svc.quality.length>0&&(
+      <div style={{display:"flex",gap:5,flexWrap:"wrap",marginBottom:12}}>
+        {svc.quality.map(q=>(
+          <span key={q} style={{fontSize:9,padding:"2px 8px",borderRadius:20,fontWeight:700,
+            background:q==="Non Drop"?"rgba(52,211,153,.12)":q==="High Quality"?"rgba(96,165,250,.12)":"rgba(245,200,66,.12)",
+            color:q==="Non Drop"?"#34d399":q==="High Quality"?"#60a5fa":"#f5c842",
+            border:`1px solid ${q==="Non Drop"?"rgba(52,211,153,.25)":q==="High Quality"?"rgba(96,165,250,.25)":"rgba(245,200,66,.25)"}`}}>
+            {q==="Non Drop"?"✓ Non Drop":q==="High Quality"?"⭐ High Quality":"🔄 Refill"}
+          </span>
+        ))}
+      </div>
+    )}
     <Btn style={{width:"100%",justifyContent:"center"}} size="sm">Order Now →</Btn>
   </div>
 );
@@ -1422,27 +1608,29 @@ const UserDash = ({ userName, userEmail, onLogout }) => {
   };
 
   const NAV=[
-    {id:"overview",  label:"Overview",    icon:"⊞"},
-    {id:"neworder",  label:"New Order",   icon:"✦"},
-    {id:"orders",    label:"My Orders",   icon:"📦"},
-    {id:"wallet",    label:"Wallet",      icon:"◈"},
-    {id:"addfunds",  label:"Add Funds",   icon:"⊕"},
-    {id:"services",  label:"Services",    icon:"◇"},
-    {id:"support",   label:"Support",     icon:"💬"},
-    {id:"settings",  label:"Profile",     icon:"👤"},
+    {id:"overview",   label:"Overview",      icon:"⊞"},
+    {id:"neworder",   label:"New Order",     icon:"✦"},
+    {id:"orders",     label:"My Orders",     icon:"📦"},
+    {id:"wallet",     label:"Wallet",        icon:"◈"},
+    {id:"addfunds",   label:"Add Funds",     icon:"⊕"},
+    {id:"services",   label:"Services",      icon:"◇"},
+    {id:"influencer", label:"Influencer",    icon:"🌟"},
+    {id:"support",    label:"Support",       icon:"💬"},
+    {id:"settings",   label:"Profile",       icon:"👤"},
   ];
 
   const renderPage=()=>{
     switch(page){
-      case "overview":  return <UserOverview orders={orders} balance={balance} setPage={goPage} userName={userName} announcements={announcements} userEmail={userEmail}/>;
-      case "neworder":  return <UserNewOrder orders={orders} addOrderSync={addOrderSync} balance={balance} setBalance={setBalanceSync} setPage={goPage}/>;
-      case "orders":    return <UserOrders orders={orders} setOrders={setOrders} userEmail={userEmail}/>;
-      case "wallet":    return <UserWallet balance={balance} txns={txns} userEmail={userEmail}/>;
-      case "addfunds":  return <UserAddFunds balance={balance} setBalance={setBalanceSync} setPage={goPage} setTxns={addTxnSync} userName={userName} userEmail={userEmail}/>;
-      case "services":  return <UserServices setPage={goPage}/>;
-      case "support":   return <UserSupport userEmail={userEmail} userName={userName}/>;
-      case "settings":  return <UserProfile userName={userName} userEmail={userEmail} balance={balance} orders={orders} onLogout={onLogout}/>;
-      default:          return <UserOverview orders={orders} balance={balance} setPage={goPage} userName={userName} announcements={announcements} userEmail={userEmail}/>;
+      case "overview":   return <UserOverview orders={orders} balance={balance} setPage={goPage} userName={userName} announcements={announcements} userEmail={userEmail}/>;
+      case "neworder":   return <UserNewOrder orders={orders} addOrderSync={addOrderSync} balance={balance} setBalance={setBalanceSync} setPage={goPage}/>;
+      case "orders":     return <UserOrders orders={orders} setOrders={setOrders} userEmail={userEmail}/>;
+      case "wallet":     return <UserWallet balance={balance} txns={txns} userEmail={userEmail}/>;
+      case "addfunds":   return <UserAddFunds balance={balance} setBalance={setBalanceSync} setPage={goPage} setTxns={addTxnSync} userName={userName} userEmail={userEmail}/>;
+      case "services":   return <UserServices setPage={goPage}/>;
+      case "influencer": return <UserInfluencer userEmail={userEmail} userName={userName}/>;
+      case "support":    return <UserSupport userEmail={userEmail} userName={userName}/>;
+      case "settings":   return <UserProfile userName={userName} userEmail={userEmail} balance={balance} orders={orders} onLogout={onLogout}/>;
+      default:           return <UserOverview orders={orders} balance={balance} setPage={goPage} userName={userName} announcements={announcements} userEmail={userEmail}/>;
     }
   };
 
@@ -1607,6 +1795,18 @@ const UserOverview = ({ orders, balance, setPage, userName, announcements, userE
         </div>
       </div>
 
+      {/* FREE TRIAL BANNER for new users with low balance */}
+      {balance<=FREE_TRIAL_AMOUNT&&balance>0&&(
+        <Card style={{padding:"14px 20px",marginBottom:18,background:"linear-gradient(135deg,rgba(52,211,153,.08),rgba(16,185,129,.04))",border:"1px solid rgba(52,211,153,.25)",display:"flex",alignItems:"center",gap:14,flexWrap:"wrap"}}>
+          <span style={{fontSize:28}}>🎁</span>
+          <div style={{flex:1}}>
+            <div style={{fontWeight:800,color:"#34d399",fontSize:14,marginBottom:3}}>Welcome Bonus! ₹{FREE_TRIAL_AMOUNT} Free Credit Added</div>
+            <div style={{fontSize:12,color:C.muted}}>Use it to try any service — add more funds to place bigger orders!</div>
+          </div>
+          <Btn v="ghost" size="sm" onClick={()=>setPage("addfunds")}>Add Funds →</Btn>
+        </Card>
+      )}
+
       {/* ANNOUNCEMENTS BOARD */}
       {announcements.length>0&&(
         <div style={{marginBottom:24}}>
@@ -1689,6 +1889,7 @@ const UserOverview = ({ orders, balance, setPage, userName, announcements, userE
           {icon:"💬",label:"Support",   sub:"Chat with our team",          page:"support", grad:C.gGr},
           {icon:"◇",label:"Services",  sub:"Browse all services",          page:"services",grad:"linear-gradient(135deg,#6366f1,#8b5cf6)"},
           {icon:"👤",label:"Profile",   sub:"Account settings & referral", page:"settings",grad:"linear-gradient(135deg,#0f766e,#14b8a6)"},
+          {icon:"🌟",label:"Influencer", sub:"Submit proof & earn rewards",    page:"influencer",grad:"linear-gradient(135deg,#f5c842,#d4a017)"},
           {icon:"🎫",label:"Support",   sub:"Tickets & help center",         page:"support", grad:"linear-gradient(135deg,#7c3aed,#6d28d9)"},
         ].map(q=>(
           <Card key={q.label} onClick={()=>setPage(q.page)} style={{padding:18,cursor:"pointer",display:"flex",alignItems:"center",gap:13,transition:"transform .18s,box-shadow .18s"}}
@@ -2686,24 +2887,158 @@ const UserAddFunds = ({ balance, setBalance, setPage, setTxns, userName="User", 
   );
 };
 
-// ─── User: Services ───────────────────────────────────────────
-const UserServices = ({ setPage }) => {
+// ─── Smart Service Browser ────────────────────────────────────
+const SmartServiceBrowser = ({ onOrder, showOrderBtn=true }) => {
   const [pf,setPf]=useState("All");
-  const filtered=pf==="All"?SERVICES:SERVICES.filter(s=>s.platform===pf);
+  const [cat,setCat]=useState("All");
+  const [quality,setQuality]=useState([]);
+  const [speedF,setSpeedF]=useState("All");
+  const [sort,setSort]=useState("popular");
+  const [search,setSearch]=useState("");
+  const [showFilters,setShowFilters]=useState(false);
+
+  const toggleQuality=(q)=>setQuality(prev=>prev.includes(q)?prev.filter(x=>x!==q):[...prev,q]);
+
+  const filtered = SERVICES.filter(s=>{
+    if(pf!=="All" && s.platform!==pf) return false;
+    if(cat!=="All" && s.cat!==cat) return false;
+    if(speedF!=="All" && s.speedTag!==speedF) return false;
+    if(quality.length>0 && !quality.every(q=>(s.quality||[]).includes(q))) return false;
+    if(search && !s.name.toLowerCase().includes(search.toLowerCase()) && !s.platform.toLowerCase().includes(search.toLowerCase())) return false;
+    return true;
+  }).sort((a,b)=>{
+    if(sort==="price_low"){
+      const pa = a.tiers?a.tiers[0].price:a.price*1000;
+      const pb = b.tiers?b.tiers[0].price:b.price*1000;
+      return pa-pb;
+    }
+    if(sort==="price_high"){
+      const pa = a.tiers?a.tiers[0].price:a.price*1000;
+      const pb = b.tiers?b.tiers[0].price:b.price*1000;
+      return pb-pa;
+    }
+    return (b.badge?1:0)-(a.badge?1:0);
+  });
+
+  const activeFilters = [pf!=="All"&&pf, cat!=="All"&&cat, speedF!=="All"&&speedF, ...quality].filter(Boolean);
+
   return (
-    <div className="page-enter" style={{animation:"fadeIn .4s ease"}}>
-      <PgH title="Services" sub="All available services" action={<Btn onClick={()=>setPage("neworder")}>Order Now</Btn>}/>
-      <div style={{display:"flex",gap:8,flexWrap:"wrap",marginBottom:22}}>
-        {PLATFORMS.map(p=><button key={p} onClick={()=>setPf(p)} style={{background:pf===p?C.gP:"rgba(255,255,255,.04)",
-          border:`1px solid ${pf===p?"transparent":C.border}`,borderRadius:8,padding:"7px 15px",
-          color:pf===p?"#fff":C.muted,fontSize:12,fontWeight:600,cursor:"pointer",transition:"all .2s"}}>{p}</button>)}
+    <div>
+      {/* Search + filter bar */}
+      <div style={{display:"flex",gap:10,marginBottom:14,flexWrap:"wrap"}}>
+        <input value={search} onChange={e=>setSearch(e.target.value)}
+          placeholder="🔍 Search services..."
+          style={{flex:1,minWidth:200,background:"rgba(255,255,255,.05)",border:`1px solid ${C.border}`,borderRadius:10,padding:"10px 14px",color:C.text,fontSize:13}}/>
+        <button onClick={()=>setShowFilters(f=>!f)}
+          style={{padding:"10px 18px",borderRadius:10,border:`1px solid ${showFilters?"rgba(124,58,237,.5)":C.border}`,
+            background:showFilters?"rgba(124,58,237,.15)":"rgba(255,255,255,.04)",
+            color:showFilters?"#c4b5fd":C.muted,fontWeight:700,fontSize:12,cursor:"pointer",
+            display:"flex",alignItems:"center",gap:7}}>
+          ⚡ Filters {activeFilters.length>0&&<span style={{background:"#7c3aed",color:"#fff",borderRadius:10,padding:"1px 7px",fontSize:10}}>{activeFilters.length}</span>}
+        </button>
+        <select value={sort} onChange={e=>setSort(e.target.value)}
+          style={{padding:"10px 14px",borderRadius:10,border:`1px solid ${C.border}`,background:"rgba(255,255,255,.04)",color:C.text,fontSize:12,cursor:"pointer"}}>
+          <option value="popular">🔥 Popular</option>
+          <option value="price_low">₹ Low Price</option>
+          <option value="price_high">₹ High Price</option>
+        </select>
       </div>
-      <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(280px,1fr))",gap:15}}>
-        {filtered.map(s=><SvcCard key={s.id} svc={s} onOrder={()=>setPage("neworder")}/>)}
+
+      {/* Platform pills */}
+      <div style={{display:"flex",gap:7,flexWrap:"wrap",marginBottom:12}}>
+        {PLATFORMS.map(p=>(
+          <button key={p} onClick={()=>setPf(p)} style={{
+            padding:"7px 14px",borderRadius:20,fontSize:12,fontWeight:700,cursor:"pointer",
+            background:pf===p?C.gP:"rgba(255,255,255,.04)",
+            border:`1px solid ${pf===p?"transparent":C.border}`,
+            color:pf===p?"#fff":C.muted,transition:"all .2s"}}>
+            {p==="Instagram"?"📸":p==="YouTube"?"▶️":p==="TikTok"?"🎵":p==="Telegram"?"✈️":p==="Facebook"?"👍":p==="Twitter"?"🐦":"🌐"} {p}
+          </button>
+        ))}
       </div>
+
+      {/* Advanced filters panel */}
+      {showFilters&&(
+        <div style={{background:"rgba(255,255,255,.03)",border:`1px solid rgba(124,58,237,.25)`,borderRadius:14,padding:18,marginBottom:16,animation:"slideDown .2s ease"}}>
+          <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(200px,1fr))",gap:16}}>
+            {/* Service type */}
+            <div>
+              <div style={{fontSize:10,fontWeight:800,color:C.muted,letterSpacing:".08em",marginBottom:9,textTransform:"uppercase"}}>Service Type</div>
+              <div style={{display:"flex",gap:6,flexWrap:"wrap"}}>
+                {SERVICE_CATS.map(c=>(
+                  <button key={c} onClick={()=>setCat(c)} style={{padding:"5px 11px",borderRadius:20,fontSize:11,fontWeight:700,cursor:"pointer",
+                    background:cat===c?"rgba(124,58,237,.2)":"transparent",
+                    border:`1px solid ${cat===c?"rgba(124,58,237,.5)":C.border}`,
+                    color:cat===c?"#c4b5fd":C.muted}}>{c}</button>
+                ))}
+              </div>
+            </div>
+            {/* Quality */}
+            <div>
+              <div style={{fontSize:10,fontWeight:800,color:C.muted,letterSpacing:".08em",marginBottom:9,textTransform:"uppercase"}}>Quality</div>
+              <div style={{display:"flex",gap:6,flexWrap:"wrap"}}>
+                {QUALITY_TAGS.map(q=>(
+                  <button key={q} onClick={()=>toggleQuality(q)} style={{padding:"5px 11px",borderRadius:20,fontSize:11,fontWeight:700,cursor:"pointer",
+                    background:quality.includes(q)?"rgba(52,211,153,.15)":"transparent",
+                    border:`1px solid ${quality.includes(q)?"rgba(52,211,153,.4)":C.border}`,
+                    color:quality.includes(q)?"#34d399":C.muted}}>{q}</button>
+                ))}
+              </div>
+            </div>
+            {/* Speed */}
+            <div>
+              <div style={{fontSize:10,fontWeight:800,color:C.muted,letterSpacing:".08em",marginBottom:9,textTransform:"uppercase"}}>Delivery Speed</div>
+              <div style={{display:"flex",gap:6,flexWrap:"wrap"}}>
+                {["All",...SPEED_TAGS].map(s=>(
+                  <button key={s} onClick={()=>setSpeedF(s)} style={{padding:"5px 11px",borderRadius:20,fontSize:11,fontWeight:700,cursor:"pointer",
+                    background:speedF===s?"rgba(96,165,250,.15)":"transparent",
+                    border:`1px solid ${speedF===s?"rgba(96,165,250,.4)":C.border}`,
+                    color:speedF===s?"#60a5fa":C.muted}}>
+                    {s==="Instant"?"⚡":s==="Fast"?"🚀":s==="Normal"?"🔄":""} {s}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+          {activeFilters.length>0&&(
+            <button onClick={()=>{setPf("All");setCat("All");setQuality([]);setSpeedF("All");}}
+              style={{marginTop:12,padding:"6px 14px",borderRadius:8,border:"1px solid rgba(239,68,68,.3)",background:"rgba(239,68,68,.08)",color:"#f87171",fontSize:11,fontWeight:700,cursor:"pointer"}}>
+              ✕ Clear all filters
+            </button>
+          )}
+        </div>
+      )}
+
+      {/* Results count */}
+      <div style={{fontSize:12,color:C.muted,marginBottom:14}}>
+        Showing <strong style={{color:"#c4b5fd"}}>{filtered.length}</strong> of {SERVICES.length} services
+        {activeFilters.length>0&&<span> · Filters: {activeFilters.join(", ")}</span>}
+      </div>
+
+      {/* Service grid */}
+      {filtered.length===0?(
+        <Card style={{padding:40,textAlign:"center"}}>
+          <div style={{fontSize:40,marginBottom:10}}>🔍</div>
+          <p style={{color:"#e8e8f2",fontWeight:700,marginBottom:6}}>No services found</p>
+          <p style={{color:C.muted,fontSize:13}}>Try adjusting your filters</p>
+        </Card>
+      ):(
+        <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(280px,1fr))",gap:16}}>
+          {filtered.map(s=><SvcCard key={s.id} svc={s} onOrder={()=>onOrder&&onOrder(s)}/>)}
+        </div>
+      )}
     </div>
   );
 };
+
+// ─── User: Services ───────────────────────────────────────────
+const UserServices = ({ setPage }) => (
+  <div className="page-enter" style={{animation:"fadeIn .4s ease"}}>
+    <PgH title="Services" sub="Browse 19+ premium SMM services"
+      action={<Btn onClick={()=>setPage("neworder")}>✦ Order Now →</Btn>}/>
+    <SmartServiceBrowser onOrder={()=>setPage("neworder")}/>
+  </div>
+);
 
 // ─── User: Support ────────────────────────────────────────────
 const UserSupport = ({ userEmail="", userName="" }) => {
@@ -2938,6 +3273,205 @@ const FaqItem = ({ q, a }) => {
   );
 };
 
+
+// ─── User: Influencer Page ────────────────────────────────────
+const UserInfluencer = ({ userEmail="", userName="" }) => {
+  const [tab,setTab]=useState("submit");
+  const [submissions,setSubmissions]=useState([]);
+  const [loading,setLoading]=useState(true);
+  const [form,setForm]=useState({type:"Instagram Story",link:"",followers:"",notes:""});
+  const [submitting,setSubmitting]=useState(false);
+  const F=(k,v)=>setForm(f=>({...f,[k]:v}));
+
+  const load=async()=>{
+    setLoading(true);
+    try{
+      const fs=await getFS(); if(!fs){setLoading(false);return;}
+      const snap=await fs.collection("influencers")
+        .where("userEmail","==",userEmail.toLowerCase().trim()).get();
+      setSubmissions(snap.docs.map(d=>({id:d.id,...d.data()}))
+        .sort((a,b)=>(b.createdAt||0)-(a.createdAt||0)));
+    }catch(e){console.error(e);}
+    setLoading(false);
+  };
+
+  useEffect(()=>{ if(userEmail) load(); },[userEmail]);
+
+  const submit=async()=>{
+    if(!form.link.trim()){Toast.error("Please enter your proof link");return;}
+    if(!form.followers||isNaN(form.followers)){Toast.error("Enter your follower count");return;}
+    setSubmitting(true);
+    try{
+      const fs=await getFS(); if(!fs) throw new Error("No connection");
+      const id="INF-"+Date.now();
+      const followers=parseInt(form.followers)||0;
+      const levelInfo=INFLUENCER_LEVELS.slice().reverse().find(l=>followers>=l.minFollowers)||INFLUENCER_LEVELS[0];
+      await fs.collection("influencers").doc(id).set({
+        id, userEmail:userEmail.toLowerCase().trim(), userName,
+        type:form.type, link:sanitize(form.link),
+        followers, notes:sanitize(form.notes),
+        level:levelInfo.level, reward:levelInfo.reward, rewardQty:levelInfo.rewardQty,
+        status:"Pending", createdAt:Date.now(), date:today()
+      });
+      setForm({type:"Instagram Story",link:"",followers:"",notes:""});
+      Toast.success("✅ Promotion proof submitted! Admin will review within 24 hours.");
+      load(); setTab("history");
+    }catch(e){Toast.error("Failed: "+e.message);}
+    setSubmitting(false);
+  };
+
+  const myLevel=submissions.find(s=>s.status==="Approved");
+  const levelInfo=myLevel?INFLUENCER_LEVELS.find(l=>l.level===myLevel.level)||INFLUENCER_LEVELS[0]:null;
+  const statCol={Pending:"#fbbf24",Approved:"#34d399",Rejected:"#f87171"};
+
+  return (
+    <div className="page-enter" style={{animation:"fadeIn .4s ease"}}>
+      <PgH title="Influencer Program" sub="Promote Nexus SMM and earn free services!"/>
+
+      {/* Level showcase */}
+      <Card gold style={{padding:22,marginBottom:24}}>
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",flexWrap:"wrap",gap:14}}>
+          <div>
+            <div style={{fontSize:13,color:C.muted,marginBottom:6}}>Your Current Level</div>
+            {levelInfo?(
+              <div style={{display:"flex",alignItems:"center",gap:10}}>
+                <span style={{fontSize:28}}>{levelInfo.icon}</span>
+                <div>
+                  <div style={{fontWeight:900,color:levelInfo.color,fontSize:18}}>{levelInfo.level}</div>
+                  <div style={{fontSize:12,color:C.muted}}>{levelInfo.reward}</div>
+                </div>
+              </div>
+            ):<div style={{fontWeight:700,color:C.muted,fontSize:14}}>Not verified yet — submit proof below!</div>}
+          </div>
+          <div style={{display:"flex",gap:10,flexWrap:"wrap"}}>
+            {INFLUENCER_LEVELS.map(l=>(
+              <div key={l.level} style={{textAlign:"center",opacity:levelInfo?.level===l.level?1:0.4}}>
+                <div style={{fontSize:22}}>{l.icon}</div>
+                <div style={{fontSize:9,fontWeight:700,color:l.color,marginTop:2}}>{l.level}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </Card>
+
+      {/* Tabs */}
+      <div style={{display:"flex",gap:0,marginBottom:22,background:"rgba(255,255,255,.03)",borderRadius:11,padding:5,width:"fit-content",border:`1px solid ${C.border}`}}>
+        {[{id:"submit",l:"Submit Proof"},{ id:"history",l:"My Submissions"},{id:"levels",l:"Level Guide"}].map(t=>(
+          <button key={t.id} onClick={()=>setTab(t.id)} style={{padding:"8px 18px",borderRadius:8,border:"none",
+            background:tab===t.id?"rgba(124,58,237,.2)":"transparent",
+            color:tab===t.id?"#c4b5fd":C.muted,fontWeight:tab===t.id?700:500,fontSize:13,cursor:"pointer"}}>{t.l}</button>
+        ))}
+      </div>
+
+      {/* SUBMIT */}
+      {tab==="submit"&&(
+        <div style={{maxWidth:560}}>
+          <Card glow style={{padding:26}}>
+            <h3 style={{fontWeight:800,color:"#e8e8f2",fontSize:15,marginBottom:18}}>📤 Submit Promotion Proof</h3>
+            <div style={{marginBottom:16}}>
+              <label style={{display:"block",fontSize:11,fontWeight:700,color:C.muted,letterSpacing:".07em",marginBottom:8,textTransform:"uppercase"}}>Promotion Type</label>
+              <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
+                {["Instagram Story","Instagram Reel","YouTube Video","Telegram Post","Twitter Post"].map(t=>(
+                  <button key={t} onClick={()=>F("type",t)} style={{padding:"6px 12px",borderRadius:20,border:`1px solid ${form.type===t?"rgba(124,58,237,.5)":C.border}`,background:form.type===t?"rgba(124,58,237,.15)":"transparent",color:form.type===t?"#c4b5fd":C.muted,fontSize:11,fontWeight:700,cursor:"pointer"}}>{t}</button>
+                ))}
+              </div>
+            </div>
+            <Inp label="Proof Link (story/reel/video/post URL)" value={form.link}
+              onChange={e=>F("link",e.target.value)} placeholder="https://instagram.com/stories/..." icon="🔗"/>
+            <Inp label="Your Follower Count" type="number" value={form.followers}
+              onChange={e=>F("followers",e.target.value)} placeholder="e.g. 15000" icon="👥"/>
+            <div style={{marginBottom:16}}>
+              <label style={{display:"block",fontSize:11,fontWeight:700,color:C.muted,letterSpacing:".07em",marginBottom:7,textTransform:"uppercase"}}>Additional Notes (optional)</label>
+              <textarea value={form.notes} onChange={e=>F("notes",e.target.value)} rows={3}
+                placeholder="Mention reach, impressions or any relevant info..."
+                style={{width:"100%",background:"rgba(255,255,255,.04)",border:`1px solid ${C.border}`,borderRadius:11,padding:"11px 14px",color:C.text,fontSize:13,resize:"vertical",fontFamily:"inherit",boxSizing:"border-box"}}/>
+            </div>
+            {form.followers&&!isNaN(form.followers)&&(()=>{
+              const lvl=INFLUENCER_LEVELS.slice().reverse().find(l=>parseInt(form.followers)>=l.minFollowers)||INFLUENCER_LEVELS[0];
+              return <div style={{background:lvl.bg,border:`1px solid ${lvl.color}40`,borderRadius:10,padding:"12px 16px",marginBottom:16}}>
+                <div style={{fontSize:11,color:lvl.color,fontWeight:700,marginBottom:3}}>You qualify for:</div>
+                <div style={{fontWeight:800,fontSize:15,color:lvl.color}}>{lvl.icon} {lvl.level} — {lvl.reward}</div>
+              </div>;
+            })()}
+            <Btn v="purple" onClick={submit} loading={submitting} style={{width:"100%",justifyContent:"center"}} size="lg">Submit Proof 📤</Btn>
+          </Card>
+        </div>
+      )}
+
+      {/* HISTORY */}
+      {tab==="history"&&(
+        loading?<CardSkel/>:
+        submissions.length===0?(
+          <Card style={{padding:40,textAlign:"center"}}>
+            <div style={{fontSize:44,marginBottom:10}}>📤</div>
+            <p style={{color:"#e8e8f2",fontWeight:700,marginBottom:6}}>No submissions yet</p>
+            <p style={{color:C.muted,fontSize:13,marginBottom:16}}>Submit your promotion proof to start earning rewards!</p>
+            <Btn onClick={()=>setTab("submit")}>Submit Proof →</Btn>
+          </Card>
+        ):(
+          <div style={{display:"flex",flexDirection:"column",gap:12}}>
+            {submissions.map(s=>(
+              <Card key={s.id} style={{padding:18}}>
+                <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",flexWrap:"wrap",gap:10}}>
+                  <div>
+                    <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:5}}>
+                      <span style={{fontWeight:800,color:"#e8e8f2",fontSize:14}}>{s.type}</span>
+                      <span style={{fontSize:10,padding:"2px 8px",borderRadius:20,background:`${statCol[s.status]||"#888"}20`,color:statCol[s.status]||"#888",fontWeight:700}}>{s.status}</span>
+                      {s.level&&<span style={{fontSize:10,padding:"2px 8px",borderRadius:20,background:"rgba(124,58,237,.1)",color:"#c4b5fd",fontWeight:700}}>{INFLUENCER_LEVELS.find(l=>l.level===s.level)?.icon} {s.level}</span>}
+                    </div>
+                    <div style={{fontSize:11,color:"#60a5fa",marginBottom:4,fontFamily:"monospace"}}>{s.link}</div>
+                    <div style={{fontSize:11,color:C.muted}}>{(s.followers||0).toLocaleString()} followers · {s.date}</div>
+                    {s.reward&&<div style={{fontSize:12,color:"#34d399",fontWeight:700,marginTop:4}}>🎁 Reward: {s.reward}</div>}
+                    {s.adminNote&&<div style={{fontSize:11,color:C.muted,marginTop:4,fontStyle:"italic"}}>Admin: {s.adminNote}</div>}
+                  </div>
+                </div>
+              </Card>
+            ))}
+          </div>
+        )
+      )}
+
+      {/* LEVELS */}
+      {tab==="levels"&&(
+        <div>
+          <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(260px,1fr))",gap:14}}>
+            {INFLUENCER_LEVELS.map(l=>(
+              <Card key={l.level} style={{padding:22,border:`1px solid ${l.color}30`,background:`${l.bg}`}}>
+                <div style={{display:"flex",alignItems:"center",gap:12,marginBottom:14}}>
+                  <span style={{fontSize:32}}>{l.icon}</span>
+                  <div>
+                    <div style={{fontWeight:900,color:l.color,fontSize:18}}>{l.level}</div>
+                    <div style={{fontSize:11,color:C.muted}}>{l.minFollowers.toLocaleString()}+ followers required</div>
+                  </div>
+                </div>
+                <div style={{background:"rgba(255,255,255,.06)",borderRadius:10,padding:"12px 14px"}}>
+                  <div style={{fontSize:11,color:C.muted,marginBottom:4}}>🎁 Reward on Approval:</div>
+                  <div style={{fontWeight:800,color:l.color,fontSize:14}}>{l.reward}</div>
+                </div>
+              </Card>
+            ))}
+          </div>
+          <Card style={{padding:20,marginTop:16}}>
+            <h4 style={{fontWeight:800,color:"#e8e8f2",marginBottom:12}}>📋 How to Qualify</h4>
+            {[
+              "Create content mentioning Nexus SMM (story, reel, video or post)",
+              "Include our website link nexus-smm.vercel.app in your bio or post",
+              "Submit the proof link and your follower count above",
+              "Admin reviews within 24 hours and sends your reward",
+              "Rewards are added to your wallet as free service credits",
+            ].map((s,i)=>(
+              <div key={i} style={{display:"flex",gap:10,padding:"8px 0",borderBottom:`1px solid ${C.border}`}}>
+                <span style={{color:"#7c3aed",fontWeight:900,fontSize:14,flexShrink:0}}>{i+1}.</span>
+                <span style={{color:C.muted,fontSize:13}}>{s}</span>
+              </div>
+            ))}
+          </Card>
+        </div>
+      )}
+    </div>
+  );
+};
+
 // ─── User: Profile ────────────────────────────────────────────
 const UserProfile = ({ userName, userEmail, balance, orders, onLogout }) => {
   const [name,setName]=useState(userName||"");
@@ -3041,7 +3575,7 @@ const UserProfile = ({ userName, userEmail, balance, orders, onLogout }) => {
             <div style={{fontSize:36,marginBottom:14}}>🤝</div>
             <h3 style={{fontWeight:900,color:C.goldL,fontSize:18,marginBottom:8}}>Earn with Referrals</h3>
             <p style={{color:C.muted,fontSize:13,lineHeight:1.6,marginBottom:20}}>
-              Share your unique code. Earn <strong style={{color:C.goldL}}>5% commission</strong> on every order your friends place — automatically added to your wallet.
+              Share your unique code. Earn <strong style={{color:C.goldL}}>{REFERRAL_COMMISSION_PCT}% commission</strong> on every order your friends place — automatically added to your wallet. Plus they get <strong style={{color:"#34d399"}}>₹{FREE_TRIAL_AMOUNT} free credit</strong> on signup!
             </p>
             <label style={{display:"block",fontSize:11,fontWeight:700,color:C.muted,letterSpacing:".07em",marginBottom:7,textTransform:"uppercase"}}>Your Referral Code</label>
             <div style={{display:"flex",gap:10,marginBottom:16}}>
@@ -3051,7 +3585,7 @@ const UserProfile = ({ userName, userEmail, balance, orders, onLogout }) => {
               <Btn v="gold" size="sm" onClick={()=>navigator.clipboard?.writeText(refCode)}>Copy</Btn>
             </div>
             <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12}}>
-              {[{l:"Referrals",v:"0"},{l:"Earnings",v:"₹0.00"}].map(x=>(
+              {[{l:"Referrals",v:"0"},{l:"Earnings",v:"₹0.00"},{l:"Commission",v:`${REFERRAL_COMMISSION_PCT}%`}].map(x=>(
                 <div key={x.l} style={{background:"rgba(212,160,23,.06)",border:"1px solid rgba(212,160,23,.15)",borderRadius:10,padding:"14px",textAlign:"center"}}>
                   <div style={{fontSize:22,fontWeight:900,color:C.goldL}}>{x.v}</div>
                   <div style={{fontSize:11,color:C.muted}}>{x.l}</div>
@@ -3209,8 +3743,9 @@ const AdminDash = ({ onLogout }) => {
     {id:"a-payments",  label:"Payments",      icon:"💰"},
     {id:"a-suppliers", label:"Suppliers",     icon:"🔌"},
     {id:"a-markup",    label:"Pricing",       icon:"💹"},
-    {id:"a-tickets",   label:"Tickets",       icon:"🎫"},
-    {id:"a-announce",  label:"Announcements", icon:"📣"},
+    {id:"a-tickets",    label:"Tickets",      icon:"🎫"},
+    {id:"a-influencer", label:"Influencers",  icon:"🌟"},
+    {id:"a-announce",   label:"Announcements",icon:"📣"},
   ];
 
   const renderPage=()=>{
@@ -4327,6 +4862,157 @@ Sitemap: ${siteUrl}/sitemap.xml`;
   );
 };
 
+
+// ─── Admin: Influencer Management ────────────────────────────
+const AdminInfluencer = () => {
+  const [subs,setSubs]=useState([]);
+  const [loading,setLoading]=useState(true);
+  const [filter,setFilter]=useState("Pending");
+  const [rewardNote,setRewardNote]=useState("");
+  const [selected,setSelected]=useState(null);
+
+  const load=async()=>{
+    setLoading(true);
+    try{
+      const fs=await getFS(); if(!fs){setLoading(false);return;}
+      const snap=await fs.collection("influencers").get();
+      setSubs(snap.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.createdAt||0)-(a.createdAt||0)));
+    }catch(e){console.error(e);}
+    setLoading(false);
+  };
+
+  useEffect(()=>{ load(); },[]);
+
+  const approve=async(sub)=>{
+    if(!window.confirm(`Approve ${sub.userName} (${sub.level})?
+Reward: ${sub.reward}
+This will mark as approved.`)) return;
+    try{
+      const fs=await getFS(); if(!fs) return;
+      await fs.collection("influencers").doc(sub.id).update({status:"Approved",adminNote:rewardNote||"Approved by admin",reviewedAt:Date.now()});
+      // Push notification
+      await DB.pushNotification(sub.userEmail,"info",`🌟 Influencer Proof Approved! ${sub.icon||""}`,`Congratulations! Your ${sub.type} submission has been approved. Your reward (${sub.reward}) will be sent shortly.`,"influencer");
+      setSubs(s=>s.map(x=>x.id===sub.id?{...x,status:"Approved"}:x));
+      setSelected(null); setRewardNote("");
+      Toast.success(`✅ Approved ${sub.userName} — ${sub.level}`);
+    }catch(e){Toast.error("Failed: "+e.message);}
+  };
+
+  const reject=async(sub)=>{
+    if(!window.confirm(`Reject ${sub.userName}'s submission?`)) return;
+    try{
+      const fs=await getFS(); if(!fs) return;
+      await fs.collection("influencers").doc(sub.id).update({status:"Rejected",adminNote:rewardNote||"Does not meet requirements",reviewedAt:Date.now()});
+      await DB.pushNotification(sub.userEmail,"info","❌ Influencer Submission Rejected",`Your ${sub.type} submission was not approved. ${rewardNote||"Please review our requirements and resubmit."}`,"influencer");
+      setSubs(s=>s.map(x=>x.id===sub.id?{...x,status:"Rejected"}:x));
+      setSelected(null); setRewardNote("");
+      Toast.warning(`Rejected ${sub.userName}`);
+    }catch(e){Toast.error("Failed: "+e.message);}
+  };
+
+  const sendReward=async(sub)=>{
+    if(!window.confirm(`Send ${sub.reward} to ${sub.userName}?
+This will add free service credit to their wallet.`)) return;
+    try{
+      const fs=await getFS(); if(!fs) return;
+      // Add reward as wallet credit
+      const currentBal = await DB.getBalanceFromFirebase(sub.userEmail);
+      const rewardValue = Math.round(sub.rewardQty * 0.15); // ₹0.15 per follower equivalent
+      const newBal = parseFloat((currentBal + rewardValue).toFixed(2));
+      await DB.updateUserBalanceAsync(sub.userEmail, newBal);
+      await fs.collection("influencers").doc(sub.id).update({rewardSent:true, rewardSentAt:Date.now()});
+      await DB.pushNotification(sub.userEmail,"deposit_approved","🎁 Influencer Reward Received!",`Your ${sub.level} influencer reward has been added! ₹${rewardValue} credited to your wallet.`,"wallet");
+      setSubs(s=>s.map(x=>x.id===sub.id?{...x,rewardSent:true}:x));
+      Toast.success(`🎁 Reward sent! ₹${rewardValue} added to ${sub.userName}`);
+    }catch(e){Toast.error("Failed: "+e.message);}
+  };
+
+  const statCol={Pending:"#fbbf24",Approved:"#34d399",Rejected:"#f87171"};
+  const filtered=filter==="All"?subs:subs.filter(s=>s.status===filter);
+
+  // Stats
+  const pending=subs.filter(s=>s.status==="Pending").length;
+  const approved=subs.filter(s=>s.status==="Approved").length;
+
+  return (
+    <div className="page-enter" style={{animation:"fadeIn .4s ease"}}>
+      <PgH title="Influencer Management" sub={`${subs.length} total submissions · ${pending} pending review`}
+        action={<button onClick={load} style={{padding:"8px 16px",background:"rgba(124,58,237,.1)",border:"1px solid rgba(124,58,237,.3)",borderRadius:9,color:"#c4b5fd",fontSize:12,fontWeight:700,cursor:"pointer"}}>🔄 Refresh</button>}/>
+
+      {/* Stats */}
+      <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(150px,1fr))",gap:14,marginBottom:20}}>
+        {[["⏳","Pending",pending,"#fbbf24"],["✅","Approved",approved,"#34d399"],["📊","Total",subs.length,"#c4b5fd"]].map(([ic,lb,val,col])=>(
+          <div key={lb} style={{background:"rgba(255,255,255,.04)",borderRadius:11,padding:"14px 16px",textAlign:"center"}}>
+            <div style={{fontSize:22,fontWeight:900,color:col}}>{val}</div>
+            <div style={{fontSize:11,color:C.muted,marginTop:3}}>{ic} {lb}</div>
+          </div>
+        ))}
+      </div>
+
+      {/* Filter */}
+      <div style={{display:"flex",gap:8,flexWrap:"wrap",marginBottom:18}}>
+        {["All","Pending","Approved","Rejected"].map(s=>(
+          <button key={s} onClick={()=>setFilter(s)} style={{padding:"7px 16px",borderRadius:20,border:`1px solid ${filter===s?"rgba(124,58,237,.6)":C.border}`,background:filter===s?"rgba(124,58,237,.15)":"transparent",color:filter===s?"#c4b5fd":C.muted,fontSize:12,fontWeight:700,cursor:"pointer"}}>
+            {s} ({s==="All"?subs.length:subs.filter(x=>x.status===s).length})
+          </button>
+        ))}
+      </div>
+
+      {loading?<div style={{display:"flex",flexDirection:"column",gap:10}}>{[1,2,3].map(i=><CardSkel key={i}/>)}</div>:
+      filtered.length===0?<Card style={{padding:30,textAlign:"center",color:C.muted}}>No {filter.toLowerCase()} submissions</Card>:(
+        <div style={{display:"flex",flexDirection:"column",gap:12}}>
+          {filtered.map(s=>{
+            const lvl=INFLUENCER_LEVELS.find(l=>l.level===s.level)||INFLUENCER_LEVELS[0];
+            return (
+              <Card key={s.id} style={{padding:20,border:`1px solid ${selected===s.id?"rgba(124,58,237,.4)":C.border}`}}>
+                <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",flexWrap:"wrap",gap:12}}>
+                  <div style={{flex:1}}>
+                    <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:8,flexWrap:"wrap"}}>
+                      <span style={{fontSize:22}}>{lvl.icon}</span>
+                      <div>
+                        <div style={{fontWeight:800,color:"#e8e8f2",fontSize:14}}>{s.userName}</div>
+                        <div style={{fontSize:11,color:C.muted}}>{s.userEmail}</div>
+                      </div>
+                      <span style={{fontSize:10,padding:"3px 10px",borderRadius:20,background:`${statCol[s.status]||"#888"}20`,color:statCol[s.status]||"#888",fontWeight:700}}>{s.status}</span>
+                      <span style={{fontSize:10,padding:"3px 10px",borderRadius:20,background:lvl.bg,color:lvl.color,fontWeight:700}}>{lvl.level}</span>
+                      {s.rewardSent&&<span style={{fontSize:10,padding:"3px 10px",borderRadius:20,background:"rgba(52,211,153,.15)",color:"#34d399",fontWeight:700}}>🎁 Reward Sent</span>}
+                    </div>
+                    <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(140px,1fr))",gap:8,marginBottom:10}}>
+                      {[["Type",s.type],["Followers",(s.followers||0).toLocaleString()],["Reward",s.reward],["Date",s.date]].map(([l,v])=>(
+                        <div key={l} style={{background:"rgba(255,255,255,.04)",borderRadius:8,padding:"8px 10px"}}>
+                          <div style={{fontSize:9,color:C.muted,marginBottom:2}}>{l.toUpperCase()}</div>
+                          <div style={{fontSize:12,fontWeight:700,color:"#c4b5fd"}}>{v}</div>
+                        </div>
+                      ))}
+                    </div>
+                    <div style={{fontSize:11,color:"#60a5fa",fontFamily:"monospace",marginBottom:s.notes?6:0,wordBreak:"break-all"}}>{s.link}</div>
+                    {s.notes&&<div style={{fontSize:11,color:C.muted,fontStyle:"italic"}}>"{s.notes}"</div>}
+                    {s.adminNote&&<div style={{fontSize:11,color:C.muted,marginTop:4}}>Admin note: {s.adminNote}</div>}
+                  </div>
+                  <div style={{display:"flex",flexDirection:"column",gap:7,minWidth:120}}>
+                    {s.status==="Pending"&&<>
+                      {selected===s.id&&(
+                        <input value={rewardNote} onChange={e=>setRewardNote(e.target.value)}
+                          placeholder="Note for user..." style={{background:"rgba(255,255,255,.04)",border:`1px solid ${C.border}`,borderRadius:8,padding:"7px 10px",color:C.text,fontSize:11,marginBottom:4}}/>
+                      )}
+                      <button onClick={()=>setSelected(selected===s.id?null:s.id)} style={{background:"rgba(255,255,255,.06)",border:`1px solid ${C.border}`,borderRadius:7,padding:"7px 12px",color:"#e8e8f2",fontSize:11,fontWeight:700,cursor:"pointer"}}>✏ Add Note</button>
+                      <button onClick={()=>approve(s)} style={{background:"rgba(52,211,153,.15)",border:"1px solid rgba(52,211,153,.3)",borderRadius:7,padding:"7px 12px",color:"#34d399",fontSize:11,fontWeight:700,cursor:"pointer"}}>✅ Approve</button>
+                      <button onClick={()=>reject(s)} style={{background:"rgba(239,68,68,.1)",border:"1px solid rgba(239,68,68,.25)",borderRadius:7,padding:"7px 12px",color:"#f87171",fontSize:11,fontWeight:700,cursor:"pointer"}}>❌ Reject</button>
+                    </>}
+                    {s.status==="Approved"&&!s.rewardSent&&(
+                      <button onClick={()=>sendReward(s)} style={{background:"rgba(212,160,23,.15)",border:"1px solid rgba(212,160,23,.3)",borderRadius:7,padding:"7px 12px",color:C.goldL,fontSize:11,fontWeight:700,cursor:"pointer"}}>🎁 Send Reward</button>
+                    )}
+                  </div>
+                </div>
+              </Card>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+};
+
 // ─── Admin: Payments ─────────────────────────────────────────
 const AdminPayments = () => {
   const [deps,setDeps]=useState([]);
@@ -4358,6 +5044,16 @@ const AdminPayments = () => {
       if(wSnap.exists) currentBal = wSnap.data().balance || 0;
 
       const newBal = parseFloat((currentBal + dep.amount).toFixed(2));
+
+      // Check if this is first deposit (give bonus)
+      let bonusAdded = 0;
+      const prevDeps = await fs.collection("deposits")
+        .where("email","==",dep.email.toLowerCase().trim())
+        .where("status","==","approved").get();
+      if(prevDeps.empty){ // This IS the first deposit
+        bonusAdded = parseFloat((dep.amount * FIRST_DEPOSIT_BONUS_PCT / 100).toFixed(2));
+        newBal = parseFloat((newBal + bonusAdded).toFixed(2));
+      }
 
       // Write wallet
       await fs.collection("wallets").doc(key).set({balance:newBal, email:dep.email.toLowerCase().trim(), ts:Date.now()});
