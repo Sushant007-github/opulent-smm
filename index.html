@@ -34,25 +34,71 @@
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 </head>
 <body>
-  <!-- Loading screen shown while Babel compiles JSX (prevents white screen) -->
-  <div id="app-loader" style="position:fixed;inset:0;background:#06060a;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:99999;font-family:sans-serif;">
-    <div style="width:54px;height:54px;border-radius:14px;background:linear-gradient(135deg,#7c3aed,#d4a017);display:flex;align-items:center;justify-content:center;font-size:24px;margin-bottom:20px;box-shadow:0 0 32px rgba(212,160,23,.4);">✦</div>
-    <div style="font-size:18px;font-weight:800;color:#f0f0ff;letter-spacing:.05em;margin-bottom:8px;">OpulentSMM</div>
-    <div style="font-size:12px;color:#6b7280;margin-bottom:24px;">Premium Social Media Growth</div>
-    <div style="width:40px;height:40px;border:3px solid rgba(212,160,23,.2);border-top-color:#d4a017;border-radius:50%;animation:spin .8s linear infinite;"></div>
-    <style>@keyframes spin{to{transform:rotate(360deg)}}</style>
+  <!-- Loading screen — stays until React fully mounts -->
+  <div id="app-loader" style="position:fixed;inset:0;background:#06060a;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:99999;font-family:sans-serif;transition:opacity .5s;">
+    <div style="width:64px;height:64px;border-radius:18px;background:linear-gradient(135deg,#7c3aed,#d4a017);display:flex;align-items:center;justify-content:center;font-size:28px;margin-bottom:22px;box-shadow:0 0 40px rgba(212,160,23,.5),0 0 80px rgba(124,58,237,.3);">✦</div>
+    <div style="font-size:22px;font-weight:800;color:#f0f0ff;letter-spacing:.04em;margin-bottom:6px;font-family:sans-serif;">OpulentSMM</div>
+    <div style="font-size:13px;color:#6b7280;margin-bottom:32px;letter-spacing:.06em;">PREMIUM SOCIAL MEDIA GROWTH</div>
+    <div style="width:44px;height:44px;border:3px solid rgba(212,160,23,.15);border-top-color:#d4a017;border-right-color:rgba(212,160,23,.5);border-radius:50%;animation:_ld_spin .9s linear infinite;"></div>
+    <div id="loader-status" style="font-size:11px;color:#3a3a50;margin-top:18px;letter-spacing:.04em;">Loading...</div>
+    <style>
+      @keyframes _ld_spin{to{transform:rotate(360deg)}}
+      @keyframes _ld_pulse{0%,100%{opacity:.4}50%{opacity:1}}
+    </style>
   </div>
   <div id="root"></div>
   <script>
-    // Hide loader once React has mounted
-    const _hideLoader = () => {
-      const l = document.getElementById('app-loader');
-      if(l) { l.style.opacity='0'; l.style.transition='opacity .4s'; setTimeout(()=>l.remove(),400); }
-    };
-    // Fallback: hide after 12 seconds no matter what
-    setTimeout(_hideLoader, 12000);
+    var _loaderHidden = false;
+    var _loaderTimer = null;
+    var _statusEl = document.getElementById('loader-status');
+    var _msgs = ['Initializing...','Loading services...','Connecting...','Almost ready...'];
+    var _mi = 0;
+    var _msgTimer = setInterval(function(){
+      if(_statusEl && !_loaderHidden) { _statusEl.textContent = _msgs[_mi % _msgs.length]; _mi++; }
+    }, 2800);
+
+    function _hideLoader() {
+      if(_loaderHidden) return;
+      _loaderHidden = true;
+      clearInterval(_msgTimer);
+      clearTimeout(_loaderTimer);
+      var l = document.getElementById('app-loader');
+      if(l) { l.style.opacity='0'; setTimeout(function(){ if(l.parentNode) l.parentNode.removeChild(l); }, 500); }
+    }
+
+    function _showLoaderError(msg) {
+      clearInterval(_msgTimer);
+      clearTimeout(_loaderTimer);
+      var l = document.getElementById('app-loader');
+      if(!l) return;
+      l.innerHTML = '<div style="text-align:center;padding:36px 24px;font-family:sans-serif;max-width:340px">' +
+        '<div style="font-size:44px;margin-bottom:16px">⚠️</div>' +
+        '<div style="font-size:18px;font-weight:800;color:#f0f0ff;margin-bottom:10px">Failed to Load</div>' +
+        '<div style="font-size:13px;color:#6b7280;margin-bottom:8px;line-height:1.6">Try clearing your browser cache (Settings → Clear browsing data) then reload.</div>' +
+        '<div style="font-size:11px;color:#444;margin-bottom:20px;word-break:break-all;">' + (msg||'').substring(0,100) + '</div>' +
+        '<button onclick="window.location.reload()" style="background:linear-gradient(135deg,#7c3aed,#a855f7);color:#fff;border:none;border-radius:10px;padding:13px 32px;font-size:14px;font-weight:700;cursor:pointer;width:100%">🔄 Reload Page</button>' +
+        '</div>';
+    }
+
+    // Catch any JS errors (Babel compile errors show up here)
+    window.addEventListener('error', function(e) {
+      console.error('App error:', e.message, 'at', e.filename, e.lineno);
+      if(!_loaderHidden) _showLoaderError(e.message);
+      return true;
+    });
+
+    // Catch unhandled promise rejections
+    window.addEventListener('unhandledrejection', function(e) {
+      console.error('Unhandled rejection:', e.reason);
+      if(!_loaderHidden) _showLoaderError(String(e.reason));
+    });
+
+    // Safety timeout — if React doesn't mount after 45s, show error
+    _loaderTimer = setTimeout(function() {
+      if(!_loaderHidden) _showLoaderError('Timeout: App took too long to load. Check your internet connection.');
+    }, 45000);
   </script>
-  <script type="text/babel" data-presets="react">
+  <script type="text/babel" data-presets="react,env" data-async="true">
 const { useState, useEffect, useRef, useCallback } = React;
 
 const ADMIN_EMAIL = "admin@opluentedge.com";
@@ -118,7 +164,6 @@ const SERVICES = [
     speed:"0–3 hrs", min:500, max:20000, price:0.15, cat:"Engagement",
     quality:["High Quality"], speedTag:"Normal" },
 
-
   { id:8, platform:"YouTube", icon:"▶️", name:"YouTube Views – Indian HQ",
     desc:"High-retention Indian views with watch time boost. Helps reach monetization thresholds faster.",
     speed:"1–24 hrs", min:1000, max:500000, cat:"Views", badge:"🏆 Top Rated",
@@ -135,7 +180,6 @@ const SERVICES = [
     speed:"1–12 hrs", min:100, max:50000, price:1.20, cat:"Likes",
     quality:["High Quality"], speedTag:"Fast" },
 
-
   { id:11, platform:"Telegram", icon:"✈️", name:"Telegram Members – Indian",
     desc:"Real Indian members for your Telegram channel or group. Boosts credibility and trust.",
     speed:"0–12 hrs", min:100, max:200000, cat:"Members", badge:"🇮🇳 Indian",
@@ -146,7 +190,6 @@ const SERVICES = [
     desc:"Increase view count on your Telegram posts and channels. Instant delivery.",
     speed:"0–30 min", min:500, max:500000, price:0.05, cat:"Views",
     quality:["High Quality"], speedTag:"Instant" },
-
 
   { id:13, platform:"TikTok", icon:"🎵", name:"TikTok Views – Worldwide",
     desc:"Push content to For You pages worldwide. Fast delivery, no password needed.",
@@ -163,7 +206,6 @@ const SERVICES = [
     speed:"0–2 hrs", min:100, max:100000, price:0.50, cat:"Likes",
     quality:["High Quality"], speedTag:"Instant" },
 
-
   { id:16, platform:"Facebook", icon:"👍", name:"Facebook Page Likes – Indian",
     desc:"Indian page likes for your Facebook business page. Looks 100% natural and organic.",
     speed:"1–48 hrs", min:100, max:50000, price:1.10, cat:"Likes",
@@ -173,7 +215,6 @@ const SERVICES = [
     desc:"Boost engagement on your Facebook posts with real-looking likes.",
     speed:"0–6 hrs", min:100, max:20000, price:0.80, cat:"Likes",
     quality:["High Quality"], speedTag:"Fast" },
-
 
   { id:18, platform:"Twitter", icon:"🐦", name:"Twitter / X Followers",
     desc:"Boost your credibility with a higher follower count. Gradual natural delivery.",
@@ -1824,12 +1865,10 @@ const UserDash = ({ userName, userEmail, onLogout }) => {
   const [showProfile,setShowProfile]=useState(false);
   const [dashLoading,setDashLoading]=useState(false);
 
-
   const goPage = React.useCallback((p) => {
     window.history.pushState({screen:"user", page:p},"",window.location.pathname);
     setPage(p);
   }, []);
-
 
   useEffect(()=>{
 
@@ -1850,7 +1889,6 @@ const UserDash = ({ userName, userEmail, onLogout }) => {
     return()=>window.removeEventListener("popstate", handlePop);
   },[]);
 
-
   useEffect(()=>{
     let mounted = true;
     const loadAll = async () => {
@@ -1866,7 +1904,6 @@ const UserDash = ({ userName, userEmail, onLogout }) => {
       if(mounted) setDashLoading(false);
     };
     loadAll();
-
 
     let prevBal = null;
     const poll = async () => {
@@ -1885,7 +1922,6 @@ const UserDash = ({ userName, userEmail, onLogout }) => {
     const iv = setInterval(poll, 5000);
     return () => { mounted=false; clearInterval(iv); };
   },[userEmail]);
-
 
   useEffect(()=>{
     if(!userEmail) return;
@@ -1934,7 +1970,6 @@ const UserDash = ({ userName, userEmail, onLogout }) => {
     const statusIv = setInterval(checkOrderStatuses, 5*60*1000);
     return ()=>clearInterval(statusIv);
   },[userEmail]);
-
 
   const setBalanceSync=(val)=>{
     const n=typeof val==="function"?val(balance):val;
@@ -5890,39 +5925,6 @@ const AdminTickets = () => {
   );
 };
 
-// ─── SEO Tools (sitemap + robots) ────────────────────────────
-const SEOTools = () => {
-  const siteUrl = "https://opulentsmm.vercel.app";
-  const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>${siteUrl}/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
-  <url><loc>${siteUrl}/#svc</loc><changefreq>daily</changefreq><priority>0.9</priority></url>
-</urlset>`;
-  const robots = `User-agent: *
-Allow: /
-Sitemap: ${siteUrl}/sitemap.xml`;
-
-  const download=(content,name,type)=>{
-    const blob=new Blob([content],{type});
-    const url=URL.createObjectURL(blob);
-    const a=document.createElement("a");
-    a.href=url; a.download=name; a.click();
-    URL.revokeObjectURL(url);
-    Toast.success(`Downloaded ${name}`);
-  };
-
-  return (
-    <Card style={{padding:22,marginBottom:20}}>
-      <h3 style={{fontWeight:800,fontSize:14,color:"#e8e8f2",marginBottom:14}}>🔍 SEO Tools</h3>
-      <div style={{display:"flex",gap:10,flexWrap:"wrap"}}>
-        <Btn v="ghost" size="sm" onClick={()=>download(sitemap,"sitemap.xml","application/xml")}>⬇ sitemap.xml</Btn>
-        <Btn v="ghost" size="sm" onClick={()=>download(robots,"robots.txt","text/plain")}>⬇ robots.txt</Btn>
-      </div>
-      <p style={{fontSize:11,color:C.muted,marginTop:10}}>Upload these files to your GitHub repo root for better SEO indexing.</p>
-    </Card>
-  );
-};
-
 // ─── Admin: Influencer Management ────────────────────────────
 const AdminInfluencer = () => {
   const [subs,setSubs]=useState([]);
@@ -6381,7 +6383,6 @@ const AdminPayments = () => {
         const newTotalDep = parseFloat((prevTotalDep + dep.amount).toFixed(2));
         await fs.collection("users").doc(userKey).set({totalDeposit: newTotalDep},{merge:true});
 
-
         const isNowActive = newTotalDep >= ACTIVE_USER_MIN_DEPOSIT;
         if(isNowActive && uSnap.exists && uSnap.data().referredBy) {
           const refCode = uSnap.data().referredBy;
@@ -6393,7 +6394,6 @@ const AdminPayments = () => {
           }
         }
       } catch(e){ console.error("totalDeposit update failed:",e); }
-
 
       await DB.pushNotification(dep.email,"deposit_approved","💰 Deposit Approved!",`₹${dep.amount} added to your wallet${bonusAdded>0?` + ₹${bonusAdded} first deposit bonus!`:""}. New balance: ₹${confirmedBal}`,"wallet");
 
@@ -6573,7 +6573,6 @@ const AdminReferrals = () => {
   };
   useEffect(()=>{ load(); },[]);
 
-
   const grouped = refs.reduce((m,r)=>{
     const k=(r.referralCode||"unknown").toLowerCase();
     const e=m[k]||{code:k, total:0, active:0, totalDeposit:0, emails:[], lastConversion:0};
@@ -6736,7 +6735,6 @@ const AdminReferrals = () => {
     load();
   },[]);
 
-
   const grouped = refs.reduce((m,r)=>{
     const k=r.referralCode||"unknown";
     const e=m[k]||{code:k,conversions:0,users:[],lastConversion:null};
@@ -6772,7 +6770,7 @@ const AdminReferrals = () => {
       <Card gold style={{padding:20,marginBottom:20}}>
         <div style={{fontSize:12,color:C.goldL,fontWeight:800,marginBottom:8}}>🔗 How Referral URLs Work</div>
         <div style={{fontSize:12,color:C.muted,lineHeight:1.7}}>
-          Influencers share links like: <code style={{background:"rgba(255,255,255,.06)",padding:"2px 8px",borderRadius:6,color:"#c4b5fd",fontFamily:"monospace"}}>https://yoursite.com?ref=THEIRCODE</code><br/>
+          Influencers share links like: <code style={{background:"rgba(255,255,255,.06)",padding:"2px 8px",borderRadius:6,color:"#c4b5fd",fontFamily:"monospace"}}>https:
           When a visitor clicks that link, their referral code is captured and stored. On signup, it's saved to their Firebase user document under the <code style={{background:"rgba(255,255,255,.06)",padding:"2px 6px",borderRadius:4,color:C.goldL,fontFamily:"monospace"}}>referral</code> field. You can then track and reward influencers manually from this panel.
         </div>
       </Card>
@@ -6985,6 +6983,11 @@ class ErrorBoundary extends React.Component {
   componentDidCatch(error,info){ console.error("OpulentSMM Error:",error,info); }
   render(){
     if(this.state.hasError){
+      // Show error in loader overlay instead of white screen
+      if(typeof _showLoaderError === 'function') {
+        _showLoaderError(String(this.state.error));
+        return null;
+      }
       return React.createElement('div',{style:{
         minHeight:"100vh",background:"#06060a",display:"flex",alignItems:"center",
         justifyContent:"center",flexDirection:"column",padding:24,fontFamily:"sans-serif"
@@ -7008,7 +7011,6 @@ class ErrorBoundary extends React.Component {
     return this.props.children;
   }
 }
-
 
 function App() {
   // ── SPA routing: detect hidden admin route via URL hash ──────
@@ -7102,8 +7104,8 @@ function App() {
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(React.createElement(ErrorBoundary, null, React.createElement(App)));
-// Hide the loading screen after React mounts
-if(typeof _hideLoader === 'function') setTimeout(_hideLoader, 100);
+// Hide loading screen only after React successfully mounts
+if(typeof _hideLoader === 'function') setTimeout(_hideLoader, 200);
 </script>
 </body>
 </html>
