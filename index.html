@@ -213,16 +213,32 @@ const FREE_TRIAL_AMOUNT = 10;       // ₹10 free trial credit for new signups
 
 // ─── Influencer Level System ──────────────────────────────────
 const INFLUENCER_LEVELS = [
-  { level:"Bronze",  icon:"🥉", minFollowers:1000,   reward:"50 Free Followers",   rewardQty:50,   color:"#cd7f32", bg:"rgba(205,127,50,.15)" },
-  { level:"Silver",  icon:"🥈", minFollowers:5000,   reward:"100 Free Followers",  rewardQty:100,  color:"#c0c0c0", bg:"rgba(192,192,192,.15)" },
-  { level:"Gold",    icon:"🥇", minFollowers:10000,  reward:"200 Free Followers",  rewardQty:200,  color:"#ffd700", bg:"rgba(255,215,0,.15)" },
-  { level:"Diamond", icon:"💎", minFollowers:50000,  reward:"500 Free Followers",  rewardQty:500,  color:"#60a5fa", bg:"rgba(96,165,250,.15)" },
-  { level:"VIP",     icon:"👑", minFollowers:100000, reward:"1000 Free Followers", rewardQty:1000, color:"#a855f7", bg:"rgba(168,85,247,.15)" },
-  { level:"VVIP",    icon:"💫", minFollowers:500000, reward:"3000 Free Followers", rewardQty:3000, color:"#f5c842", bg:"rgba(245,200,66,.15)" },
+  { level:"Bronze",  icon:"🥉", minFollowers:1000,   minActiveUsers:5,    reward:"50 Free Followers",   rewardQty:50,   color:"#cd7f32", bg:"rgba(205,127,50,.15)",  border:"rgba(205,127,50,.3)"  },
+  { level:"Silver",  icon:"🥈", minFollowers:5000,   minActiveUsers:20,   reward:"100 Free Followers",  rewardQty:100,  color:"#c0c0c0", bg:"rgba(192,192,192,.15)", border:"rgba(192,192,192,.3)" },
+  { level:"Gold",    icon:"🥇", minFollowers:10000,  minActiveUsers:50,   reward:"200 Free Followers",  rewardQty:200,  color:"#ffd700", bg:"rgba(255,215,0,.15)",   border:"rgba(255,215,0,.3)"   },
+  { level:"Diamond", icon:"💎", minFollowers:50000,  minActiveUsers:150,  reward:"500 Free Followers",  rewardQty:500,  color:"#60a5fa", bg:"rgba(96,165,250,.15)",  border:"rgba(96,165,250,.3)"  },
+  { level:"VIP",     icon:"👑", minFollowers:100000, minActiveUsers:300,  reward:"1000 Free Followers", rewardQty:1000, color:"#a855f7", bg:"rgba(168,85,247,.15)",  border:"rgba(168,85,247,.3)"  },
+  { level:"VVIP",    icon:"💫", minFollowers:500000, minActiveUsers:1000, reward:"3000 Free Followers", rewardQty:3000, color:"#f5c842", bg:"rgba(245,200,66,.15)",   border:"rgba(245,200,66,.3)"  },
 ];
 
+// ── Influencer helpers ──────────────────────────────────────
+const ACTIVE_USER_MIN_DEPOSIT = 100;
+const ACTIVE_USER_MIN_ORDERS  = 1;
+const getInfluencerLevel = (followers, activeUsers) => {
+  const f=parseInt(followers)||0, a=parseInt(activeUsers)||0;
+  const eligible=INFLUENCER_LEVELS.filter(l=>f>=l.minFollowers && a>=l.minActiveUsers);
+  return eligible.length ? eligible[eligible.length-1] : null;
+};
+const getNextInfluencerLevel = (followers, activeUsers) => {
+  const f=parseInt(followers)||0, a=parseInt(activeUsers)||0;
+  const cur=getInfluencerLevel(f,a);
+  if(!cur) return INFLUENCER_LEVELS[0];
+  const idx=INFLUENCER_LEVELS.findIndex(l=>l.level===cur.level);
+  return idx<INFLUENCER_LEVELS.length-1 ? INFLUENCER_LEVELS[idx+1] : null;
+};
+
 // ── Wipe any old localStorage data once ──────────────────────
-(()=>{ try{ Object.keys(localStorage).filter(k=>k.startsWith("nx_")).forEach(k=>localStorage.removeItem(k)); }catch{} })();
+(()=>{ try{ Object.keys(localStorage).filter(k=>k.startsWith("nx_") && k!=="opulent_ref").forEach(k=>localStorage.removeItem(k)); }catch{} })();
 const uid = () => "ORD-" + String(Math.floor(Math.random()*9000)+1000);
 const today = () => new Date().toISOString().slice(0,10);
 const sanitize = (str) => String(str||"").replace(/<[^>]*>/g,"").replace(/[<>"'&]/g,"").trim().slice(0,500);
@@ -319,7 +335,27 @@ const DB = {
   },
 
   addOrder(o){
-    getFS().then(fs=>{ if(fs) fs.collection("orders").add(o).catch(console.error); });
+    getFS().then(async fs=>{
+      if(!fs) return;
+      fs.collection("orders").add(o).catch(console.error);
+      // ── Increment totalOrders for active-user tracking ──
+      if(o.userEmail){
+        try{
+          const uKey=o.userEmail.toLowerCase().trim().replace(/[@.]/g,"_");
+          const uSnap=await fs.collection("users").doc(uKey).get();
+          const prev=uSnap.exists?(uSnap.data().totalOrders||0):0;
+          const newTotal=prev+1;
+          await fs.collection("users").doc(uKey).set({totalOrders:newTotal},{merge:true});
+          // Mark referral as active if threshold met
+          if(newTotal>=ACTIVE_USER_MIN_ORDERS && uSnap.exists && uSnap.data().referredBy){
+            const rSnap=await fs.collection("referrals")
+              .where("newUserEmail","==",o.userEmail.toLowerCase().trim()).get();
+            for(const d of rSnap.docs)
+              await d.ref.set({isActive:true,totalOrders:newTotal},{merge:true});
+          }
+        }catch(e){console.error("totalOrders update failed:",e);}
+      }
+    });
   },
 
   updateOrder(id,status){
@@ -347,10 +383,12 @@ const DB = {
       if(snap && !snap.exists){
         const userData = {
           ...user,
-          balance: FREE_TRIAL_AMOUNT,
-          referral: user.referral || "",
-          referredBy: user.referral || "",
-          joinedAt: Date.now(),
+          balance:      FREE_TRIAL_AMOUNT,
+          referral:     user.referral || "",
+          referredBy:   user.referral || "",
+          totalDeposit: 0,
+          totalOrders:  0,
+          joinedAt:     Date.now(),
         };
         await fs.collection("users").doc(key).set(userData).catch(console.error);
         // Give free trial credit
@@ -362,12 +400,15 @@ const DB = {
         if(user.referral) {
           try {
             await fs.collection("referrals").add({
-              referralCode: user.referral,
-              newUserEmail: user.email.toLowerCase().trim(),
-              newUserName: user.name || "",
-              convertedAt: Date.now(),
-              date: new Date().toISOString().slice(0,10),
-              rewarded: false,
+              referralCode:  user.referral,
+              newUserEmail:  user.email.toLowerCase().trim(),
+              newUserName:   user.name || "",
+              convertedAt:   Date.now(),
+              date:          new Date().toISOString().slice(0,10),
+              rewarded:      false,
+              isActive:      false,
+              totalDeposit:  0,
+              totalOrders:   0,
             });
           } catch(e) { console.error("Referral track failed:", e); }
         }
@@ -3881,8 +3922,13 @@ const UserInfluencer = ({ userEmail="", userName="" }) => {
   const [proofImg,setProofImg]=useState(null);
   const [proofName,setProofName]=useState("");
   const [submitting,setSubmitting]=useState(false);
+  const [refStats,setRefStats]=useState({total:0,active:0,totalDeposit:0});
   const fileRef=useRef(null);
   const F=(k,v)=>setForm(f=>({...f,[k]:v}));
+
+  // Referral code for this user
+  const refCode=React.useMemo(()=>`OPULENT-${((userName||"USER").slice(0,4)).toUpperCase()}${(userEmail.charCodeAt(0)*37+userEmail.length*13+1000)%9000+1000}`,[userEmail,userName]);
+  const refURL=`https://nexus-smm.vercel.app?ref=${refCode.toLowerCase()}`;
 
   const handleProofImg=(e)=>{
     const file=e.target.files[0]; if(!file) return;
@@ -3897,10 +3943,20 @@ const UserInfluencer = ({ userEmail="", userName="" }) => {
     setLoading(true);
     try{
       const fs=await getFS(); if(!fs){setLoading(false);return;}
+      // Load submissions
       const snap=await fs.collection("influencers")
         .where("userEmail","==",userEmail.toLowerCase().trim()).get();
       setSubmissions(snap.docs.map(d=>({id:d.id,...d.data()}))
         .sort((a,b)=>(b.createdAt||0)-(a.createdAt||0)));
+      // Load referral stats
+      const rSnap=await fs.collection("referrals")
+        .where("referralCode","==",refCode.toLowerCase()).get().catch(()=>({docs:[]}));
+      const allRefs=rSnap.docs.map(d=>d.data());
+      setRefStats({
+        total:allRefs.length,
+        active:allRefs.filter(r=>r.isActive===true).length,
+        totalDeposit:allRefs.reduce((s,r)=>s+(r.totalDeposit||0),0),
+      });
     }catch(e){console.error(e);}
     setLoading(false);
   };
@@ -3910,18 +3966,32 @@ const UserInfluencer = ({ userEmail="", userName="" }) => {
   const submit=async()=>{
     if(!form.link.trim()){Toast.error("Please enter your proof link");return;}
     if(!form.followers||isNaN(form.followers)){Toast.error("Enter your follower count");return;}
+    if(!proofImg){Toast.error("Please upload a screenshot proof");return;}
     setSubmitting(true);
     try{
       const fs=await getFS(); if(!fs) throw new Error("No connection");
+      // Anti-duplicate: check no pending/approved submission exists
+      const existing=await fs.collection("influencers")
+        .where("userEmail","==",userEmail.toLowerCase().trim())
+        .where("status","in",["Pending","Approved"]).get();
+      if(!existing.empty){
+        Toast.error("You already have a pending or approved submission.");
+        setSubmitting(false); return;
+      }
       const id="INF-"+Date.now();
       const followers=parseInt(form.followers)||0;
-      const levelInfo=INFLUENCER_LEVELS.slice().reverse().find(l=>followers>=l.minFollowers)||INFLUENCER_LEVELS[0];
+      const qualifiedLevel=getInfluencerLevel(followers, refStats.active);
       await fs.collection("influencers").doc(id).set({
         id, userEmail:userEmail.toLowerCase().trim(), userName,
         type:form.type, link:sanitize(form.link),
         followers, notes:sanitize(form.notes),
         proofScreenshot: proofImg||null,
-        level:levelInfo.level, reward:levelInfo.reward, rewardQty:levelInfo.rewardQty,
+        referralCode: refCode.toLowerCase(),
+        activeUsers:  refStats.active,
+        totalReferrals: refStats.total,
+        level:       qualifiedLevel ? qualifiedLevel.level  : "Unqualified",
+        reward:      qualifiedLevel ? qualifiedLevel.reward : "No reward yet",
+        rewardQty:   qualifiedLevel ? qualifiedLevel.rewardQty : 0,
         status:"Pending", createdAt:Date.now(), date:today()
       });
       setForm({type:"Instagram Story",link:"",followers:"",notes:""});
@@ -3936,9 +4006,92 @@ const UserInfluencer = ({ userEmail="", userName="" }) => {
   const levelInfo=myLevel?INFLUENCER_LEVELS.find(l=>l.level===myLevel.level)||INFLUENCER_LEVELS[0]:null;
   const statCol={Pending:"#fbbf24",Approved:"#34d399",Rejected:"#f87171"};
 
+  // Progress to next level
+  const currentFollowers=myLevel?parseInt(myLevel.followers||0):0;
+  const nextLevel=getNextInfluencerLevel(currentFollowers, refStats.active);
+  const progFollowers=nextLevel?Math.min(100,Math.round((currentFollowers/nextLevel.minFollowers)*100)):100;
+  const progActive=nextLevel?Math.min(100,Math.round((refStats.active/nextLevel.minActiveUsers)*100)):100;
+
   return (
     <div className="page-enter" style={{animation:"fadeIn .4s ease"}}>
       <PgH title="Influencer Program" sub="Promote OpulentSMM and earn free services!"/>
+
+      {/* ── REFERRAL STATS + SMART LEVEL SECTION ── */}
+      <Card style={{padding:22,marginBottom:16,border:"1px solid rgba(124,58,237,.25)",background:"rgba(124,58,237,.04)"}}>
+        {/* Referral Link */}
+        <div style={{marginBottom:16}}>
+          <div style={{fontSize:11,fontWeight:700,color:C.muted,letterSpacing:".07em",marginBottom:8,textTransform:"uppercase"}}>🔗 Your Referral URL</div>
+          <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
+            <input readOnly value={refURL}
+              style={{flex:1,minWidth:180,background:"rgba(255,255,255,.04)",border:"1px solid rgba(212,160,23,.3)",
+                borderRadius:9,padding:"9px 12px",color:"#c4b5fd",fontSize:11,fontFamily:"monospace",
+                overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}/>
+            <button onClick={()=>{ navigator.clipboard&&navigator.clipboard.writeText(refURL); Toast.success("Referral URL copied!"); }}
+              style={{padding:"9px 16px",background:"rgba(212,160,23,.15)",border:"1px solid rgba(212,160,23,.3)",
+                borderRadius:9,color:"#f5c842",fontSize:12,fontWeight:700,cursor:"pointer",whiteSpace:"nowrap"}}>
+              📋 Copy
+            </button>
+          </div>
+          <div style={{fontSize:11,color:C.muted,marginTop:6}}>
+            Share this link. Only users who deposit ₹{ACTIVE_USER_MIN_DEPOSIT}+ or place ≥1 order count as <strong style={{color:"#34d399"}}>active</strong>.
+          </div>
+        </div>
+
+        {/* Stats row */}
+        <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(110px,1fr))",gap:10,marginBottom:16}}>
+          {[
+            {l:"Total Referred", v:refStats.total,                        c:"#c4b5fd", icon:"👥"},
+            {l:"Active Users",   v:refStats.active,                       c:"#34d399", icon:"✅", hi:true},
+            {l:"Deposits ₹",    v:refStats.totalDeposit.toFixed(0),      c:"#f5c842", icon:"💰"},
+          ].map(s=>(
+            <div key={s.l} style={{background:s.hi?"rgba(52,211,153,.08)":"rgba(255,255,255,.04)",
+              border:`1px solid ${s.hi?"rgba(52,211,153,.25)":"rgba(255,255,255,.07)"}`,
+              borderRadius:11,padding:"12px 10px",textAlign:"center"}}>
+              <div style={{fontSize:9,color:C.muted,letterSpacing:".06em",marginBottom:5,textTransform:"uppercase"}}>{s.icon} {s.l}</div>
+              <div style={{fontSize:22,fontWeight:900,color:s.c,fontFamily:"Syne,sans-serif"}}>{s.v}</div>
+            </div>
+          ))}
+        </div>
+
+        {/* Progress to next level */}
+        {nextLevel&&(
+          <div>
+            <div style={{fontSize:11,color:C.muted,marginBottom:8}}>
+              Progress to <strong style={{color:nextLevel.color}}>{nextLevel.icon} {nextLevel.level}</strong>
+              &nbsp;— need both:
+            </div>
+            <div style={{marginBottom:6}}>
+              <div style={{display:"flex",justifyContent:"space-between",fontSize:10,color:C.muted,marginBottom:3}}>
+                <span>👥 Followers</span>
+                <span style={{color:"#c4b5fd"}}>{currentFollowers.toLocaleString()} / {nextLevel.minFollowers.toLocaleString()}</span>
+              </div>
+              <div style={{height:5,background:"rgba(255,255,255,.08)",borderRadius:10,overflow:"hidden"}}>
+                <div style={{height:"100%",width:progFollowers+"%",borderRadius:10,transition:"width 1s ease",
+                  background:`linear-gradient(90deg,${nextLevel.color},${nextLevel.color}bb)`,
+                  boxShadow:`0 0 6px ${nextLevel.color}55`}}/>
+              </div>
+            </div>
+            <div>
+              <div style={{display:"flex",justifyContent:"space-between",fontSize:10,color:C.muted,marginBottom:3}}>
+                <span>✅ Active Users</span>
+                <span style={{color:"#34d399"}}>{refStats.active} / {nextLevel.minActiveUsers}</span>
+              </div>
+              <div style={{height:5,background:"rgba(255,255,255,.08)",borderRadius:10,overflow:"hidden"}}>
+                <div style={{height:"100%",width:progActive+"%",borderRadius:10,transition:"width 1s ease",
+                  background:"linear-gradient(90deg,#34d399,#059669)",boxShadow:"0 0 6px rgba(52,211,153,.4)"}}/>
+              </div>
+            </div>
+            <div style={{marginTop:8,fontSize:11,color:"#34d399",fontWeight:700}}>
+              🔒 Reward unlocks when BOTH targets are met
+            </div>
+          </div>
+        )}
+        {!nextLevel&&levelInfo&&(
+          <div style={{fontSize:12,color:"#34d399",fontWeight:700,textAlign:"center",padding:"8px 0"}}>
+            🏆 Max Level Reached — {levelInfo.reward} Earned!
+          </div>
+        )}
+      </Card>
 
       {/* Level showcase */}
       <Card gold style={{padding:22,marginBottom:24}}>
@@ -3999,11 +4152,25 @@ const UserInfluencer = ({ userEmail="", userName="" }) => {
                 style={{width:"100%",background:"rgba(255,255,255,.04)",border:`1px solid ${C.border}`,borderRadius:11,padding:"11px 14px",color:C.text,fontSize:13,resize:"vertical",fontFamily:"inherit",boxSizing:"border-box"}}/>
             </div>
             {form.followers&&!isNaN(form.followers)&&(()=>{
-              const lvl=INFLUENCER_LEVELS.slice().reverse().find(l=>parseInt(form.followers)>=l.minFollowers)||INFLUENCER_LEVELS[0];
-              return <div style={{background:lvl.bg,border:`1px solid ${lvl.color}40`,borderRadius:10,padding:"12px 16px",marginBottom:16}}>
-                <div style={{fontSize:11,color:lvl.color,fontWeight:700,marginBottom:3}}>You qualify for:</div>
-                <div style={{fontWeight:800,fontSize:15,color:lvl.color}}>{lvl.icon} {lvl.level} — {lvl.reward}</div>
-              </div>;
+              const f=parseInt(form.followers)||0;
+              const lvl=getInfluencerLevel(f, refStats.active);
+              const nextLvl=getNextInfluencerLevel(f, refStats.active);
+              if(lvl) return (
+                <div style={{background:lvl.bg,border:`1px solid ${lvl.border||lvl.color+"40"}`,borderRadius:10,padding:"12px 16px",marginBottom:16}}>
+                  <div style={{fontSize:11,color:lvl.color,fontWeight:700,marginBottom:3}}>✅ You qualify for:</div>
+                  <div style={{fontWeight:800,fontSize:15,color:lvl.color}}>{lvl.icon} {lvl.level} — {lvl.reward}</div>
+                </div>
+              );
+              if(nextLvl) return (
+                <div style={{background:"rgba(239,68,68,.07)",border:"1px solid rgba(239,68,68,.2)",borderRadius:10,padding:"12px 16px",marginBottom:16}}>
+                  <div style={{fontSize:11,color:"#f87171",fontWeight:700,marginBottom:3}}>⚠ Not qualified yet — need:</div>
+                  <div style={{fontSize:12,color:C.muted}}>
+                    {f<nextLvl.minFollowers&&<div>• {(nextLvl.minFollowers-f).toLocaleString()} more followers</div>}
+                    {refStats.active<nextLvl.minActiveUsers&&<div>• {nextLvl.minActiveUsers-refStats.active} more active referred users (have {refStats.active})</div>}
+                  </div>
+                </div>
+              );
+              return null;
             })()}
             {/* Screenshot upload */}
             <div style={{marginBottom:16}}>
@@ -4078,12 +4245,13 @@ const UserInfluencer = ({ userEmail="", userName="" }) => {
         <div>
           <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(260px,1fr))",gap:14}}>
             {INFLUENCER_LEVELS.map(l=>(
-              <Card key={l.level} style={{padding:22,border:`1px solid ${l.color}30`,background:`${l.bg}`}}>
+              <Card key={l.level} style={{padding:22,border:`1px solid ${l.border||l.color+"30"}`,background:`${l.bg}`}}>
                 <div style={{display:"flex",alignItems:"center",gap:12,marginBottom:14}}>
                   <span style={{fontSize:32}}>{l.icon}</span>
                   <div>
                     <div style={{fontWeight:900,color:l.color,fontSize:18}}>{l.level}</div>
-                    <div style={{fontSize:11,color:C.muted}}>{l.minFollowers.toLocaleString()}+ followers required</div>
+                    <div style={{fontSize:11,color:C.muted}}>{l.minFollowers.toLocaleString()}+ followers</div>
+                    <div style={{fontSize:11,color:"#34d399",fontWeight:700,marginTop:2}}>{l.minActiveUsers}+ active referred users</div>
                   </div>
                 </div>
                 <div style={{background:"rgba(255,255,255,.06)",borderRadius:10,padding:"12px 14px"}}>
@@ -5719,6 +5887,8 @@ This will add free service credit to their wallet.`)) return;
   // Stats
   const pending=subs.filter(s=>s.status==="Pending").length;
   const approved=subs.filter(s=>s.status==="Approved").length;
+  const totalActiveUsers=subs.reduce((t,s)=>t+(s.activeUsers||0),0);
+  const qualified=subs.filter(s=>getInfluencerLevel(s.followers||0,s.activeUsers||0)!==null).length;
 
   return (
     <div className="page-enter" style={{animation:"fadeIn .4s ease"}}>
@@ -5728,7 +5898,7 @@ This will add free service credit to their wallet.`)) return;
 
       {/* Stats */}
       <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(150px,1fr))",gap:14,marginBottom:20}}>
-        {[["⏳","Pending",pending,"#fbbf24"],["✅","Approved",approved,"#34d399"],["📊","Total",subs.length,"#c4b5fd"]].map(([ic,lb,val,col])=>(
+        {[["⏳","Pending",pending,"#fbbf24"],["✅","Approved",approved,"#34d399"],["📊","Total",subs.length,"#c4b5fd"],["✅","Active Users",totalActiveUsers,"#34d399"],["🎯","Qualified",qualified,"#a855f7"]].map(([ic,lb,val,col])=>(
           <div key={lb} style={{background:"rgba(255,255,255,.04)",borderRadius:11,padding:"14px 16px",textAlign:"center"}}>
             <div style={{fontSize:22,fontWeight:900,color:col}}>{val}</div>
             <div style={{fontSize:11,color:C.muted,marginTop:3}}>{ic} {lb}</div>
@@ -5750,8 +5920,9 @@ This will add free service credit to their wallet.`)) return;
         <div style={{display:"flex",flexDirection:"column",gap:12}}>
           {filtered.map(s=>{
             const lvl=INFLUENCER_LEVELS.find(l=>l.level===s.level)||INFLUENCER_LEVELS[0];
+            const isQualified=getInfluencerLevel(s.followers||0,s.activeUsers||0)!==null;
             return (
-              <Card key={s.id} style={{padding:20,border:`1px solid ${selected===s.id?"rgba(124,58,237,.4)":C.border}`}}>
+              <Card key={s.id} style={{padding:20,border:`1px solid ${selected===s.id?"rgba(124,58,237,.4)":isQualified?"rgba(52,211,153,.25)":C.border}`}}>
                 <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",flexWrap:"wrap",gap:12}}>
                   <div style={{flex:1}}>
                     <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:8,flexWrap:"wrap"}}>
@@ -5762,10 +5933,13 @@ This will add free service credit to their wallet.`)) return;
                       </div>
                       <span style={{fontSize:10,padding:"3px 10px",borderRadius:20,background:`${statCol[s.status]||"#888"}20`,color:statCol[s.status]||"#888",fontWeight:700}}>{s.status}</span>
                       <span style={{fontSize:10,padding:"3px 10px",borderRadius:20,background:lvl.bg,color:lvl.color,fontWeight:700}}>{lvl.level}</span>
+                      {isQualified&&<span style={{fontSize:10,padding:"3px 10px",borderRadius:20,background:"rgba(52,211,153,.15)",color:"#34d399",fontWeight:700}}>✓ QUALIFIED</span>}
+                      {!isQualified&&s.status==="Pending"&&<span style={{fontSize:10,padding:"3px 10px",borderRadius:20,background:"rgba(239,68,68,.1)",color:"#f87171",fontWeight:700}}>⚠ NOT QUALIFIED</span>}
+                      {(s.activeUsers||0)===0&&<span style={{fontSize:10,padding:"3px 10px",borderRadius:20,background:"rgba(239,68,68,.12)",color:"#f87171",fontWeight:700}}>🚩 0 ACTIVE USERS</span>}
                       {s.rewardSent&&<span style={{fontSize:10,padding:"3px 10px",borderRadius:20,background:"rgba(52,211,153,.15)",color:"#34d399",fontWeight:700}}>🎁 Reward Sent</span>}
                     </div>
                     <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(140px,1fr))",gap:8,marginBottom:10}}>
-                      {[["Type",s.type],["Followers",(s.followers||0).toLocaleString()],["Reward",s.reward],["Date",s.date]].map(([l,v])=>(
+                      {[["Type",s.type],["Followers",(s.followers||0).toLocaleString()],["Active Users",s.activeUsers||0],["Total Refs",s.totalReferrals||0],["Reward",s.reward],["Date",s.date]].map(([l,v])=>(
                         <div key={l} style={{background:"rgba(255,255,255,.04)",borderRadius:8,padding:"8px 10px"}}>
                           <div style={{fontSize:9,color:C.muted,marginBottom:2}}>{l.toUpperCase()}</div>
                           <div style={{fontSize:12,fontWeight:700,color:"#c4b5fd"}}>{v}</div>
@@ -5873,6 +6047,21 @@ const AdminPayments = () => {
       const depositDocId = dep.id || dep._docId;
       if(!depositDocId) throw new Error("Deposit ID missing");
       await fs.collection("deposits").doc(depositDocId).set({status:"approved"},{merge:true});
+
+      // ── Increment totalDeposit for active-user tracking ──
+      try{
+        const uSnap2=await fs.collection("users").doc(key).get();
+        const prevDep=uSnap2.exists?(uSnap2.data().totalDeposit||0):0;
+        const newTotalDep=parseFloat((prevDep+Number(dep.amount)).toFixed(2));
+        await fs.collection("users").doc(key).set({totalDeposit:newTotalDep},{merge:true});
+        // Mark referral active if threshold met
+        if(newTotalDep>=ACTIVE_USER_MIN_DEPOSIT && uSnap2.exists && uSnap2.data().referredBy){
+          const rSnap=await fs.collection("referrals")
+            .where("newUserEmail","==",dep.email.toLowerCase().trim()).get();
+          for(const d of rSnap.docs)
+            await d.ref.set({isActive:true,totalDeposit:newTotalDep},{merge:true});
+        }
+      }catch(e){console.error("totalDeposit update failed:",e);}
 
       // Push notification to customer
       await DB.pushNotification(dep.email,"deposit_approved","💰 Deposit Approved!",`₹${dep.amount} added to your wallet${bonusAdded>0?` + ₹${bonusAdded} first deposit bonus!`:""}. New balance: ₹${confirmedBal}`,"wallet");
@@ -6040,34 +6229,37 @@ const AdminReferrals = () => {
   const [loading,setLoading]=useState(true);
   const [search,setSearch]=useState("");
 
-  useEffect(()=>{
-    const load=async()=>{
-      setLoading(true);
-      try{
-        const fs=await getFS(); if(!fs){setLoading(false);return;}
-        const [rSnap,uSnap]=await Promise.all([
-          fs.collection("referrals").orderBy("convertedAt","desc").get().catch(()=>({docs:[]})),
-          fs.collection("users").get().catch(()=>({docs:[]})),
-        ]);
-        setRefs(rSnap.docs.map(d=>({id:d.id,...d.data()})));
-        setUsers(uSnap.docs.map(d=>d.data()).filter(u=>u.referral));
-      }catch(e){console.error(e);}
-      setLoading(false);
-    };
-    load();
-  },[]);
+  const load=async()=>{
+    setLoading(true);
+    try{
+      const fs=await getFS(); if(!fs){setLoading(false);return;}
+      const [rSnap,uSnap]=await Promise.all([
+        fs.collection("referrals").get().catch(()=>({docs:[]})),
+        fs.collection("users").get().catch(()=>({docs:[]})),
+      ]);
+      setRefs(rSnap.docs.map(d=>({id:d.id,...d.data()})));
+      setUsers(uSnap.docs.map(d=>d.data()).filter(u=>u.referredBy||u.referral));
+    }catch(e){console.error(e);}
+    setLoading(false);
+  };
 
-  // Aggregate: group by referralCode
+  useEffect(()=>{ load(); },[]);
+
+  // Aggregate: group by referralCode with active breakdown
   const grouped = refs.reduce((m,r)=>{
-    const k=r.referralCode||"unknown";
-    const e=m[k]||{code:k,conversions:0,users:[],lastConversion:null};
-    e.conversions++;
-    e.users.push(r.newUserEmail||"");
-    if(!e.lastConversion||r.convertedAt>e.lastConversion) e.lastConversion=r.convertedAt;
+    const k=(r.referralCode||"unknown").toLowerCase();
+    const e=m[k]||{code:k,total:0,active:0,totalDeposit:0,emails:[],lastConversion:null};
+    e.total++;
+    if(r.isActive===true) e.active++;
+    e.totalDeposit+=r.totalDeposit||0;
+    e.emails.push({email:r.newUserEmail||"",isActive:r.isActive===true,deposit:r.totalDeposit||0,orders:r.totalOrders||0});
+    if(!e.lastConversion||(r.convertedAt||0)>e.lastConversion) e.lastConversion=r.convertedAt||null;
     m[k]=e; return m;
   },{});
-  const rows=Object.values(grouped).sort((a,b)=>b.conversions-a.conversions);
+  const rows=Object.values(grouped).sort((a,b)=>b.active-a.active||b.total-a.total);
   const filtered=search?rows.filter(r=>r.code.includes(search.toLowerCase())):rows;
+  const totalActive=refs.filter(r=>r.isActive===true).length;
+  const totalDep=refs.reduce((s,r)=>s+(r.totalDeposit||0),0);
 
   return (
     <div className="page-enter" style={{animation:"fadeIn .4s ease"}}>
@@ -6076,15 +6268,20 @@ const AdminReferrals = () => {
           style={{padding:"8px 16px",background:"rgba(124,58,237,.1)",border:"1px solid rgba(124,58,237,.3)",borderRadius:9,color:"#c4b5fd",fontSize:12,fontWeight:700,cursor:"pointer"}}>🔄 Refresh</button>}/>
 
       {/* Stats */}
-      <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(160px,1fr))",gap:14,marginBottom:20}}>
+      <div style={{background:"rgba(52,211,153,.05)",border:"1px solid rgba(52,211,153,.2)",borderRadius:12,padding:"12px 18px",marginBottom:16,fontSize:12,color:C.muted}}>
+        🛡️ <strong style={{color:"#34d399"}}>Anti-Fake Active.</strong> Only users who deposited ₹{ACTIVE_USER_MIN_DEPOSIT}+ or placed ≥1 order count as active. Zero-activity signups are tracked but excluded from rewards.
+      </div>
+      <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(140px,1fr))",gap:14,marginBottom:20}}>
         {[
-          ["🔗","Total Conversions",refs.length,"#c4b5fd"],
-          ["👥","Referred Users",users.length,C.goldL],
-          ["📊","Unique Codes",rows.length,"#34d399"],
+          ["👥","Total Signups",refs.length,"#c4b5fd"],
+          ["✅","Active Users",totalActive,"#34d399"],
+          ["❌","Inactive/Fake",refs.length-totalActive,"#f87171"],
+          ["💰","Total Deposits","₹"+totalDep.toFixed(0),C.goldL],
+          ["🔗","Unique Codes",rows.length,"#a855f7"],
         ].map(([ic,lb,val,col])=>(
           <div key={lb} style={{background:"rgba(255,255,255,.04)",borderRadius:11,padding:"14px 16px",textAlign:"center"}}>
-            <div style={{fontSize:22,fontWeight:900,color:col}}>{val}</div>
-            <div style={{fontSize:11,color:C.muted,marginTop:3}}>{ic} {lb}</div>
+            <div style={{fontSize:20,fontWeight:900,color:col}}>{val}</div>
+            <div style={{fontSize:10,color:C.muted,marginTop:3}}>{ic} {lb}</div>
           </div>
         ))}
       </div>
@@ -6108,43 +6305,52 @@ const AdminReferrals = () => {
          <p style={{fontWeight:700,color:"#e8e8f2",marginBottom:6}}>No referral conversions yet</p>
          <p style={{fontSize:13}}>Share your referral link to start tracking signups.</p>
        </Card>:(
-        <Card style={{padding:22}}>
-          <div style={{overflowX:"auto"}}>
-            <table style={{width:"100%",borderCollapse:"collapse",fontSize:12}}>
-              <thead>
-                <tr style={{borderBottom:`1px solid ${C.border}`}}>
-                  {["Referral Code","Conversions","Referred Users","Last Conversion"].map(h=>(
-                    <th key={h} style={{padding:"9px 12px",textAlign:"left",color:C.muted,fontWeight:700,fontSize:10,letterSpacing:".05em"}}>{h}</th>
+        <div style={{display:"flex",flexDirection:"column",gap:12}}>
+          {filtered.map((r,i)=>(
+            <Card key={r.code} style={{padding:18,border:`1px solid ${r.active>0?"rgba(52,211,153,.2)":C.border}`}}>
+              <div style={{display:"flex",justifyContent:"space-between",flexWrap:"wrap",gap:12,marginBottom:12}}>
+                <span style={{background:"rgba(212,160,23,.12)",border:"1px solid rgba(212,160,23,.25)",borderRadius:6,padding:"4px 12px",color:C.goldL,fontWeight:800,fontFamily:"monospace",fontSize:13}}>{r.code.toUpperCase()}</span>
+                <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
+                  {[
+                    {v:r.total,  l:"Signups",  c:"#c4b5fd"},
+                    {v:r.active, l:"Active",   c:"#34d399", hi:true},
+                    {v:r.total-r.active,l:"Inactive",c:"#f87171"},
+                    {v:"₹"+r.totalDeposit.toFixed(0),l:"Deposits",c:C.goldL},
+                  ].map(s=>(
+                    <div key={s.l} style={{textAlign:"center",background:s.hi?"rgba(52,211,153,.06)":"rgba(255,255,255,.04)",
+                      border:`1px solid ${s.hi?"rgba(52,211,153,.2)":C.border}`,borderRadius:9,padding:"8px 14px",minWidth:60}}>
+                      <div style={{fontSize:18,fontWeight:900,color:s.c}}>{s.v}</div>
+                      <div style={{fontSize:10,color:C.muted}}>{s.l}</div>
+                    </div>
                   ))}
-                </tr>
-              </thead>
-              <tbody>
-                {filtered.map((r,i)=>(
-                  <tr key={r.code} style={{borderBottom:`1px solid rgba(255,255,255,.04)`,background:i%2?"rgba(255,255,255,.01)":"transparent"}}>
-                    <td style={{padding:"12px 12px"}}>
-                      <span style={{background:"rgba(212,160,23,.12)",border:"1px solid rgba(212,160,23,.25)",borderRadius:6,padding:"3px 10px",color:C.goldL,fontWeight:800,fontFamily:"monospace",fontSize:12}}>{r.code}</span>
-                    </td>
-                    <td style={{padding:"12px 12px"}}>
-                      <span style={{fontSize:18,fontWeight:900,color:"#c4b5fd"}}>{r.conversions}</span>
-                      <span style={{fontSize:10,color:C.muted,marginLeft:4}}>user{r.conversions!==1?"s":""}</span>
-                    </td>
-                    <td style={{padding:"12px 12px",maxWidth:240}}>
-                      <div style={{display:"flex",flexWrap:"wrap",gap:4}}>
-                        {r.users.slice(0,3).map((u,i)=>(
-                          <span key={i} style={{fontSize:10,background:"rgba(255,255,255,.06)",borderRadius:4,padding:"2px 6px",color:C.muted,overflow:"hidden",textOverflow:"ellipsis",maxWidth:120,whiteSpace:"nowrap"}}>{u}</span>
-                        ))}
-                        {r.users.length>3&&<span style={{fontSize:10,color:C.muted}}>+{r.users.length-3} more</span>}
-                      </div>
-                    </td>
-                    <td style={{padding:"12px 12px",color:C.muted,fontSize:11}}>
-                      {r.lastConversion?new Date(r.lastConversion).toLocaleDateString("en-IN",{dateStyle:"medium"}):"—"}
-                    </td>
-                  </tr>
+                </div>
+              </div>
+              {r.total>0&&(
+                <div style={{marginBottom:10}}>
+                  <div style={{display:"flex",justifyContent:"space-between",fontSize:10,color:C.muted,marginBottom:3}}>
+                    <span>Active rate</span>
+                    <span style={{color:"#34d399"}}>{Math.round((r.active/r.total)*100)}%</span>
+                  </div>
+                  <div style={{height:4,background:"rgba(255,255,255,.06)",borderRadius:10,overflow:"hidden"}}>
+                    <div style={{height:"100%",width:Math.round((r.active/r.total)*100)+"%",background:"#34d399",borderRadius:10}}/>
+                  </div>
+                </div>
+              )}
+              <div style={{display:"flex",flexDirection:"column",gap:4}}>
+                {r.emails.slice(0,5).map((u,i)=>(
+                  <div key={i} style={{display:"flex",alignItems:"center",gap:10,padding:"5px 10px",
+                    background:u.isActive?"rgba(52,211,153,.05)":"rgba(255,255,255,.02)",
+                    border:`1px solid ${u.isActive?"rgba(52,211,153,.15)":"rgba(255,255,255,.04)"}`,borderRadius:7}}>
+                    <span style={{color:u.isActive?"#34d399":"#f87171",fontSize:12,flexShrink:0}}>{u.isActive?"✅":"❌"}</span>
+                    <span style={{fontSize:11,color:"#60a5fa",fontFamily:"monospace",flex:1,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{u.email}</span>
+                    <span style={{fontSize:10,color:C.muted,whiteSpace:"nowrap",flexShrink:0}}>₹{(u.deposit||0).toFixed(0)} · {u.orders||0} orders</span>
+                  </div>
                 ))}
-              </tbody>
-            </table>
-          </div>
-        </Card>
+                {r.emails.length>5&&<div style={{fontSize:11,color:C.muted,padding:"3px 10px"}}>+{r.emails.length-5} more users</div>}
+              </div>
+            </Card>
+          ))}
+        </div>
       )}
 
       {/* Users with referral field */}
