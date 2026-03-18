@@ -34,71 +34,7 @@
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 </head>
 <body>
-  <!-- Loading screen — stays until React fully mounts -->
-  <div id="app-loader" style="position:fixed;inset:0;background:#06060a;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:99999;font-family:sans-serif;transition:opacity .5s;">
-    <div style="width:64px;height:64px;border-radius:18px;background:linear-gradient(135deg,#7c3aed,#d4a017);display:flex;align-items:center;justify-content:center;font-size:28px;margin-bottom:22px;box-shadow:0 0 40px rgba(212,160,23,.5),0 0 80px rgba(124,58,237,.3);">✦</div>
-    <div style="font-size:22px;font-weight:800;color:#f0f0ff;letter-spacing:.04em;margin-bottom:6px;font-family:sans-serif;">OpulentSMM</div>
-    <div style="font-size:13px;color:#6b7280;margin-bottom:32px;letter-spacing:.06em;">PREMIUM SOCIAL MEDIA GROWTH</div>
-    <div style="width:44px;height:44px;border:3px solid rgba(212,160,23,.15);border-top-color:#d4a017;border-right-color:rgba(212,160,23,.5);border-radius:50%;animation:_ld_spin .9s linear infinite;"></div>
-    <div id="loader-status" style="font-size:11px;color:#3a3a50;margin-top:18px;letter-spacing:.04em;">Loading...</div>
-    <style>
-      @keyframes _ld_spin{to{transform:rotate(360deg)}}
-      @keyframes _ld_pulse{0%,100%{opacity:.4}50%{opacity:1}}
-    </style>
-  </div>
-  <div id="root"></div>
-  <script>
-    var _loaderHidden = false;
-    var _loaderTimer = null;
-    var _statusEl = document.getElementById('loader-status');
-    var _msgs = ['Initializing...','Loading services...','Connecting...','Almost ready...'];
-    var _mi = 0;
-    var _msgTimer = setInterval(function(){
-      if(_statusEl && !_loaderHidden) { _statusEl.textContent = _msgs[_mi % _msgs.length]; _mi++; }
-    }, 2800);
-
-    function _hideLoader() {
-      if(_loaderHidden) return;
-      _loaderHidden = true;
-      clearInterval(_msgTimer);
-      clearTimeout(_loaderTimer);
-      var l = document.getElementById('app-loader');
-      if(l) { l.style.opacity='0'; setTimeout(function(){ if(l.parentNode) l.parentNode.removeChild(l); }, 500); }
-    }
-
-    function _showLoaderError(msg) {
-      clearInterval(_msgTimer);
-      clearTimeout(_loaderTimer);
-      var l = document.getElementById('app-loader');
-      if(!l) return;
-      l.innerHTML = '<div style="text-align:center;padding:36px 24px;font-family:sans-serif;max-width:340px">' +
-        '<div style="font-size:44px;margin-bottom:16px">⚠️</div>' +
-        '<div style="font-size:18px;font-weight:800;color:#f0f0ff;margin-bottom:10px">Failed to Load</div>' +
-        '<div style="font-size:13px;color:#6b7280;margin-bottom:8px;line-height:1.6">Try clearing your browser cache (Settings → Clear browsing data) then reload.</div>' +
-        '<div style="font-size:11px;color:#444;margin-bottom:20px;word-break:break-all;">' + (msg||'').substring(0,100) + '</div>' +
-        '<button onclick="window.location.reload()" style="background:linear-gradient(135deg,#7c3aed,#a855f7);color:#fff;border:none;border-radius:10px;padding:13px 32px;font-size:14px;font-weight:700;cursor:pointer;width:100%">🔄 Reload Page</button>' +
-        '</div>';
-    }
-
-    // Catch any JS errors (Babel compile errors show up here)
-    window.addEventListener('error', function(e) {
-      console.error('App error:', e.message, 'at', e.filename, e.lineno);
-      if(!_loaderHidden) _showLoaderError(e.message);
-      return true;
-    });
-
-    // Catch unhandled promise rejections
-    window.addEventListener('unhandledrejection', function(e) {
-      console.error('Unhandled rejection:', e.reason);
-      if(!_loaderHidden) _showLoaderError(String(e.reason));
-    });
-
-    // Safety timeout — if React doesn't mount after 45s, show error
-    _loaderTimer = setTimeout(function() {
-      if(!_loaderHidden) _showLoaderError('Timeout: App took too long to load. Check your internet connection.');
-    }, 45000);
-  </script>
-  <script type="text/babel" data-presets="react,env" data-async="true">
+  <script type="text/babel" data-presets="react">
 const { useState, useEffect, useRef, useCallback } = React;
 
 const ADMIN_EMAIL = "admin@opluentedge.com";
@@ -884,10 +820,10 @@ const StatCard = ({ icon, label, value, grad, sub }) => (
 
 const Logo = () => (
   <div style={{display:"flex",alignItems:"center",gap:9}}>
-    <div style={{width:34,height:34,borderRadius:10,background:C.gG,display:"flex",alignItems:"center",justifyContent:"center",fontSize:17,boxShadow:"0 0 18px rgba(212,160,23,.5)"}}>✦</div>
+    <div style={{width:34,height:34,borderRadius:10,background:C.gP,display:"flex",alignItems:"center",justifyContent:"center",fontSize:17,boxShadow:"0 0 18px rgba(124,58,237,.5)"}}>✦</div>
     <div>
       <div style={{fontWeight:900,fontSize:16,fontFamily:"Syne,sans-serif",color:"#f0f0ff",letterSpacing:".01em"}}>OPULENT</div>
-      <div style={{fontSize:9,color:C.goldL,letterSpacing:".1em",marginTop:-2}}>SMM PLATFORM</div>
+      <div style={{fontSize:9,color:C.muted,letterSpacing:".1em",marginTop:-2}}>SMM PLATFORM</div>
     </div>
   </div>
 );
@@ -1151,9 +1087,11 @@ const Landing = ({ goLogin, goSignup }) => {
 
           {/* Trust badge */}
           <div style={{display:"inline-flex",alignItems:"center",gap:8,
-            background:"rgba(124,58,237,.12)",border:"1px solid rgba(124,58,237,.3)",
-            borderRadius:50,padding:"6px 18px",marginBottom:32,
-            fontSize:11,fontWeight:700,color:"#c4b5fd",letterSpacing:".08em"}}>
+            background:"linear-gradient(135deg,rgba(124,58,237,.2),rgba(168,85,247,.1))",
+            border:"1px solid rgba(124,58,237,.35)",
+            borderRadius:50,padding:"7px 20px",marginBottom:32,
+            fontSize:11,fontWeight:700,color:"#c4b5fd",letterSpacing:".1em",
+            boxShadow:"0 0 20px rgba(124,58,237,.15)"}}>
             <span style={{width:6,height:6,borderRadius:"50%",background:"#34d399",
               animation:"pulse 1.5s infinite",display:"inline-block"}}/>
             ✦ TRUSTED WORLDWIDE BY 48,000+ USERS
@@ -1502,7 +1440,7 @@ const Landing = ({ goLogin, goSignup }) => {
       </section>
 
       {/* ── FIRST DEPOSIT BONUS ──────────────────────────────── */}
-      <section style={{padding:"80px 6%",background:"linear-gradient(135deg,rgba(212,160,23,.05),rgba(212,160,23,.02))",borderTop:"1px solid rgba(212,160,23,.12)",borderBottom:"1px solid rgba(212,160,23,.12)"}}>
+      <section style={{padding:"80px 6%",background:"linear-gradient(135deg,rgba(212,160,23,.05),rgba(212,160,23,.02))",borderTop:"1px solid rgba(212,160,23,.12)",borderBottom:`1px solid ${C.border}`}}>
         <div style={{maxWidth:740,margin:"0 auto",textAlign:"center"}}>
           <div style={{display:"inline-flex",alignItems:"center",gap:8,background:"rgba(212,160,23,.12)",
             border:"1px solid rgba(212,160,23,.35)",borderRadius:50,padding:"7px 20px",marginBottom:20,
@@ -6976,41 +6914,6 @@ const AdminAnnounce = ({ announcements, setAnnouncements }) => {
 // ═══════════════════════════════════════════════════════════════
 //  ROOT
 // ═══════════════════════════════════════════════════════════════
-// ─── Error Boundary — catches runtime errors, shows friendly message ──────────
-class ErrorBoundary extends React.Component {
-  constructor(props){ super(props); this.state={hasError:false,error:null}; }
-  static getDerivedStateFromError(error){ return {hasError:true,error}; }
-  componentDidCatch(error,info){ console.error("OpulentSMM Error:",error,info); }
-  render(){
-    if(this.state.hasError){
-      // Show error in loader overlay instead of white screen
-      if(typeof _showLoaderError === 'function') {
-        _showLoaderError(String(this.state.error));
-        return null;
-      }
-      return React.createElement('div',{style:{
-        minHeight:"100vh",background:"#06060a",display:"flex",alignItems:"center",
-        justifyContent:"center",flexDirection:"column",padding:24,fontFamily:"sans-serif"
-      }},
-        React.createElement('div',{style:{fontSize:48,marginBottom:16}},"⚠️"),
-        React.createElement('h2',{style:{color:"#f0f0ff",marginBottom:8,fontWeight:800}},"Something went wrong"),
-        React.createElement('p',{style:{color:"#6b7280",marginBottom:20,textAlign:"center",maxWidth:400}},
-          "The app encountered an error. Please refresh the page or clear your browser cache."),
-        React.createElement('button',{
-          onClick:()=>window.location.reload(),
-          style:{background:"linear-gradient(135deg,#7c3aed,#a855f7)",border:"none",borderRadius:10,
-            padding:"12px 28px",color:"#fff",fontSize:14,fontWeight:700,cursor:"pointer"}
-        },"🔄 Refresh Page"),
-        React.createElement('details',{style:{marginTop:16,color:"#6b7280",fontSize:11}},
-          React.createElement('summary',{style:{cursor:"pointer"}},"Error details"),
-          React.createElement('pre',{style:{fontSize:10,marginTop:8,maxWidth:500,overflow:"auto",whiteSpace:"pre-wrap"}},
-            String(this.state.error))
-        )
-      );
-    }
-    return this.props.children;
-  }
-}
 
 function App() {
   // ── SPA routing: detect hidden admin route via URL hash ──────
@@ -7103,9 +7006,7 @@ function App() {
 }
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(React.createElement(ErrorBoundary, null, React.createElement(App)));
-// Hide loading screen only after React successfully mounts
-if(typeof _hideLoader === 'function') setTimeout(_hideLoader, 200);
+root.render(React.createElement(App));
 </script>
 </body>
 </html>
