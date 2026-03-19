@@ -6968,30 +6968,80 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(React.createElement(App));
   </script>
 
-</body>
-</html>
-
-
-<!-- OPULENTSMM CHATBOT -->
+<!-- ═══ CHATBOT: CSS TOGGLE (zero JS needed to open/close) ═══ -->
 <style>
-  #xbtn{position:fixed;bottom:26px;right:22px;z-index:2147483647;width:62px;height:62px;border-radius:50%;background:linear-gradient(135deg,#d4a017,#f5c842);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 24px rgba(212,160,23,0.6)}
-  #xbtn::after{content:'';position:absolute;inset:-3px;border-radius:50%;border:2px solid rgba(212,160,23,0.5);animation:xp 2s ease-out infinite}
-  @keyframes xp{0%{transform:scale(1);opacity:0.8}100%{transform:scale(1.65);opacity:0}}
-  #xbadge{position:absolute;top:-1px;right:-1px;width:17px;height:17px;background:#ef4444;border-radius:50%;border:2px solid #06060a;font-size:9px;color:#fff;display:none;align-items:center;justify-content:center;font-weight:900}
-  #xwin{position:fixed;bottom:98px;right:18px;width:315px;height:460px;background:#0a0a0f;border:1px solid rgba(212,160,23,0.35);border-radius:20px;display:none;flex-direction:column;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.9);z-index:2147483647}
-  @media(max-width:480px){#xbtn{bottom:82px;right:14px}#xwin{width:calc(100vw - 24px);right:12px;bottom:158px;height:420px}}
+/* Checkbox controls open/close - React cannot intercept CSS */
+#cb-toggle { display:none }
+
+/* Button */
+#cb-label {
+  position:fixed; bottom:26px; right:22px;
+  z-index:2147483647;
+  width:62px; height:62px;
+  border-radius:50%;
+  background:linear-gradient(135deg,#d4a017,#f5c842);
+  display:flex; align-items:center; justify-content:center;
+  cursor:pointer;
+  box-shadow:0 6px 24px rgba(212,160,23,0.6);
+  -webkit-tap-highlight-color:transparent;
+  user-select:none; -webkit-user-select:none;
+}
+#cb-label::before {
+  content:'';
+  position:absolute; inset:-3px; border-radius:50%;
+  border:2px solid rgba(212,160,23,0.5);
+  animation:cbp 2s ease-out infinite;
+}
+@keyframes cbp { 0%{transform:scale(1);opacity:0.8} 100%{transform:scale(1.65);opacity:0} }
+
+/* Badge */
+#cb-badge {
+  position:absolute; top:-2px; right:-2px;
+  width:18px; height:18px;
+  background:#ef4444; border-radius:50%;
+  border:2px solid #06060a;
+  font-size:9px; color:#fff;
+  display:flex; align-items:center; justify-content:center;
+  font-weight:900;
+}
+
+/* Chat window - hidden by default */
+#cb-box {
+  position:fixed; bottom:98px; right:18px;
+  width:315px; height:460px;
+  background:#0a0a0f;
+  border:1px solid rgba(212,160,23,0.35);
+  border-radius:20px;
+  flex-direction:column; overflow:hidden;
+  box-shadow:0 20px 60px rgba(0,0,0,0.9);
+  z-index:2147483647;
+  display:none;  /* hidden */
+}
+
+/* Show window when checkbox checked */
+#cb-toggle:checked ~ #cb-box { display:flex }
+
+/* Change button icon when open */
+#cb-icon-open  { display:block }
+#cb-icon-close { display:none }
+#cb-toggle:checked ~ #cb-label #cb-icon-open  { display:none }
+#cb-toggle:checked ~ #cb-label #cb-icon-close { display:block }
+
+/* Mobile */
+@media(max-width:480px){
+  #cb-label { bottom:82px; right:14px }
+  #cb-box { width:calc(100vw - 24px); right:12px; bottom:158px; height:420px }
+}
 </style>
 
-<!-- CHAT BUTTON — hardcoded HTML, always in DOM -->
-<button id="xbtn" onclick="xToggle()" type="button">
-  <span id="xbadge">1</span>
-  <svg width="26" height="26" viewBox="0 0 24 24" fill="white"><path d="M20 2H4c-1.1 0-2 0.9-2 2v18l4-4h14c1.1 0 2-0.9 2-2V4c0-1.1-0.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/></svg>
-</button>
+<!-- Checkbox (invisible) -->
+<input type="checkbox" id="cb-toggle">
 
-<!-- CHAT WINDOW — hardcoded HTML -->
-<div id="xwin">
+<!-- Chat window (shown when checkbox checked) -->
+<div id="cb-box">
+  <!-- Header with close label -->
   <div style="background:linear-gradient(135deg,#1a1200,#2a1e00);border-bottom:1px solid rgba(212,160,23,0.25);padding:13px 15px;display:flex;align-items:center;gap:10px;flex-shrink:0">
-    <div style="width:36px;height:36px;border-radius:50%;background:rgba(212,160,23,0.15);border:1px solid rgba(212,160,23,0.4);display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0">&#x1F916;</div>
+    <div style="width:36px;height:36px;border-radius:50%;background:rgba(212,160,23,0.15);border:1px solid rgba(212,160,23,0.35);display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0">&#x1F916;</div>
     <div style="flex:1">
       <div style="font-weight:800;color:#f5c842;font-size:13px;font-family:Arial,sans-serif">OpulentSMM AI</div>
       <div style="font-size:11px;color:rgba(212,160,23,0.6);display:flex;align-items:center;gap:4px;margin-top:2px;font-family:Arial,sans-serif">
@@ -6999,21 +7049,12 @@ root.render(React.createElement(App));
         Sales Assistant &bull; Online
       </div>
     </div>
-    <button id="xclose" onclick="xClose()" type="button" style="background:rgba(212,160,23,0.1);border:1px solid rgba(212,160,23,0.2);border-radius:8px;width:28px;height:28px;cursor:pointer;color:rgba(212,160,23,0.8);font-size:16px;display:flex;align-items:center;justify-content:center">&#x2715;</button>
+    <!-- Close = uncheck checkbox -->
+    <label for="cb-toggle" style="background:rgba(212,160,23,0.1);border:1px solid rgba(212,160,23,0.2);border-radius:8px;width:28px;height:28px;cursor:pointer;color:rgba(212,160,23,0.8);font-size:16px;display:flex;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent">&#x2715;</label>
   </div>
-  <div id="xmsgs" style="flex:1;overflow-y:auto;padding:11px;display:flex;flex-direction:column;gap:7px"></div>
+  <div id="cb-msgs" style="flex:1;overflow-y:auto;padding:11px;display:flex;flex-direction:column;gap:7px"></div>
   <div style="padding:9px 11px;border-top:1px solid rgba(212,160,23,0.12);display:flex;gap:7px;flex-shrink:0;background:rgba(8,8,15,0.98)">
-    <input id="xinp" type="text" placeholder="Type a message..." autocomplete="off" onkeydown="if(event.key==='Enter'){event.preventDefault();xSendClick()}"
+    <input id="cb-inp" type="text" placeholder="Type a message..." autocomplete="off"
       style="flex:1;background:rgba(255,255,255,0.05);border:1px solid rgba(212,160,23,0.25);border-radius:9px;padding:8px 11px;color:#f0f0f0;font-size:13px;font-family:Arial,sans-serif;outline:none"/>
-    <button id="xsend" onclick="xSendClick()" type="button" style="width:35px;height:35px;background:linear-gradient(135deg,#d4a017,#f5c842);border:none;border-radius:9px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="white"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
-    </button>
-  </div>
-</div>
-
-<script>
-(function(){
-  var open=false,hist=[],sid="CB"+Date.now(),timer=null;
-
-  var KB=[
-    {k:["hi","hello","hey","hii","namaste","helo","start","sup"],a:"Welcome to OpulentSMM!\n\nWe help creators & businesse
+    <button id="cb-send" type="button"
+      style="width:35px;height:35px;background:linear-gradient(135deg,#d4a017,#f5c84
