@@ -6874,139 +6874,149 @@ const AdminAnnounce = ({ announcements, setAnnouncements }) => {
 // ═══════════════════════════════════════════════════════════════
 //  ROOT
 // ═══════════════════════════════════════════════════════════════
-// ── ChatBot Class Component ─────────────────────────────────────
-// Uses React.Component - works on ALL Android versions with Babel standalone
-var ChatBot = (function(_super) {
-  // Extend React.Component
-  function ChatBot(props) {
-    _super.call(this, props);
-    this.state = {open:false, msgs:[], inp:"", busy:false, dot:false, init:false};
-    this.sid = "CB" + Date.now();
-    this.hist = [];
-    // Bind all methods
-    this.openChat  = this.openChat.bind(this);
-    this.closeChat = this.closeChat.bind(this);
-    this.send      = this.send.bind(this);
-    this.onInpChange = this.onInpChange.bind(this);
-    this.onKeyDown   = this.onKeyDown.bind(this);
-    this.onSendClick = this.onSendClick.bind(this);
-    this.onBtnClick  = this.onBtnClick.bind(this);
+function App() {
+  // ── SPA routing: detect hidden admin route via URL hash ──────
+  const getInitialScreen = () => {
+    const hash = window.location.hash;
+    if(hash === "#secure-opulent-dashboard-9821") return "adminlogin";
+    return sessionStorage.getItem("nx_screen") || "landing";
+  };
+
+  const savedScreen = getInitialScreen();
+  const savedName   = sessionStorage.getItem("nx_name")||"";
+  const savedEmail  = sessionStorage.getItem("nx_email")||"";
+
+  const [screen,setScreen]=useState(savedScreen);
+  const [userName,setUserName]=useState(savedName);
+  const [userEmail,setUserEmail]=useState(savedEmail);
+
+  // ── History API: push state on screen change ──────────────
+  const goScreen=(s, replace=false)=>{
+    const state={screen:s};
+    if(replace) window.history.replaceState(state,"",window.location.pathname);
+    else window.history.pushState(state,"",window.location.pathname);
+    setScreen(s);
+  };
+
+  // ── Listen to browser back/forward button ─────────────────
+  useEffect(()=>{
+    // Set initial history state so back button has something to go to
+    window.history.replaceState({screen:savedScreen},"",window.location.pathname);
+
+    const handlePop=(e)=>{
+      const s = e.state?.screen||"landing";
+      // If going back to landing while logged in → just go to overview, not logout
+      if(s==="landing" && sessionStorage.getItem("nx_screen")==="user"){
+        setScreen("user");
+        // Push a new state so they can't keep going back
+        window.history.pushState({screen:"user"},"",window.location.pathname);
+        return;
+      }
+      if(s==="landing" && sessionStorage.getItem("nx_screen")==="admin"){
+        setScreen("admin");
+        window.history.pushState({screen:"admin"},"",window.location.pathname);
+        return;
+      }
+      setScreen(s);
+    };
+    const handleHash = () => {
+      if(window.location.hash === "#secure-opulent-dashboard-9821") setScreen("adminlogin");
+    };
+    window.addEventListener("popstate", handlePop);
+    window.addEventListener("hashchange", handleHash);
+    return()=>{ window.removeEventListener("popstate", handlePop); window.removeEventListener("hashchange", handleHash); };
+  },[]);
+
+  const loginUser=(name,email="")=>{
+    const normEmail = (email||"").toLowerCase().trim();
+    setUserName(name);
+    setUserEmail(normEmail);
+    sessionStorage.setItem("nx_screen","user");
+    sessionStorage.setItem("nx_name",name);
+    sessionStorage.setItem("nx_email",normEmail);
+    DB.addUser({
+      id:"USR-"+Date.now(),
+      name: name||(normEmail.split("@")[0]),
+      email: normEmail,
+      balance:0, orders:0,
+      joined:today(), status:"Active",
+    });
+    goScreen("user");
+  };
+  const loginAdmin=()=>{ sessionStorage.setItem("nx_screen","admin"); goScreen("admin"); };
+  const logout=()=>{
+    sessionStorage.clear();
+    goScreen("landing", true);
+    setUserName(""); setUserEmail("");
+  };
+
+  return (
+    <>
+      <GS/>
+      <ToastContainer/>
+      {screen==="landing"    && <Landing goLogin={()=>goScreen("login")} goSignup={()=>goScreen("signup")}/>}
+      {screen==="signup"     && <Signup goLogin={()=>goScreen("login")} onSuccess={(n,e)=>loginUser(n,e)}/>}
+      {screen==="login"      && <Login goSignup={()=>goScreen("signup")} onUserLogin={(n,e)=>loginUser(n,e)} onAdminLogin={()=>goScreen("adminlogin")}/>}
+      {screen==="adminlogin" && <AdminLogin onAdminLogin={loginAdmin} goBack={()=>goScreen("landing")}/>}
+      {screen==="user"       && <UserDash userName={userName||"User"} userEmail={userEmail} onLogout={logout}/>}
+      {screen==="admin"      && <AdminDash onLogout={logout}/>}
+    </>
+  );
+}
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(React.createElement(App));
+  </script>
+
+<!-- CHATBOT: Pure React.createElement, zero JSX, zero Babel, works on all Android -->
+<div id="cb-root"></div>
+<script>
+// Wait for React (loaded by Babel script above)
+function mountCB(){
+  if(!window.React||!window.ReactDOM||!ReactDOM.createRoot){
+    setTimeout(mountCB,200); return;
+  }
+  var e=React.createElement;
+  var div=document.getElementById("cb-root");
+  if(!div) return;
+
+  var KB=[
+    {k:["hi","hello","hey","hii","namaste","start","helo"],a:"Welcome to OpulentSMM!\n\nWe help creators grow fast with premium social media services.\n\nNew users get special rewards after signup!\n\nWhat do you want to grow?",q:["Instagram","YouTube","TikTok","Other"]},
+    {k:["instagram","insta","ig","reel","follower","like"],a:"Instagram is our most popular platform!\n\nMultiple packages based on quality and speed.\n\nLooking for premium or fast delivery?",q:["Premium Quality","Fast Delivery","Budget Friendly"]},
+    {k:["youtube","yt","views","subscriber","watch"],a:"YouTube is growing fast!\n\nViews, Subscribers, Likes and Watch Time.\n\nAll safe for monetization.",q:["More Views","Subscribers","Other"]},
+    {k:["tiktok","tok"],a:"TikTok growth is trending!\n\nViews, Followers and Likes with fast delivery.",q:["Views","Followers","Likes"]},
+    {k:["other","telegram","twitter","facebook"],a:"We cover all major platforms!\n\nTelegram, Twitter, Facebook and more.\n\nCreate a free account to see full catalogue.",q:["Create Free Account"]},
+    {k:["price","cost","rate","how much","pricing"],a:"Pricing is available inside the dashboard only.\n\nCreate free account to unlock all packages instantly.",q:["Create Free Account"]},
+    {k:["reward","bonus","offer","discount","free"],a:"New users get special rewards after signup!\n\nCreate your free account now to claim it!",q:["Create Free Account"]},
+    {k:["safe","secure","real","trust","legit"],a:"Safety is our priority!\n\n- No password required\n- Safe for all accounts\n- Trusted by thousands daily",q:["Create Free Account"]},
+    {k:["deliver","time","when","how long"],a:"Most services start quickly after order.\n\nDelivery speed depends on the package.",q:["Create Free Account"]},
+    {k:["refund","cancel","problem","issue","support"],a:"We take care of our customers!\n\n- Support always available\n- Issues resolved quickly\n- Protection on all orders",q:["Create Free Account"]},
+    {k:["how","work","process","step","kaise"],a:"Simple!\n\n1. Create free account\n2. Add wallet balance\n3. Choose service\n4. Watch your account grow!",q:["Create Free Account"]},
+    {k:["deposit","wallet","pay","upi","gpay","money"],a:"All Indian payment methods supported!\n\n- UPI and Google Pay\n- PhonePe and Paytm\n- NEFT and Bank Transfer",q:["Create Free Account"]},
+    {k:["account","signup","register","create","join","sign"],a:"Creating an account is 100% FREE!\n\nNo credit card required. Takes 2 minutes.\n\nSpecial rewards waiting for you!",q:["Create Free Account"]},
+    {k:["thank","thanks","ok","okay","great","good","perfect"],a:"You are welcome!\n\nNew user rewards are still waiting for you!",q:["Create Free Account","Instagram","YouTube"]},
+  ];
+
+  function getAns(q){
+    var l=q.toLowerCase();
+    for(var i=0;i<KB.length;i++)
+      for(var j=0;j<KB[i].k.length;j++)
+        if(l.indexOf(KB[i].k[j])>=0) return KB[i];
+    return {a:"Tell me your goal and I will suggest the best option.\n\nWhat platform do you want to grow?",q:["Instagram","YouTube","TikTok","Other"]};
   }
 
-  // Extend prototype
-  ChatBot.prototype = Object.create(_super.prototype);
-  ChatBot.prototype.constructor = ChatBot;
+  function ts(){var d=new Date();return d.getHours()+":"+("0"+d.getMinutes()).slice(-2);}
 
-  ChatBot.prototype.componentDidMount = function() {
-    var self = this;
-    setTimeout(function(){ if(!self.state.open) self.setState({dot:true}); }, 8000);
-  };
-
-  ChatBot.prototype.componentDidUpdate = function() {
-    var el = document.getElementById("cb-msgs-box");
-    if (el) el.scrollTop = el.scrollHeight;
-  };
-
-  ChatBot.prototype.getAns = function(q) {
-    var l = q.toLowerCase();
-    var KB = [
-      {k:["hi","hello","hey","hii","namaste","start","helo","sup"],a:"Welcome to OpulentSMM!\n\nWe help creators grow fast with premium social media services.\n\nNew users get special rewards after signup!\n\nWhat do you want to grow?",q:["Instagram","YouTube","TikTok","Other"]},
-      {k:["instagram","insta","ig","reel","story","follower","like"],a:"Instagram is our most popular platform!\n\nMultiple packages based on quality and speed.\n\nLooking for premium or fast delivery?",q:["Premium Quality","Fast Delivery","Budget Friendly"]},
-      {k:["youtube","yt","views","subscriber","watch"],a:"YouTube is growing fast!\n\nViews, Subscribers, Likes and Watch Time.\n\nAll safe for monetization.\n\nWhat do you need?",q:["More Views","Subscribers","Other"]},
-      {k:["tiktok","tok"],a:"TikTok growth is trending!\n\nViews, Followers and Likes with fast delivery.",q:["Views","Followers","Likes"]},
-      {k:["other","telegram","twitter","facebook"],a:"We cover all major platforms!\n\nTelegram, Twitter, Facebook and more.\n\nCreate a free account to see full catalogue.",q:["Create Free Account"]},
-      {k:["price","cost","rate","kitna","how much","pricing"],a:"Pricing is available inside the dashboard only.\n\nCreate free account to unlock all packages instantly.",q:["Create Free Account"]},
-      {k:["reward","bonus","offer","discount","gift","free"],a:"New users get special rewards after signup!\n\nCreate your free account now to claim it!",q:["Create Free Account"]},
-      {k:["safe","secure","real","trust","legit"],a:"Safety is our priority!\n\n- No password required\n- Safe for all accounts\n- Trusted by thousands daily",q:["Create Free Account"]},
-      {k:["deliver","time","when","how long","fast"],a:"Most services start quickly after order.\n\nDelivery speed depends on the package.",q:["Create Free Account"]},
-      {k:["refund","cancel","problem","issue","support","help"],a:"We take care of our customers!\n\n- Support always available\n- Issues resolved quickly\n- Protection on all orders",q:["Create Free Account"]},
-      {k:["how","work","process","step","kaise"],a:"Simple!\n\n1. Create free account\n2. Add wallet balance\n3. Choose service\n4. Watch your account grow!",q:["Create Free Account"]},
-      {k:["deposit","wallet","pay","upi","gpay","money"],a:"All Indian payment methods supported!\n\n- UPI and Google Pay\n- PhonePe and Paytm\n- NEFT and Bank Transfer",q:["Create Free Account"]},
-      {k:["account","signup","register","create","join","sign"],a:"Creating an account is 100% FREE!\n\nNo credit card required. Takes 2 minutes.\n\nSpecial rewards waiting for you!",q:["Create Free Account"]},
-      {k:["thank","thanks","ok","okay","great","good","perfect","done"],a:"You are welcome!\n\nNew user rewards are still waiting for you!\n\nGrow your social media with OpulentSMM today.",q:["Create Free Account","Instagram","YouTube"]},
-    ];
-    for (var i = 0; i < KB.length; i++) {
-      for (var j = 0; j < KB[i].k.length; j++) {
-        if (l.indexOf(KB[i].k[j]) >= 0) return KB[i];
-      }
-    }
-    return {a:"Tell me your goal and I will suggest the best option.\n\nWhat platform do you want to grow?",q:["Instagram","YouTube","TikTok","Other"]};
-  };
-
-  ChatBot.prototype.send = function(txt) {
-    if (!txt || !txt.trim()) return;
-    var text = txt.trim();
-    var self = this;
-    var now = new Date();
-    var ts = now.getHours() + ":" + ("0" + now.getMinutes()).slice(-2);
-    var newMsgs = this.state.msgs.concat([{r:"u",text:text,t:ts}]);
-    this.setState({msgs:newMsgs, inp:"", busy:true});
-    setTimeout(function(){
-      var now2 = new Date();
-      var ts2 = now2.getHours() + ":" + ("0" + now2.getMinutes()).slice(-2);
-      var ans = self.getAns(text);
-      var newMsgs2 = self.state.msgs.concat([{r:"b",text:ans.a,q:ans.q||[],t:ts2}]);
-      self.setState({msgs:newMsgs2, busy:false});
-      try {
-        if (typeof firebase !== "undefined" && firebase.apps && firebase.apps.length) {
-          self.hist.push({role:"user",text:text,ts:Date.now()});
-          self.hist.push({role:"bot",text:ans.a,ts:Date.now()+1});
-          firebase.firestore().collection("chatSessions").doc(self.sid).set({
-            sessionId:self.sid,
-            userName:sessionStorage.getItem("nx_name")||"Visitor",
-            userEmail:sessionStorage.getItem("nx_email")||"anonymous",
-            messages:self.hist,lastMessage:Date.now(),hasAdminReply:false,status:"open"
-          },{merge:true}).catch(function(){});
-        }
-      } catch(e) {}
-      if (text === "Create Free Account") {
-        var btns = document.querySelectorAll("button");
-        for (var i = 0; i < btns.length; i++) {
-          if ((btns[i].textContent||"").indexOf("Get Started") >= 0) {
-            btns[i].click(); self.setState({open:false}); break;
-          }
-        }
-      }
-    }, 700);
-  };
-
-  ChatBot.prototype.openChat = function() {
-    var self = this;
-    var now = new Date();
-    var ts = now.getHours() + ":" + ("0" + now.getMinutes()).slice(-2);
-    this.setState({open:true, dot:false});
-    if (!this.state.init) {
-      this.setState({init:true});
-      setTimeout(function(){
-        self.setState({msgs:[{r:"b",text:"Welcome to OpulentSMM!\n\nWe help creators grow fast with premium social media services.\n\nNew users get special rewards after signup!\n\nWhat do you want to grow?",q:["Instagram","YouTube","TikTok","Other"],t:ts}]});
-      }, 200);
-    }
-  };
-
-  ChatBot.prototype.closeChat = function() {
-    this.setState({open:false});
-  };
-
-  ChatBot.prototype.onBtnClick = function() {
-    if (this.state.open) this.closeChat(); else this.openChat();
-  };
-
-  ChatBot.prototype.onInpChange = function(e) {
-    this.setState({inp: e.target.value});
-  };
-
-  ChatBot.prototype.onKeyDown = function(e) {
-    if (e.key === "Enter" && this.state.inp.trim()) {
-      this.send(this.state.inp);
-    }
-  };
-
-  ChatBot.prototype.onSendClick = function() {
-    if (this.state.inp.trim()) this.send(this.state.inp);
-  };
-
-  ChatBot.prototype.render = function() {
-    var self = this;
-    var s = this.state;
-    var bStyle = {alignSelf:"flex-start",background:"rgba(212,160,23,0.08)",border:"1px solid rgba(212,160,23,0.2)",borderRadius:"14px 14px 14px 3px",padding:"9px 12px",maxWidth:"90%",color:"#f0f0e8",fontSize:13,wordBreak:"break-word",whiteSpace:"pre-wrap",lineHeight:1.6};
-    var uStyle = {alignSelf:"flex-end",background:"rgba(212,160,23,0.18)",border:"1px solid rgba(212,160,23,0.35)",borderRadius:"14px 14px 3px 14px",padd
+  // Class component using React.Component
+  function CB(props){
+    React.Component.call(this,props);
+    this.state={open:false,msgs:[],inp:"",busy:false,dot:false,init:false};
+    this.sid="CB"+Date.now();
+    this.hist=[];
+    this.toggle=this.toggle.bind(this);
+    this.close=this.close.bind(this);
+    this.open=this.open.bind(this);
+    this.sendMsg=this.sendMsg.bind(this);
+    this.onChg=this.onChg.bind(this);
+    this.onKey=this.onKey.bind(this);
+    this.onSend=this.onSend
