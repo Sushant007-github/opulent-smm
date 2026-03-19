@@ -3225,7 +3225,7 @@ const PaymentUTRScreen = ({ amount, method, qrUrl, userName, userEmail, onBack, 
             <div style={{fontSize:10,color:C.muted,marginBottom:2,textTransform:"uppercase",letterSpacing:".06em"}}>UPI ID</div>
             <div style={{fontWeight:800,color:"#c4b5fd",fontSize:13,letterSpacing:".01em"}}>{UPI_ID}</div>
           </div>
-          <button onClick={()=>{navigator.clipboard?.writeText(UPI_ID).catch(()=>{}); setErr("✅ UPI ID Copied!");setTimeout(()=>setErr(""),2000);}}
+          <button onClick={()=>{navigator.clipboard&&navigator.clipboard.writeText(UPI_ID).catch(()=>{}); setErr("✅ UPI ID Copied!");setTimeout(()=>setErr(""),2000);}}
             style={{background:"rgba(124,58,237,.25)",border:"1px solid rgba(124,58,237,.5)",borderRadius:7,
               padding:"6px 12px",color:"#c4b5fd",fontSize:11,fontWeight:700,cursor:"pointer"}}>Copy</button>
         </div>
@@ -4059,7 +4059,7 @@ const UserInfluencer = ({ userEmail="", userName="" }) => {
 
   // Referral code for this user
   const refCode=React.useMemo(()=>`OPULENT-${((userName||"USER").slice(0,4)).toUpperCase()}${(userEmail.charCodeAt(0)*37+userEmail.length*13+1000)%9000+1000}`,[userEmail,userName]);
-  const refURL=`https://opulentsmm.in?ref=${refCode.toLowerCase()}`;
+  const refURL=`${window.location.origin}?ref=${refCode.toLowerCase()}`;
 
   const handleProofImg=(e)=>{
     const file=e.target.files[0]; if(!file) return;
@@ -4523,15 +4523,15 @@ const UserProfile = ({ userName, userEmail, balance, orders, onLogout }) => {
               <input readOnly value={refCode} style={{flex:1,background:"rgba(255,255,255,.04)",
                 border:"1px solid rgba(212,160,23,.3)",borderRadius:10,padding:"11px 14px",
                 color:C.goldL,fontWeight:800,fontSize:14,fontFamily:"monospace"}}/>
-              <Btn v="gold" size="sm" onClick={()=>{ navigator.clipboard?.writeText(refCode); Toast.success("Code copied!"); }}>Copy Code</Btn>
+              <Btn v="gold" size="sm" onClick={()=>{ navigator.clipboard&&navigator.clipboard.writeText(refCode); Toast.success("Code copied!"); }}>Copy Code</Btn>
             </div>
             <label style={{display:"block",fontSize:11,fontWeight:700,color:C.muted,letterSpacing:".07em",marginBottom:7,textTransform:"uppercase"}}>Your Shareable Referral URL</label>
             <div style={{display:"flex",gap:10,marginBottom:20}}>
-              <input readOnly value={`https://opulentsmm.in?ref=${refCode.toLowerCase()}`}
+              <input readOnly value={`${window.location.origin}?ref=${refCode.toLowerCase()}`}
                 style={{flex:1,background:"rgba(255,255,255,.04)",border:"1px solid rgba(212,160,23,.3)",
                   borderRadius:10,padding:"11px 14px",color:"#c4b5fd",fontWeight:600,fontSize:12,fontFamily:"monospace",
                   overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}/>
-              <Btn v="gold" size="sm" onClick={()=>{ navigator.clipboard?.writeText(`https://opulentsmm.in?ref=${refCode.toLowerCase()}`); Toast.success("URL copied!"); }}>Copy URL</Btn>
+              <Btn v="gold" size="sm" onClick={()=>{ navigator.clipboard&&navigator.clipboard.writeText(`${window.location.origin}?ref=${refCode.toLowerCase()}`); Toast.success("URL copied!"); }}>Copy URL</Btn>
             </div>
             <div style={{background:"rgba(212,160,23,.06)",border:"1px solid rgba(212,160,23,.15)",borderRadius:12,padding:"14px 16px",marginBottom:16}}>
               <div style={{fontSize:11,color:C.goldL,fontWeight:700,marginBottom:6}}>💡 How it works</div>
@@ -6878,7 +6878,7 @@ function App() {
   // ── SPA routing: detect hidden admin route via URL hash ──────
   const getInitialScreen = () => {
     const hash = window.location.hash;
-    if(hash === "#secure-opulent-dashboard-9821") return "adminlogin";
+    if(hash.replace(/^#+/,"") === "secure-opulent-dashboard-9821") return "adminlogin";
     return sessionStorage.getItem("nx_screen") || "landing";
   };
 
@@ -6968,61 +6968,61 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(React.createElement(App));
   </script>
 
-<!-- OPULENTSMM CHATBOT - Second React root, zero JSX, zero Babel -->
-<div id="chat-root"></div>
+<!-- ═══ OpulentSMM AI Chatbot ═══ -->
+<style>
+@keyframes cbPulse{0%{transform:scale(1);opacity:0.8}100%{transform:scale(1.65);opacity:0}}
+@keyframes cbBlink{0%,100%{opacity:0.3;transform:scale(0.8)}50%{opacity:1;transform:scale(1.1)}}
+</style>
+<div id="chat-root" style="position:fixed;bottom:24px;right:20px;z-index:2147483647"></div>
 <script>
-// Wait for React to be ready (Babel loads it async)
-function mountChatbot() {
-  if (typeof React === 'undefined' || typeof ReactDOM === 'undefined') {
-    setTimeout(mountChatbot, 100);
-    return;
-  }
-  var h = React.createElement;
-  var useState = React.useState;
-  var useEffect = React.useEffect;
-  var useRef = React.useRef;
+(function(){
+  var READY = false;
 
-  var KB = [
-    {k:["hi","hello","hey","hii","namaste","help","start"],
-     a:"Hey! Welcome to OpulentSMM! I help creators grow on Instagram, YouTube and more. New users get Rs0.10 FREE on signup! Which platform?",
-     q:["Instagram","YouTube","TikTok","Other"]},
-    {k:["instagram","insta","ig","followers","follow","reel","story","likes"],
-     a:"Instagram is our #1 service!\n\nWe offer:\n- Indian & Premium Followers\n- Reel Views (go viral!)\n- Story Views & Post Likes\n- Comments & Saves\n\nOrders start in 30 mins!",
-     q:["Sign Up Free","How it works","Is it safe?"]},
-    {k:["youtube","yt","views","subscriber","sub","video","watch"],
-     a:"YouTube growth done right!\n\n- High Retention Views\n- Real Subscribers\n- Watch Time Hours\n- Safe for monetization!\n\nSign up to see all plans!",
-     q:["Sign Up Free","Is it safe?","How fast?"]},
-    {k:["tiktok","telegram","twitter","facebook","other","social"],
-     a:"We cover ALL platforms!\n\n- TikTok Followers & Views\n- Telegram Members\n- Twitter/X Followers\n- Facebook Page Likes\n\n100+ services after signup!",
-     q:["Sign Up Free","How it works"]},
-    {k:["price","cost","rate","kitna","cheap","rupee","how much","plan","pricing"],
-     a:"Pricing unlocks after FREE signup!\n\n- Rs0.10 FREE credit on joining\n- 20% BONUS on first deposit\n- Plans from Rs0.0.09 per unit\n\nSignup takes 2 mins, no card needed!",
-     cta:true,q:["Sign Up Free"]},
-    {k:["how","work","process","kaise","step","explain"],
-     a:"How it works:\n\n1. Create free account\n2. Add wallet via UPI/GPay\n3. Choose service & paste link\n4. Watch your account grow!\n\nDelivery starts automatically!",
-     q:["Sign Up Free","Is it safe?","How fast?"]},
-    {k:["safe","real","fake","drop","quality","guarantee","refill","legit","password"],
-     a:"100% safe - always!\n\n- We NEVER ask for your password\n- 30-day refill guarantee\n- 1,00,000+ orders delivered\n- Non-drop protection\n\nTrusted by 10,000+ Indian creators!",
-     q:["Sign Up Free"]},
-    {k:["fast","speed","delivery","time","kab","instant","how long"],
-     a:"Super fast delivery!\n\n- Likes & Views: 0-30 mins\n- Followers: 1-12 hours\n- YT Views: 1-6 hours\n- Subscribers: 12-24 hours\n\nMost orders start automatically!",
-     q:["Sign Up Free"]},
-    {k:["payment","pay","upi","gpay","phonepe","paytm","deposit","money"],
-     a:"Easy Indian payments!\n\n- Google Pay & PhonePe\n- Paytm & Any UPI\n- NEFT / IMPS\n\nMin Rs0.100. First deposit: +20% bonus!",
-     q:["Sign Up Free"]},
-    {k:["refund","cancel","money back","wapas"],
-     a:"Risk-free guarantee!\n\n- Full refund if order fails\n- Wallet refund is instant\n- 30-day follower refill\n\n98% satisfaction rate!",
-     q:["Sign Up Free"]},
-    {k:["free","bonus","signup","register","account","join","sign up","create","get started"],
-     a:"Getting started is FREE!\n\n1. Click Sign Up Free below\n2. Enter email + password\n3. Verify email\n4. Get Rs0.10 FREE instantly!\n\nNo card needed, 2 minutes!",
-     cta:true},
-    {k:["referral","refer","earn","influencer","commission","promote"],
-     a:"Earn while you grow!\n\n- Refer friends = 5% commission\n- Promote us = up to 3000 free followers\n\nFind your link in Influencer tab after login!",
-     q:["Sign Up Free"]},
-    {k:["support","help","issue","problem","contact","human","agent","talk"],
-     a:"We are here for you!\n\n- Support tickets after login\n- WhatsApp: 9AM-11PM IST\n\nWe reply within 5 minutes!",
-     wa:true},
-    {k:["whatsapp","wa"],
-     a:"Tap below to chat on WhatsApp!\nWe reply within 5 minutes (9AM-11PM IST).",
-     wa:true},
-    {k:["thank","thanks","ok","okay","great","goo
+  function tryMount(){
+    if(READY) return;
+    if(typeof React==="undefined"||typeof ReactDOM==="undefined"||typeof ReactDOM.createRoot==="undefined"){
+      setTimeout(tryMount,100); return;
+    }
+    READY = true;
+    var el = document.getElementById("chat-root");
+    if(!el) return;
+
+    var h = React.createElement;
+    var useState = React.useState;
+    var useEffect = React.useEffect;
+    var useRef = React.useRef;
+
+    var KB=[
+      {k:["hi","hello","hey","hii","namaste","help","start","helo"],
+       a:"Hey! Welcome to OpulentSMM!\n\nI help creators grow on Instagram, YouTube and more.\n\nNew users get Rs0.10 FREE on signup!\n\nWhich platform do you want to grow?",
+       q:["Instagram","YouTube","TikTok","Other"]},
+      {k:["instagram","insta","ig","followers","follow","reel","story","likes","comment"],
+       a:"Instagram is our #1 service!\n\n- Indian & Premium Followers\n- Reel Views (go viral!)\n- Story Views & Post Likes\n- Comments & Saves\n\nOrders start in 30 mins!\nSign up to unlock full catalogue.",
+       q:["Sign Up Free","How it works","Is it safe?"]},
+      {k:["youtube","yt","views","subscriber","sub","video","watch","monetize"],
+       a:"YouTube growth done right!\n\n- High Retention Views\n- Real Subscribers\n- Watch Time Hours\n- Safe for monetization!\n\nSign up to see all plans!",
+       q:["Sign Up Free","Is it safe?","How fast?"]},
+      {k:["tiktok","telegram","twitter","facebook","social","other","platform"],
+       a:"We cover ALL platforms!\n\n- TikTok Followers & Views\n- Telegram Members\n- Twitter/X Followers\n- Facebook Page Likes\n\n100+ services after signup!",
+       q:["Sign Up Free","How it works"]},
+      {k:["price","cost","rate","kitna","cheap","rupee","how much","plan","pricing"],
+       a:"Pricing unlocks after FREE signup!\n\n- Rs0.10 FREE credit on joining\n- 20% BONUS on first deposit\n- Plans from Rs0.0.09 per unit\n\nSignup = 2 mins, no card needed!",
+       cta:true,q:["Sign Up Free"]},
+      {k:["how","work","process","kaise","step","explain"],
+       a:"How it works:\n\n1. Create free account\n2. Add wallet via UPI/GPay\n3. Choose service & paste link\n4. Watch your account grow!\n\nDelivery starts automatically!",
+       q:["Sign Up Free","Is it safe?","How fast?"]},
+      {k:["safe","real","fake","drop","quality","guarantee","refill","legit","password"],
+       a:"100% safe - always!\n\n- We NEVER ask for your password\n- 30-day refill guarantee\n- 1,00,000+ orders delivered\n- Non-drop protection\n\nTrusted by 10,000+ Indian creators!",
+       q:["Sign Up Free"]},
+      {k:["fast","speed","delivery","time","kab","instant","how long","kitne"],
+       a:"Super fast delivery!\n\n- Likes & Views: 0-30 mins\n- Followers: 1-12 hours\n- YT Views: 1-6 hours\n- Subscribers: 12-24 hours\n\nMost orders start automatically!",
+       q:["Sign Up Free"]},
+      {k:["payment","pay","upi","gpay","phonepe","paytm","deposit","money","wallet"],
+       a:"Easy Indian payments!\n\n- Google Pay & PhonePe\n- Paytm & Any UPI\n- NEFT / IMPS\n\nMin Rs0.100.\nFirst deposit gets +20% bonus!",
+       q:["Sign Up Free"]},
+      {k:["refund","cancel","money back","wapas","return"],
+       a:"Risk-free guarantee!\n\n- Full refund if order fails\n- Wallet refund is instant\n- 30-day follower refill\n\n98% satisfaction rate!",
+       q:["Sign Up Free"]},
+      {k:["free","bonus","signup","register","account","join","sign up","create","get started"],
+       a:"Getting started is FREE!\n\n1. Click Sign Up Free below\n2. Enter email + password\n3. Verify email\n4. Get Rs0.10 FREE instantly!\n\nNo card needed, only 2 minutes!",
+       cta:
