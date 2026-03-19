@@ -29,8 +29,8 @@
   <meta name="twitter:image" content="https://opulentsmm.in/og-image.png"/>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800;900&family=DM+Sans:wght@400;500;600;700&display=swap"/>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800;900&family=DM+Sans:wght@400;500;600;700&display=swap" media="print" onload="this.media='all'"/>
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Syne:wght@700;800;900&display=swap"/>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Syne:wght@700;800;900&display=swap" media="print" onload="this.media='all'"/>
   <meta name="format-detection" content="telephone=yes"/>
   <meta name="mobile-web-app-capable" content="yes"/>
   <meta name="apple-mobile-web-app-capable" content="yes"/>
@@ -693,15 +693,15 @@ const UTRGuard = {
 // ─── Global CSS ────────────────────────────────────────────────
 const GS = () => (
   <style>{`
-    @import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800;900&family=DM+Sans:wght@400;500;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Syne:wght@700;800;900&display=swap');
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     html{scroll-behavior:smooth}
-    body{background:#06060a;color:#e8e8f2;font-family:'DM Sans',sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+    body{background:#06060a;color:#e8e8f2;font-family:'Plus Jakarta Sans',sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
     ::-webkit-scrollbar{width:5px;height:5px}
     ::-webkit-scrollbar-track{background:rgba(255,255,255,.02)}
     ::-webkit-scrollbar-thumb{background:rgba(212,160,23,.4);border-radius:4px}
     ::-webkit-scrollbar-thumb:hover{background:rgba(212,160,23,.7)}
-    input,textarea,select,button{font-family:'DM Sans',sans-serif}
+    input,textarea,select,button{font-family:'Plus Jakarta Sans',sans-serif}
     input:focus,textarea:focus{outline:none;border-color:rgba(212,160,23,.6)!important;box-shadow:0 0 0 3px rgba(212,160,23,.1)}
     select:focus{outline:none;border-color:rgba(212,160,23,.6)!important;}
     img{max-width:100%;height:auto;display:block}
@@ -4527,11 +4527,11 @@ const UserProfile = ({ userName, userEmail, balance, orders, onLogout }) => {
             </div>
             <label style={{display:"block",fontSize:11,fontWeight:700,color:C.muted,letterSpacing:".07em",marginBottom:7,textTransform:"uppercase"}}>Your Shareable Referral URL</label>
             <div style={{display:"flex",gap:10,marginBottom:20}}>
-              <input readOnly value={`https://opulentsmm.in?ref=${refCode.toLowerCase()}`}
+              <input readOnly value={`${window.location.origin}?ref=${refCode.toLowerCase()}`}
                 style={{flex:1,background:"rgba(255,255,255,.04)",border:"1px solid rgba(212,160,23,.3)",
                   borderRadius:10,padding:"11px 14px",color:"#c4b5fd",fontWeight:600,fontSize:12,fontFamily:"monospace",
                   overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}/>
-              <Btn v="gold" size="sm" onClick={()=>{ navigator.clipboard?.writeText(`https://opulentsmm.in?ref=${refCode.toLowerCase()}`); Toast.success("URL copied!"); }}>Copy URL</Btn>
+              <Btn v="gold" size="sm" onClick={()=>{ navigator.clipboard&&navigator.clipboard.writeText(`${window.location.origin}?ref=${refCode.toLowerCase()}`); Toast.success("URL copied!"); }}>Copy URL</Btn>
             </div>
             <div style={{background:"rgba(212,160,23,.06)",border:"1px solid rgba(212,160,23,.15)",borderRadius:12,padding:"14px 16px",marginBottom:16}}>
               <div style={{fontSize:11,color:C.goldL,fontWeight:700,marginBottom:6}}>💡 How it works</div>
@@ -6874,140 +6874,109 @@ const AdminAnnounce = ({ announcements, setAnnouncements }) => {
 // ═══════════════════════════════════════════════════════════════
 //  ROOT
 // ═══════════════════════════════════════════════════════════════
-function App() {
-  // ── SPA routing: detect hidden admin route via URL hash ──────
-  const getInitialScreen = () => {
-    const hash = window.location.hash;
-    if(hash === "#secure-opulent-dashboard-9821") return "adminlogin";
-    return sessionStorage.getItem("nx_screen") || "landing";
-  };
+const ChatBot = () => {
+  const [open, setOpen] = useState(false);
+  const [msgs, setMsgs] = useState([]);
+  const [inp, setInp] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [badge, setBadge] = useState(false);
+  const endRef = useRef(null);
+  const sidRef = useRef("CB"+Date.now()+Math.random().toString(36).slice(2,6));
+  const histRef = useRef([]);
 
-  const savedScreen = getInitialScreen();
-  const savedName   = sessionStorage.getItem("nx_name")||"";
-  const savedEmail  = sessionStorage.getItem("nx_email")||"";
+  const KB = [
+    {k:["hi","hello","hey","hii","namaste","start","help"],a:"Hey! Welcome to <b>OpulentSMM!</b><br/><br/>I help creators grow on Instagram, YouTube and more.<br/><br/><b>Rs0.10 FREE</b> just for signing up!<br/><br/>Which platform?",q:["Instagram","YouTube","TikTok","Other"]},
+    {k:["instagram","insta","ig","followers","follow","reel","story","likes"],a:"Instagram is our #1 service!<br/><br/>- Indian &amp; Premium Followers<br/>- Reel Views (go viral!)<br/>- Story Views &amp; Likes<br/>- Comments &amp; Saves<br/><br/>Orders start in 30 mins!",q:["Sign Up Free","How it works","Is it safe?"]},
+    {k:["youtube","yt","views","subscriber","sub","video","watch"],a:"YouTube growth done right!<br/><br/>- High Retention Views<br/>- Real Subscribers<br/>- Watch Time Hours<br/>- Safe for monetization!<br/><br/>Sign up to see all plans!",q:["Sign Up Free","Is it safe?","How fast?"]},
+    {k:["tiktok","telegram","twitter","facebook","social","other"],a:"We cover ALL platforms!<br/><br/>- TikTok Followers &amp; Views<br/>- Telegram Members<br/>- Twitter/X Followers<br/>- Facebook Page Likes<br/><br/>100+ services after signup!",q:["Sign Up Free"]},
+    {k:["price","cost","rate","kitna","cheap","rupee","how much","plan","pricing"],a:"Pricing unlocks after FREE signup!<br/><br/>- <b>Rs0.10 FREE</b> on joining<br/>- <b>20% BONUS</b> on first deposit<br/>- Plans from Rs0.0.09/unit<br/><br/>Signup = 2 mins, no card needed!",cta:true,q:["Sign Up Free"]},
+    {k:["how","work","process","explain","kaise","step"],a:"How it works:<br/><br/>1. Create free account<br/>2. Add wallet via UPI/GPay<br/>3. Choose service + paste link<br/>4. Watch your account grow!",q:["Sign Up Free","Is it safe?","How fast?"]},
+    {k:["safe","real","fake","drop","quality","guarantee","refill","legit"],a:"100% safe - always!<br/><br/>- We NEVER ask for your password<br/>- 30-day refill guarantee<br/>- 1,00,000+ orders delivered<br/>- Non-drop protection",q:["Sign Up Free"]},
+    {k:["fast","speed","delivery","time","kab","instant","how long"],a:"Super fast delivery!<br/><br/>- Likes &amp; Views: 0-30 mins<br/>- Followers: 1-12 hours<br/>- YT Views: 1-6 hours<br/>- Subscribers: 12-24 hours",q:["Sign Up Free"]},
+    {k:["payment","pay","upi","gpay","phonepe","paytm","deposit"],a:"Easy Indian payments!<br/><br/>- Google Pay &amp; PhonePe<br/>- Paytm &amp; Any UPI<br/>- NEFT / IMPS<br/><br/>Min: Rs0.100. First deposit: +20% bonus!",q:["Sign Up Free"]},
+    {k:["refund","cancel","money back","wapas"],a:"Risk-free guarantee!<br/><br/>- Full refund if order fails<br/>- Wallet refund instant<br/>- 30-day follower refill<br/><br/>98% satisfaction rate!",q:["Sign Up Free"]},
+    {k:["free","bonus","signup","register","account","join","create","sign up","get started"],a:"Getting started is FREE!<br/><br/>1. Click Sign Up Free below<br/>2. Enter email + password<br/>3. Verify email<br/>4. Get <b>Rs0.10 FREE</b> instantly!",cta:true},
+    {k:["referral","refer","earn","influencer","commission"],a:"Earn while you grow!<br/><br/>- Refer friends = 5% commission<br/>- Promote us = up to 3,000 free followers<br/><br/>Find link in Influencer tab after login!",q:["Sign Up Free"]},
+    {k:["support","help","issue","problem","contact","human","agent"],a:"We are here for you!<br/><br/>- Support tickets after login<br/>- WhatsApp: 9AM-11PM IST<br/><br/>Reply within 5 minutes!",wa:true},
+    {k:["whatsapp","wa"],a:"Tap below to chat on WhatsApp!<br/>Reply within 5 minutes (9AM-11PM).",wa:true},
+    {k:["thank","thanks","ok","okay","great","good","perfect"],a:"You're welcome! Anything else?<br/><br/><b>Rs0.10 FREE</b> when you sign up!",q:["Sign Up Free","Instagram","YouTube"]},
+  ];
 
-  const [screen,setScreen]=useState(savedScreen);
-  const [userName,setUserName]=useState(savedName);
-  const [userEmail,setUserEmail]=useState(savedEmail);
-
-  // ── History API: push state on screen change ──────────────
-  const goScreen=(s, replace=false)=>{
-    const state={screen:s};
-    if(replace) window.history.replaceState(state,"",window.location.pathname);
-    else window.history.pushState(state,"",window.location.pathname);
-    setScreen(s);
-  };
-
-  // ── Listen to browser back/forward button ─────────────────
-  useEffect(()=>{
-    // Set initial history state so back button has something to go to
-    window.history.replaceState({screen:savedScreen},"",window.location.pathname);
-
-    const handlePop=(e)=>{
-      const s = e.state?.screen||"landing";
-      // If going back to landing while logged in → just go to overview, not logout
-      if(s==="landing" && sessionStorage.getItem("nx_screen")==="user"){
-        setScreen("user");
-        // Push a new state so they can't keep going back
-        window.history.pushState({screen:"user"},"",window.location.pathname);
-        return;
+  const getAns = (q) => {
+    const l = q.toLowerCase();
+    for (let i = 0; i < KB.length; i++) {
+      for (let j = 0; j < KB[i].k.length; j++) {
+        if (l.indexOf(KB[i].k[j]) >= 0) return KB[i];
       }
-      if(s==="landing" && sessionStorage.getItem("nx_screen")==="admin"){
-        setScreen("admin");
-        window.history.pushState({screen:"admin"},"",window.location.pathname);
-        return;
+    }
+    return {a:"Great question! Sign up free to access all services and get Rs0.10 FREE!",cta:true,q:["Sign Up Free","Instagram","YouTube"]};
+  };
+
+  const now = () => { const d = new Date(); return d.getHours()+":"+(("0"+d.getMinutes()).slice(-2)); };
+
+  useEffect(() => {
+    if (endRef.current) endRef.current.scrollIntoView({behavior:"smooth"});
+  }, [msgs, busy]);
+
+  useEffect(() => {
+    const t = setTimeout(() => { if (!open) setBadge(true); }, 8000);
+    return () => clearTimeout(t);
+  }, []);
+
+  const saveChat = (u, b) => {
+    try {
+      if (typeof firebase === "undefined" || !firebase.apps || !firebase.apps.length) return;
+      histRef.current.push({role:"user",text:u,ts:Date.now()});
+      histRef.current.push({role:"bot",text:b,ts:Date.now()+100});
+      firebase.firestore().collection("chatSessions").doc(sidRef.current).set({
+        sessionId: sidRef.current,
+        userName: sessionStorage.getItem("nx_name") || "Visitor",
+        userEmail: sessionStorage.getItem("nx_email") || "anonymous",
+        messages: histRef.current,
+        lastMessage: Date.now(),
+        hasAdminReply: false,
+        status: "open"
+      }, {merge:true}).catch(() => {});
+    } catch(e) {}
+  };
+
+  const send = (txt) => {
+    if (!txt || !txt.trim()) return;
+    const t = txt.trim();
+    setMsgs(m => [...m, {role:"user",text:t,time:now()}]);
+    setBusy(true);
+    setTimeout(() => {
+      const r = getAns(t);
+      setMsgs(m => [...m, {role:"bot",html:r.a,qr:r.q||[],cta:r.cta||false,wa:r.wa||false,time:now()}]);
+      setBusy(false);
+      saveChat(t, r.a);
+    }, 700 + Math.floor(Math.random()*400));
+  };
+
+  const onOpen = () => {
+    setOpen(true);
+    setBadge(false);
+    if (msgs.length === 0) {
+      setTimeout(() => {
+        setMsgs([{role:"bot",html:"Hey! Welcome to <b>OpulentSMM!</b><br/><br/>I help creators grow fast on Instagram, YouTube, TikTok and more.<br/><br/><b>Rs0.10 FREE</b> just for signing up!<br/><br/>Which platform do you want to grow?",qr:["Instagram","YouTube","TikTok","Other Platforms"],cta:false,wa:false,time:now()}]);
+      }, 300);
+    }
+  };
+
+  const doSignup = () => {
+    const btns = document.querySelectorAll("button");
+    for (let i = 0; i < btns.length; i++) {
+      const t = btns[i].textContent || "";
+      if (t.indexOf("Get Started") >= 0 || t.indexOf("Sign Up") >= 0) {
+        btns[i].click();
+        setOpen(false);
+        break;
       }
-      setScreen(s);
-    };
-    const handleHash = () => {
-      if(window.location.hash === "#secure-opulent-dashboard-9821") setScreen("adminlogin");
-    };
-    window.addEventListener("popstate", handlePop);
-    window.addEventListener("hashchange", handleHash);
-    return()=>{ window.removeEventListener("popstate", handlePop); window.removeEventListener("hashchange", handleHash); };
-  },[]);
-
-  const loginUser=(name,email="")=>{
-    const normEmail = (email||"").toLowerCase().trim();
-    setUserName(name);
-    setUserEmail(normEmail);
-    sessionStorage.setItem("nx_screen","user");
-    sessionStorage.setItem("nx_name",name);
-    sessionStorage.setItem("nx_email",normEmail);
-    DB.addUser({
-      id:"USR-"+Date.now(),
-      name: name||(normEmail.split("@")[0]),
-      email: normEmail,
-      balance:0, orders:0,
-      joined:today(), status:"Active",
-    });
-    goScreen("user");
-  };
-  const loginAdmin=()=>{ sessionStorage.setItem("nx_screen","admin"); goScreen("admin"); };
-  const logout=()=>{
-    sessionStorage.clear();
-    goScreen("landing", true);
-    setUserName(""); setUserEmail("");
+    }
   };
 
-  return (
-    <>
-      <GS/>
-      <ToastContainer/>
-      {screen==="landing"    && <Landing goLogin={()=>goScreen("login")} goSignup={()=>goScreen("signup")}/>}
-      {screen==="signup"     && <Signup goLogin={()=>goScreen("login")} onSuccess={(n,e)=>loginUser(n,e)}/>}
-      {screen==="login"      && <Login goSignup={()=>goScreen("signup")} onUserLogin={(n,e)=>loginUser(n,e)} onAdminLogin={()=>goScreen("adminlogin")}/>}
-      {screen==="adminlogin" && <AdminLogin onAdminLogin={loginAdmin} goBack={()=>goScreen("landing")}/>}
-      {screen==="user"       && <UserDash userName={userName||"User"} userEmail={userEmail} onLogout={logout}/>}
-      {screen==="admin"      && <AdminDash onLogout={logout}/>}
-    </>
-  );
-}
-
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(React.createElement(App));
-  </script>
-
-<style>
-#smm-btn{position:fixed;bottom:26px;right:22px;z-index:2147483647;width:58px;height:58px;border-radius:50%;background:linear-gradient(135deg,#7c3aed,#a855f7);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 24px rgba(124,58,237,.65)}
-#smm-btn::before{content:'';position:absolute;inset:-2px;border-radius:50%;border:2px solid rgba(168,85,247,.5);animation:smmP 2s ease-out infinite}
-@keyframes smmP{0%{transform:scale(1);opacity:.8}100%{transform:scale(1.6);opacity:0}}
-#smm-dot{position:absolute;top:-1px;right:-1px;width:16px;height:16px;background:#ef4444;border-radius:50%;border:2px solid #000;font-size:9px;color:#fff;display:none;align-items:center;justify-content:center;font-weight:900}
-#smm-win{position:fixed;bottom:94px;right:16px;width:310px;height:460px;background:#0c0c1a;border:1px solid rgba(124,58,237,.4);border-radius:18px;display:none;flex-direction:column;overflow:hidden;box-shadow:0 16px 50px rgba(0,0,0,.85);z-index:2147483647}
-@media(max-width:480px){#smm-btn{bottom:80px;right:14px}#smm-win{width:calc(100vw - 24px);right:12px;bottom:152px;height:420px}}
-</style>
-
-<!-- Chatbot button - plain HTML, always visible -->
-<button id="smm-btn" type="button" onclick="event.preventDefault();event.stopPropagation();smmToggle();return false;">
-  <div id="smm-dot">1</div>
-  <svg width="25" height="25" viewBox="0 0 24 24" fill="white"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/></svg>
-</button>
-
-<!-- Chat window -->
-<div id="smm-win">
-  <div style="background:linear-gradient(135deg,#5b21b6,#7c3aed);padding:13px 15px;display:flex;align-items:center;gap:10px;flex-shrink:0">
-    <div style="width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0">&#x1F916;</div>
-    <div style="flex:1">
-      <div style="font-weight:800;color:#fff;font-size:13px;font-family:Arial,sans-serif">OpulentSMM AI</div>
-      <div style="font-size:11px;color:rgba(255,255,255,.65);display:flex;align-items:center;gap:4px;margin-top:1px;font-family:Arial,sans-serif">
-        <span style="width:6px;height:6px;background:#34d399;border-radius:50%;display:inline-block"></span>Online now
-      </div>
-    </div>
-    <button type="button" onclick="event.preventDefault();event.stopPropagation();smmClose();return false;" style="background:rgba(255,255,255,.15);border:none;border-radius:8px;width:27px;height:27px;cursor:pointer;color:#fff;font-size:17px;display:flex;align-items:center;justify-content:center;font-family:Arial">&#x2715;</button>
-  </div>
-  <div id="smm-msgs" style="flex:1;overflow-y:auto;padding:11px;display:flex;flex-direction:column;gap:7px"></div>
-  <div style="padding:9px 11px;border-top:1px solid rgba(255,255,255,.08);display:flex;gap:7px;flex-shrink:0;background:#080814">
-    <input id="smm-inp" type="text" placeholder="Ask anything..." autocomplete="off"
-      style="flex:1;background:rgba(255,255,255,.08);border:1px solid rgba(124,58,237,.35);border-radius:9px;padding:8px 11px;color:#f0f0ff;font-size:13px;outline:none;font-family:Arial,sans-serif"
-      onkeydown="if(event.key==='Enter'){event.preventDefault();smmSend()}"/>
-    <button type="button" onclick="event.preventDefault();event.stopPropagation();smmSend();return false;" style="width:34px;height:34px;background:linear-gradient(135deg,#7c3aed,#a855f7);border:none;border-radius:9px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="white"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
-    </button>
-  </div>
-</div>
-
-<script>
-var smmOpen=false,smmH=[],smmT=null,smmU=0;
-var smmSid="CB"+Date.now()+Math.random().toString(36).slice(2,6);
-var smmKB=[
-  {k:["hi","hello","hey","hii","namaste","start","help","helo","sup"],a:"Hey! Welcome to <b>OpulentSMM!</b><br><br>India's best SMM panel for creators. <b>Rs.10 FREE</b> just for signing up!<br><br>Which platfo
+  const wrapS = {position:"fixed",bottom:24,right:20,zIndex:2147483647,fontFamily:"Arial,sans-serif"};
+  const btnS = {width:60,height:60,borderRadius:"50%",background:"linear-gradient(135deg,#7c3aed,#a855f7)",border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",boxShadow:"0 6px 28px rgba(124,58,237,0.7)",position:"relative",outline:"none",WebkitTapHighlightColor:"transparent"};
+  const winS = {position:"fixed",bottom:92,right:16,width:320,height:480,background:"#0c0c1a",border:"1px solid rgba(124,58,237,0.4)",borderRadius:20,display:"flex",flexDirection:"column",overflow:"hidden",boxShadow:"0 20px 60px rgba(0,0,0,0.85)",zIndex:2147483647};
+  const botBubble = {alignSelf:"flex-start",background:"rgba(255,255,255,0.07)",border:"1px solid rgba(255,255,255,0.1)",borderRadius:"14px 14px 14px 3px",padding:"9px 13px",maxWidth:"88%",color:"#e8e8f2",fontSize:13,lineHeight:1.6,wordBreak:"break-word"};
+  const userBubble = {alignSelf:"flex-end",background:"rgba(124,58,237,0.3)",border:
