@@ -29,8 +29,8 @@
   <meta name="twitter:image" content="https://opulentsmm.in/og-image.png"/>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800;900&family=DM+Sans:wght@400;500;600;700&display=swap"/>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800;900&family=DM+Sans:wght@400;500;600;700&display=swap" media="print" onload="this.media='all'"/>
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Syne:wght@700;800;900&display=swap"/>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Syne:wght@700;800;900&display=swap" media="print" onload="this.media='all'"/>
   <meta name="format-detection" content="telephone=yes"/>
   <meta name="mobile-web-app-capable" content="yes"/>
   <meta name="apple-mobile-web-app-capable" content="yes"/>
@@ -693,15 +693,15 @@ const UTRGuard = {
 // ─── Global CSS ────────────────────────────────────────────────
 const GS = () => (
   <style>{`
-    @import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800;900&family=DM+Sans:wght@400;500;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Syne:wght@700;800;900&display=swap');
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     html{scroll-behavior:smooth}
-    body{background:#06060a;color:#e8e8f2;font-family:'DM Sans',sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+    body{background:#06060a;color:#e8e8f2;font-family:'Plus Jakarta Sans',sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
     ::-webkit-scrollbar{width:5px;height:5px}
     ::-webkit-scrollbar-track{background:rgba(255,255,255,.02)}
     ::-webkit-scrollbar-thumb{background:rgba(212,160,23,.4);border-radius:4px}
     ::-webkit-scrollbar-thumb:hover{background:rgba(212,160,23,.7)}
-    input,textarea,select,button{font-family:'DM Sans',sans-serif}
+    input,textarea,select,button{font-family:'Plus Jakarta Sans',sans-serif}
     input:focus,textarea:focus{outline:none;border-color:rgba(212,160,23,.6)!important;box-shadow:0 0 0 3px rgba(212,160,23,.1)}
     select:focus{outline:none;border-color:rgba(212,160,23,.6)!important;}
     img{max-width:100%;height:auto;display:block}
@@ -6878,7 +6878,7 @@ function App() {
   // ── SPA routing: detect hidden admin route via URL hash ──────
   const getInitialScreen = () => {
     const hash = window.location.hash;
-    if(hash === "#secure-opulent-dashboard-9821") return "adminlogin";
+    if(hash.replace(/^#+/,"") === "secure-opulent-dashboard-9821") return "adminlogin";
     return sessionStorage.getItem("nx_screen") || "landing";
   };
 
@@ -6920,7 +6920,7 @@ function App() {
       setScreen(s);
     };
     const handleHash = () => {
-      if(window.location.hash === "#secure-opulent-dashboard-9821") setScreen("adminlogin");
+      if(window.location.hash.replace(/^#+/,"") === "secure-opulent-dashboard-9821") setScreen("adminlogin");
     };
     window.addEventListener("popstate", handlePop);
     window.addEventListener("hashchange", handleHash);
@@ -6968,34 +6968,31 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(React.createElement(App));
   </script>
 
-  <!-- ══════════════════════════════════════
-       FLOATING WHATSAPP BUTTON
-  ══════════════════════════════════════ -->
+  <!-- ══ FLOATING WHATSAPP BUTTON ══ -->
   <style>
-    #wa-float{position:fixed;bottom:92px;right:20px;z-index:2147483646;display:flex;flex-direction:column;align-items:flex-end;gap:8px}
-    #wa-float-btn{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#25d366,#128c7e);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(37,211,102,.5);text-decoration:none;position:relative;border:none;cursor:pointer}
-    #wa-float-pulse{position:absolute;inset:0;border-radius:50%;background:rgba(37,211,102,.35);animation:waPulse 2s ease-out infinite;pointer-events:none}
-    #wa-float-tip{background:rgba(10,10,18,.95);border:1px solid rgba(37,211,102,.3);color:#fff;padding:6px 12px;border-radius:8px;font-size:11px;font-weight:700;white-space:nowrap;font-family:Arial,sans-serif}
-    @keyframes waPulse{0%{transform:scale(1);opacity:.8}100%{transform:scale(1.7);opacity:0}}
-    @media(max-width:480px){#wa-float{bottom:150px;right:12px}}
+    #wa-fb{position:fixed;bottom:90px;right:20px;z-index:2147483646;display:flex;flex-direction:column;align-items:flex-end;gap:8px}
+    #wa-fbb{width:50px;height:50px;border-radius:50%;background:linear-gradient(135deg,#25d366,#128c7e);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 18px rgba(37,211,102,.5);text-decoration:none;position:relative}
+    #wa-fp{position:absolute;inset:0;border-radius:50%;background:rgba(37,211,102,.35);animation:waP 2s ease-out infinite;pointer-events:none}
+    #wa-ft{background:rgba(10,10,18,.95);border:1px solid rgba(37,211,102,.3);color:#fff;padding:5px 11px;border-radius:8px;font-size:11px;font-weight:700;white-space:nowrap;font-family:'Plus Jakarta Sans',Arial,sans-serif}
+    @keyframes waP{0%{transform:scale(1);opacity:.8}100%{transform:scale(1.7);opacity:0}}
+    @media(max-width:480px){#wa-fb{bottom:148px;right:12px}}
   </style>
-  <div id="wa-float">
-    <div id="wa-float-tip">&#x1F4AC; Chat on WhatsApp</div>
-    <a id="wa-float-btn" href="https://wa.me/918767282776?text=Hi%2C%20I%20want%20to%20buy%20social%20media%20services%20from%20OpulentSMM" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
-      <div id="wa-float-pulse"></div>
-      <svg width="26" height="26" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+  <div id="wa-fb">
+    <div id="wa-ft">&#x1F4AC; Chat on WhatsApp</div>
+    <a id="wa-fbb" href="https://wa.me/918767282776?text=Hi%2C%20I%20want%20to%20buy%20social%20media%20services" target="_blank" rel="noopener" aria-label="WhatsApp">
+      <div id="wa-fp"></div>
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
     </a>
   </div>
-  <script>setTimeout(function(){var t=document.getElementById("wa-float-tip");if(t){t.style.opacity="0";t.style.transition="opacity .5s";setTimeout(function(){t.style.display="none";},500);}},5000);</script>
+  <script>setTimeout(function(){var t=document.getElementById("wa-ft");if(t){t.style.transition="opacity .4s";t.style.opacity="0";setTimeout(function(){t.style.display="none"},400);}},5000);</script>
 
-  <!-- ══════════════════════════════════════
-       AI CHATBOT WIDGET - FULL VERSION
-  ══════════════════════════════════════ -->
+  <!-- ══ AI CHATBOT ══ -->
   <style>
     #ocb{position:fixed;bottom:24px;right:20px;z-index:2147483647;display:block}
-    #ocb-btn{width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,#7c3aed,#a855f7);border:none;cursor:pointer;box-shadow:0 4px 28px rgba(124,58,237,.6);position:relative;display:flex;align-items:center;justify-content:center}
-    #ocb-ring{position:absolute;inset:0;border-radius:50%;border:2px solid rgba(124,58,237,.5);animation:ocbRing 2s ease-out infinite;pointer-events:none}
-    @keyframes ocbRing{0%{transform:scale(1);opacity:.8}100%{transform:scale(1.65);opacity:0}}
+    #ocb-btn{width:58px;height:58px;border-radius:50%;background:linear-gradient(135deg,#7c3aed,#a855f7);border:none;cursor:pointer;box-shadow:0 4px 24px rgba(124,58,237,.6);position:relative;display:flex;align-items:center;justify-content:center}
+    #ocb-ring{position:absolute;inset:0;border-radius:50%;border:2px solid rgba(124,58,237,.5);animation:ocbR 2s ease-out infinite;pointer-events:none}
+    @keyframes ocbR{0%{transform:scale(1);opacity:.8}100%{transform:scale(1.65);opacity:0}}
     #ocb-dot{position:absolute;top:1px;right:1px;width:16px;height:16px;background:#ef4444;border-radius:50%;border:2px solid #06060a;font-size:9px;color:#fff;display:none;align-items:center;justify-content:center;font-weight:900}
-    #ocb-win{position:fixed;bottom:96px;right:16px;width:330px;height:500px;background:#0d0d1a;border:1px solid rgba(124,58,237,.4);border-radius:20px;display:none;flex-direction:column;overflow:hidden;box-shadow:0 24px 64px rgba(0,0,0,.75);z-index:2147483647}
-    #ocb-head{background:linear-grad
+    #ocb-win{position:fixed;bottom:94px;right:16px;width:328px;height:496px;background:#0d0d1a;border:1px solid rgba(124,58,237,.4);border-radius:20px;display:none;flex-direction:column;overflow:hidden;box-shadow:0 24px 64px rgba(0,0,0,.75);z-index:2147483647}
+    #ocb-head{background:linear-gradient(135deg,#6d28d9,#7c3aed);padding:13px 15px;display:flex;align-items:center;gap:10px;flex-shrink:0}
+    #ocb-msgs{flex:1;overflow-y:auto;padding:13px;display:flex;flex-direction:column;g
