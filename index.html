@@ -6984,7 +6984,7 @@ root.render(React.createElement(App));
         <span style="width:6px;height:6px;background:#34d399;border-radius:50%;display:inline-block"></span> Online
       </div>
     </div>
-    <button type="button" onclick="cbClose()" style="background:rgba(212,160,23,.1);border:1px solid rgba(212,160,23,.2);border-radius:8px;width:28px;height:28px;cursor:pointer;color:#f5c842;font-size:16px;display:flex;align-items:center;justify-content:center">X</button>
+    <button type="button" onclick="cbClose()" ontouchend="cbClose()" style="background:rgba(212,160,23,.1);border:1px solid rgba(212,160,23,.2);border-radius:8px;width:28px;height:28px;cursor:pointer;color:#f5c842;font-size:16px;display:flex;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent;touch-action:manipulation">X</button>
   </div>
   <div id="cbmsgs" style="flex:1;overflow-y:auto;padding:11px;display:flex;flex-direction:column;gap:7px"></div>
   <div style="padding:9px 11px;border-top:1px solid rgba(212,160,23,.1);display:flex;gap:7px;flex-shrink:0;background:#080810">
@@ -6997,16 +6997,21 @@ root.render(React.createElement(App));
   </div>
 </div>
 
-<button type="button" onclick="cbOpen()" id="cbbtn"
-  style="position:fixed;bottom:26px;right:22px;z-index:2147483647;width:62px;height:62px;border-radius:50%;background:linear-gradient(135deg,#d4a017,#f5c842);border:none;cursor:pointer;box-shadow:0 6px 24px rgba(212,160,23,.6);display:flex;align-items:center;justify-content:center;outline:none">
+<button type="button" onclick="cbToggle(event)" ontouchend="cbToggle(event)" id="cbbtn"
+  style="position:fixed;bottom:26px;right:22px;z-index:2147483647;width:62px;height:62px;border-radius:50%;background:linear-gradient(135deg,#d4a017,#f5c842);border:none;cursor:pointer;box-shadow:0 6px 24px rgba(212,160,23,.6);display:flex;align-items:center;justify-content:center;outline:none;-webkit-tap-highlight-color:transparent;touch-action:manipulation">
   <div style="position:absolute;inset:-3px;border-radius:50%;border:2px solid rgba(212,160,23,.5);animation:cbP 2s ease-out infinite;pointer-events:none"></div>
   <svg width="26" height="26" viewBox="0 0 24 24" fill="white"><path d="M20 2H4c-1.1 0-2 0.9-2 2v18l4-4h14c1.1 0 2-0.9 2-2V4c0-1.1-0.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/></svg>
 </button>
 
 <script>
-var cbH=[],cbS="CB"+Date.now(),cbI=false;
+var cbH=[],cbS="CB"+Date.now(),cbI=false,cbIsOpen=false,cbLastTap=0;
+function cbToggle(e){
+  if(e){e.preventDefault();e.stopPropagation();}
+  var now=Date.now();
+  if(now-cbLastTap<300)return;  // debounce double fires
+  cbLastTap=now;
+  if(cbIsOpen) cbClose(); else cbOpen();
+}
 var KB=[
   {k:["hi","hello","hey","hii","namaste","start","helo"],a:"Welcome to OpulentSMM!\n\nWe help creators grow fast with premium social media services.\n\nNew users get special rewards after signup!\n\nWhat do you want to grow?",q:["Instagram","YouTube","TikTok","Other"]},
-  {k:["instagram","insta","ig"],a:"Instagram is our most popular platform!\n\nMultiple packages based on quality and speed.\n\nLooking for premium or fast delivery?",q:["Premium Quality","Fast Delivery","Budget Friendly"]},
-  {k:["youtube","yt"],a:"YouTube is growing fast!\n\nViews, Subscribers, Likes and Watch Time.\n\nAll safe for monetization.\n\nWhat do you need?",q:["More Views","Subscribers","Other"]},
-  {k:["tiktok","tok"],a:"Ti
+  {k:["inst
