@@ -6968,35 +6968,99 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(React.createElement(App));
   </script>
 
-<!-- ═══════════════════════════════════════
-  OPULENTSMM CUSTOM AI CHATBOT
-  - Button is position:fixed directly
-  - No Tawk.to (custom chatbot instead)
-  - Pure vanilla JS + inline styles
-═══════════════════════════════════════ -->
+<!-- CHATBOT BUTTON - hardcoded HTML, always visible -->
 <style>
-@keyframes cbPulse{0%{transform:scale(1);opacity:.8}100%{transform:scale(1.7);opacity:0}}
-@keyframes cbDot{0%,100%{opacity:.3;transform:scale(.8)}50%{opacity:1;transform:scale(1.1)}}
-#cb-msgs::-webkit-scrollbar{width:3px}
-#cb-msgs::-webkit-scrollbar-thumb{background:rgba(124,58,237,.5);border-radius:3px}
-#cb-inp::placeholder{color:rgba(255,255,255,.3)!important}
+#cb-btn {
+  position: fixed !important;
+  bottom: 28px !important;
+  right: 20px !important;
+  width: 62px !important;
+  height: 62px !important;
+  border-radius: 50% !important;
+  background: linear-gradient(135deg, #7c3aed, #a855f7) !important;
+  border: none !important;
+  cursor: pointer !important;
+  z-index: 2147483647 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-shadow: 0 6px 28px rgba(124,58,237,.7) !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+#cb-btn:after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 2.5px solid rgba(168,85,247,.6);
+  animation: cbPulse 2s ease-out infinite;
+}
+#cb-badge {
+  position: absolute;
+  top: -3px;
+  right: -3px;
+  width: 18px;
+  height: 18px;
+  background: #ef4444;
+  border-radius: 50%;
+  border: 2px solid #06060a;
+  font-size: 9px;
+  color: #fff;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+}
+#cb-win {
+  position: fixed !important;
+  bottom: 100px !important;
+  right: 16px !important;
+  width: 320px !important;
+  height: 480px !important;
+  background: #0c0c1a !important;
+  border: 1px solid rgba(124,58,237,.4) !important;
+  border-radius: 20px !important;
+  z-index: 2147483647 !important;
+  display: none;
+  flex-direction: column !important;
+  overflow: hidden !important;
+  box-shadow: 0 20px 60px rgba(0,0,0,.85) !important;
+  font-family: Arial, sans-serif !important;
+}
+@keyframes cbPulse {
+  0%   { transform: scale(1); opacity: .8; }
+  100% { transform: scale(1.65); opacity: 0; }
+}
+@keyframes cbDot {
+  0%, 100% { opacity: .3; transform: scale(.8); }
+  50%       { opacity: 1;  transform: scale(1.1); }
+}
+#cb-msgs::-webkit-scrollbar { width: 3px; }
+#cb-msgs::-webkit-scrollbar-thumb { background: rgba(124,58,237,.5); border-radius: 3px; }
+#cb-inp::placeholder { color: rgba(255,255,255,.3); }
+#cb-inp:focus { border-color: rgba(168,85,247,.7) !important; }
+@media (max-width: 480px) {
+  #cb-btn { bottom: 80px !important; right: 14px !important; }
+  #cb-win { width: calc(100vw - 24px) !important; right: 12px !important; bottom: 160px !important; height: 430px !important; }
+}
 </style>
 
-<script>
-(function(){
-  var _o=false,_h=[],_t=null,_u=0;
-  var _s="CB-"+Date.now()+"-"+Math.random().toString(36).slice(2,6);
-
-  var KB=[
-    {k:["hi","hello","hey","hii","namaste","start","help","helo","sup"],a:"Hey! Welcome to <b>OpulentSMM!</b><br><br>India's best SMM panel. I help creators grow on social media <b>fast &amp; affordably</b>.<br><br>New users get <b>Rs.10 FREE</b> on signup!<br><br>Which platform do you want to grow?",q:["Instagram","YouTube","TikTok","Other"]},
-    {k:["instagram","insta","ig","followers","follow","reel","story","likes"],a:"Instagram is our #1 service!<br><br>- Indian &amp; Premium Followers<br>- Reel Views (go viral!)<br>- Story Views &amp; Likes<br>- Comments &amp; Saves<br><br>Orders start in 30 mins!<br>Sign up to unlock full catalogue.",q:["Sign Up Free","How it works","Is it safe?"]},
-    {k:["youtube","yt","views","subscriber","sub","video","watch"],a:"YouTube growth done right!<br><br>- High Retention Views<br>- Real Subscribers<br>- Watch Time Hours<br>- Safe for monetization!<br><br>Sign up to see all plans!",q:["Sign Up Free","Is it safe?","How fast?"]},
-    {k:["tiktok","telegram","twitter","facebook","social","other"],a:"We cover ALL platforms!<br><br>- TikTok Followers &amp; Views<br>- Telegram Members<br>- Twitter/X Followers<br>- Facebook Page Likes<br><br>100+ services after signup!",q:["Sign Up Free","How it works"]},
-    {k:["price","cost","rate","kitna","cheap","rs","rupee","how much","plan","pricing"],a:"Pricing unlocks after FREE signup!<br><br>- Get Rs.10 FREE credit on joining<br>- 20% BONUS on first deposit<br>- Plans from Rs.0.09/unit<br><br>Signup = 2 mins, no card needed!",cta:true,q:["Sign Up Free"]},
-    {k:["how","work","process","explain","kaise","step"],a:"How OpulentSMM works:<br><br>1. Create free account (2 mins)<br>2. Add wallet via UPI/GPay/Paytm<br>3. Choose service + paste link<br>4. Watch your account grow!<br><br>Delivery starts automatically!",q:["Sign Up Free","Is it safe?","How fast?"]},
-    {k:["safe","real","fake","drop","quality","guarantee","refill","password","legit"],a:"100% safe - always!<br><br>- We NEVER ask for your password<br>- 30-day refill guarantee<br>- 1,00,000+ orders delivered<br>- Non-drop protection<br><br>Trusted by 10,000+ Indian creators!",q:["Sign Up Free","How fast?"]},
-    {k:["fast","speed","delivery","time","kab","instant","quick","how long"],a:"Super fast delivery!<br><br>- Likes &amp; Views: 0-30 mins<br>- Followers: 1-12 hours<br>- YT Views: 1-6 hours<br>- Subscribers: 12-24 hours",q:["Sign Up Free","Is it safe?"]},
-    {k:["payment","pay","upi","gpay","phonepe","paytm","deposit","add money"],a:"Easy Indian payments!<br><br>- Google Pay &amp; PhonePe<br>- Paytm &amp; Any UPI<br>- NEFT / IMPS<br><br>Min: Rs.100. First deposit: +20% bonus!",q:["Sign Up Free"]},
-    {k:["refund","cancel","money back","return","wapas"],a:"Risk-free guarantee!<br><br>- Full refund if order fails<br>- Wallet refund instant<br>- 30-day follower refill<br><br>98% satisfaction rate!",q:["Sign Up Free"]},
-    {k:["free","bonus","credit","signup","register","account","join","create","sign up","get started"],a:"Getting started is FREE!<br><br>1. Click Sign Up Free below<br>2. Enter email + password<br>3. Verify email<br>4. Get Rs.10 FREE instantly!<br><br>No card needed. 2 minutes!",cta:true},
-    {k:["referral","refer
+<!-- Chat window -->
+<div id="cb-win">
+  <div style="background:linear-gradient(135deg,#5b21b6,#7c3aed);padding:14px 16px;display:flex;align-items:center;gap:10px;flex-shrink:0">
+    <div style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">&#x1F916;</div>
+    <div style="flex:1">
+      <div style="font-weight:800;color:#fff;font-size:13px">OpulentSMM AI</div>
+      <div style="font-size:11px;color:rgba(255,255,255,.65);display:flex;align-items:center;gap:5px;margin-top:2px">
+        <span style="width:6px;height:6px;background:#34d399;border-radius:50%;display:inline-block;flex-shrink:0"></span>Online now
+      </div>
+    </div>
+    <button onclick="cbClose()" style="background:rgba(255,255,255,.15);border:none;border-radius:8px;width:28px;height:28px;cursor:pointer;color:#fff;font-size:18px;display:flex;align-items:center;justify-content:center">&#x2715;</button>
+  </div>
+  <div id="cb-msgs" style="flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:8px"></div>
+  <div style="padding:10px 12px;border-top:1px solid rgba(255,255,255,.08);display:flex;gap:8px;flex-shrink:0;background:#080814">
+    <input id="cb-inp" type="text" placeholder="Ask anything..."
+      style="flex:1;background:rgba(255,255,255,.08);border:1px solid rgba(124,58,237,.35);border-radius:10px;padding:9px 12px;color:#f0f0ff;font-size:13px;outline:none;font-family:Arial,sans-serif"
+      onkeydown="if(event.key==='Enter'){event.preventDefault();cbSend()}" />
+    <button onclick="cbSend()" style="width:36px;height:36px;background:linear-gradient(135deg,#
