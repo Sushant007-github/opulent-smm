@@ -227,6 +227,11 @@ const BUNDLES = [
 ];
 
 
+const BUNDLES = [
+  { id:"B1", name:"Starter Pack",    price:299, popular:false, items:["1K Followers","2K Likes","5K Reel Views"] },
+  { id:"B2", name:"Influencer Pack", price:499, popular:true,  items:["2K Followers","5K Likes","10K Reel Views"] },
+  { id:"B3", name:"Viral Pack",      price:999, popular:false, items:["5K Followers","10K Likes","50K Reel Views"] },
+];
 const PLATFORMS = ["All","Instagram","YouTube","Facebook","TikTok","Twitter"];
 
 // ─── Service Badge Config ─────────────────────────────────────
@@ -2447,7 +2452,7 @@ const OTable = ({ orders, onCancel, adminView=false }) => (
           </thead>
           <tbody>
             {orders.map((o,i)=>(
-              <tr key={o.id} style={{borderBottom:`1px solid rgba(255,255,255,.04)`,background:i%2?"rgba(255,255,255,.01)":"transparent"}}>
+              <tr key={o.id} style={{borderBottom:`1px solid rgba(255,255,255,.04)`,background:o.isBundle?"rgba(212,160,23,0.06)":i%2?"rgba(255,255,255,.01)":"transparent"}}>
                 <td style={{padding:"11px 12px",color:C.purpleL,fontWeight:800,fontFamily:"monospace",fontSize:11,whiteSpace:"nowrap"}}>{o.id}</td>
                 <td style={{padding:"11px 12px"}}>
                   <div style={{display:"flex",alignItems:"center",gap:7}}>
@@ -2528,25 +2533,14 @@ const UserNewOrder = ({ orders, addOrderSync, balance, setBalance, setPage }) =>
     else { setDisc(0); setCouponMsg(coupon?"❌ Invalid code. Check and try again.":""); }
   };
 
-  const isBundl = sel && sel.isBundl;
-  const finalPrice = isBundl ? (sel ? sel.price : 0) : total;
   const place=()=>{
-    const finalPrice = sel.isBundl ? sel.price : total;
-    if(finalPrice>balance){ alert("Insufficient balance! Go to Add Funds."); return; }
+    if(total>balance){ alert("Insufficient balance! Go to Add Funds."); return; }
     setLoading(true);
     setTimeout(()=>{
-      if(sel.isBundl){
-        const newOrd={ id:uid(), service:"Bundle: "+sel.name, platform:"Instagram", icon:"🎁",
-          qty:1, price:sel.price, status:"Pending", date:today(), link,
-          isBundle:true, bundleItems:sel.items, bundleName:sel.name };
-        addOrderSync(newOrd);
-        setBalance(function(b){ return parseFloat((b-sel.price).toFixed(2)); });
-      } else {
-        const newOrd={ id:uid(), service:sel.name, platform:sel.platform, icon:sel.icon,
-          qty, price:parseFloat(total.toFixed(2)), status:"Pending", date:today(), link };
-        addOrderSync(newOrd);
-        setBalance(function(b){ return parseFloat((b-total).toFixed(2)); });
-      }
+      const newOrd={ id:uid(), service:sel.name, platform:sel.platform, icon:sel.icon,
+        qty, price:parseFloat(total.toFixed(2)), status:"Pending", date:today(), link };
+      addOrderSync(newOrd);
+      setBalance(b=>parseFloat((b-total).toFixed(2)));
       setLoading(false); setStep(4);
     },1400);
   };
@@ -2589,41 +2583,6 @@ const UserNewOrder = ({ orders, addOrderSync, balance, setBalance, setPage }) =>
 
       {/* STEP 1 */}
       {step===1&&<>
-        {/* ── Bundle Packs ── */}
-        <Card style={{padding:18,marginBottom:22,background:"rgba(212,160,23,0.04)",border:"1px solid rgba(212,160,23,0.2)"}}>
-          <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:14}}>
-            <div>
-              <div style={{fontWeight:800,color:C.goldL,fontSize:14}}>🎁 Bundle Packs</div>
-              <div style={{fontSize:11,color:C.muted,marginTop:2}}>Bundles give better results than single services</div>
-            </div>
-          </div>
-          <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(160px,1fr))",gap:12}}>
-            {BUNDLES.map(function(b){
-              return (
-                <div key={b.id}
-                  onClick={function(){ setSel({id:b.id,name:b.name,price:b.price,icon:"🎁",platform:"Instagram",isBundl:true,items:b.items,speed:"1-24 hrs",cat:"Bundle"}); setStep(3); }}
-                  style={{padding:14,borderRadius:12,cursor:"pointer",position:"relative",
-                    background:b.popular?"rgba(212,160,23,0.1)":"rgba(255,255,255,0.03)",
-                    border:b.popular?"2px solid rgba(212,160,23,0.5)":"1px solid rgba(255,255,255,0.08)"}}>
-                  {b.popular&&(
-                    <div style={{position:"absolute",top:-10,left:"50%",transform:"translateX(-50%)",
-                      background:"linear-gradient(135deg,#d4a017,#f5c842)",borderRadius:20,
-                      padding:"2px 10px",fontSize:9,fontWeight:900,color:"#000",whiteSpace:"nowrap"}}>
-                      MOST POPULAR
-                    </div>
-                  )}
-                  <div style={{fontWeight:800,fontSize:13,color:b.popular?C.goldL:"#e8e8f2",marginBottom:4}}>{b.name}</div>
-                  <div style={{fontSize:22,fontWeight:900,color:b.popular?"#f5c842":"#c4b5fd",marginBottom:8}}>Rs.{b.price}</div>
-                  {b.items.map(function(it,i){
-                    return <div key={i} style={{fontSize:11,color:C.muted,marginBottom:2}}>+ {it}</div>;
-                  })}
-                  {b.popular&&<div style={{marginTop:8,fontSize:10,color:"rgba(212,160,23,0.8)",fontWeight:700}}>Recommended for best growth</div>}
-                </div>
-              );
-            })}
-          </div>
-        </Card>
-        {/* Platform filter */}
         <div style={{display:"flex",gap:8,flexWrap:"wrap",marginBottom:20}}>
           {PLATFORMS.map(p=>(
             <button key={p} onClick={()=>setPf(p)} style={{background:pf===p?C.gP:"rgba(255,255,255,.04)",
@@ -5085,17 +5044,11 @@ Qty: ${order.qty}`)) return;
 
   return (
     <div className="page-enter" style={{animation:"fadeIn .4s ease"}}>
-      <PgH title="All Orders" sub={`${orders.length} total · ${filtered.length} shown`}
+      <PgH title="All Orders" sub={`${orders.length} total · ${filtered.length} shown · ${orders.filter(function(o){return o.isBundle;}).length} bundles`}
         action={<div style={{display:"flex",gap:8}}>
           <button onClick={()=>upd("bulk","Completed")} style={{display:"none"}}/>
         </div>}/>
       <div style={{display:"flex",gap:8,flexWrap:"wrap",marginBottom:20}}>
-        {/* Bundle orders count badge */}
-        {orders.filter(function(o){ return o.isBundle; }).length>0&&(
-          <div style={{padding:"7px 14px",background:"rgba(212,160,23,0.15)",border:"1px solid rgba(212,160,23,0.4)",borderRadius:8,color:"#f5c842",fontSize:12,fontWeight:700}}>
-            🎁 {orders.filter(function(o){ return o.isBundle; }).length} Bundle Orders
-          </div>
-        )}
         {["All","Pending","Processing","Completed","Cancelled"].map(s=>(
           <button key={s} onClick={()=>setFilter(s)} style={{background:filter===s?C.gP:"rgba(255,255,255,.04)",
             border:`1px solid ${filter===s?"transparent":C.border}`,borderRadius:8,padding:"7px 14px",
@@ -5116,18 +5069,10 @@ Qty: ${order.qty}`)) return;
             </thead>
             <tbody>
               {filtered.map((o,i)=>(
-                <tr key={o.id} style={{borderBottom:`1px solid rgba(255,255,255,.04)`,background:o.isBundle?"rgba(212,160,23,0.06)":i%2?"rgba(255,255,255,.01)":"transparent"}}>
+                <tr key={o.id} style={{borderBottom:`1px solid rgba(255,255,255,.04)`,background:i%2?"rgba(255,255,255,.01)":"transparent"}}>
                   <td style={{padding:"11px 12px",color:C.purpleL,fontFamily:"monospace",fontWeight:800,fontSize:11}}>{o.id}</td>
                   <td style={{padding:"11px 12px",color:"#e8e8f2",fontSize:11,whiteSpace:"nowrap"}}>{o.userEmail||o.userName||"—"}</td>
-                  <td style={{padding:"11px 12px"}}>
-                    <div style={{color:o.isBundle?"#f5c842":"#c4b5fd",fontWeight:700}}>{o.service}</div>
-                    {o.isBundle&&o.bundleItems&&(
-                      <div style={{fontSize:10,color:"rgba(212,160,23,0.7)",marginTop:2}}>
-                        {o.bundleItems.map(function(it,i){ return it+(i<o.bundleItems.length-1?" · ":""); })}
-                      </div>
-                    )}
-                    {!o.isBundle&&<div style={{fontSize:10,color:C.muted}}>{o.platform}</div>}
-                  </td>
+                  <td style={{padding:"11px 12px"}}><div style={{color:"#c4b5fd",fontWeight:600}}>{o.service}</div><div style={{fontSize:10,color:C.muted}}>{o.platform}</div></td>
                   <td style={{padding:"11px 12px",color:C.muted}}>{o.qty.toLocaleString()}</td>
                   <td style={{padding:"11px 12px",color:C.goldL,fontWeight:800}}>{fmt(o.price)}</td>
                   <td style={{padding:"11px 12px",fontSize:10,maxWidth:120}}>
@@ -5422,16 +5367,10 @@ const AdminUsers = () => {
 
   const userOrders=(email)=>{ const e=(email||'').toLowerCase().trim(); return (window._adminOrders||[]).filter(o=>(o.userEmail||'').toLowerCase().trim()===e); };
 
-  const filteredUsers = search ? USERS.filter(function(u){
-    return (u.email||"").toLowerCase().includes(search.toLowerCase()) ||
-           (u.name||"").toLowerCase().includes(search.toLowerCase());
-  }) : USERS;
-  const userTotalSpend = function(email){
-    const e=(email||"").toLowerCase().trim();
-    return (window._adminOrders||[]).filter(function(o){ return (o.userEmail||"").toLowerCase().trim()===e; })
-      .reduce(function(sum,o){ return sum+(o.price||0); },0);
-  };
-  const isHighValue = function(email){ return userTotalSpend(email) >= 500; };
+  const filteredUsers = search ? USERS.filter(u=>
+    u.email?.toLowerCase().includes(search.toLowerCase()) ||
+    u.name?.toLowerCase().includes(search.toLowerCase())
+  ) : USERS;
 
   return (
     <div className="page-enter" style={{animation:"fadeIn .4s ease"}}>
@@ -6573,10 +6512,7 @@ const AdminReferrals = () => {
               <tbody>
                 {users.map((u,i)=>(
                   <tr key={u.email} style={{borderBottom:`1px solid rgba(255,255,255,.04)`,background:i%2?"rgba(255,255,255,.01)":"transparent"}}>
-                    <td style={{padding:"10px 12px",fontWeight:600}}>
-                      <span style={{color:"#e8e8f2"}}>{u.name||"—"}</span>
-                      {isHighValue(u.email)&&<span style={{marginLeft:6,background:"rgba(212,160,23,0.2)",border:"1px solid rgba(212,160,23,0.4)",borderRadius:10,padding:"1px 7px",fontSize:9,fontWeight:900,color:"#f5c842"}}>HIGH VALUE</span>}
-                    </td>
+                    <td style={{padding:"10px 12px",fontWeight:600}}><span style={{color:"#e8e8f2"}}>{u.name||"—"}</span>{(function(){var sp=(window._adminOrders||[]).filter(function(o){return(o.userEmail||"").toLowerCase()===(u.email||"").toLowerCase();}).reduce(function(s,o){return s+(o.price||0);},0);return sp>=500?<span style={{marginLeft:5,background:"rgba(212,160,23,0.2)",border:"1px solid rgba(212,160,23,0.4)",borderRadius:10,padding:"1px 7px",fontSize:9,fontWeight:900,color:"#f5c842"}}>HIGH VALUE</span>:null;})()}</td>
                     <td style={{padding:"10px 12px",color:"#60a5fa",fontSize:11}}>{u.email}</td>
                     <td style={{padding:"10px 12px"}}>
                       <span style={{background:"rgba(212,160,23,.1)",border:"1px solid rgba(212,160,23,.2)",borderRadius:6,padding:"2px 8px",color:C.goldL,fontWeight:700,fontFamily:"monospace",fontSize:11}}>{u.referral}</span>
@@ -7039,4 +6975,8 @@ function App() {
 }
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(React.cre
+root.render(React.createElement(App));
+  </script>
+
+</body>
+</html>
