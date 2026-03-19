@@ -6943,24 +6943,24 @@ const ChatBot = () => {
 
   const ts = () => { const d = new Date(); return d.getHours() + ":" + ("0" + d.getMinutes()).slice(-2); };
 
-  React.useEffect(() => {
+  React.useEffect(function(){
     if (msgsEl.current) msgsEl.current.scrollTop = msgsEl.current.scrollHeight;
   }, [msgs, busy]);
 
-  React.useEffect(() => {
-    const t = setTimeout(() => { if (!open) setDot(true); }, 8000);
-    return () => clearTimeout(t);
+  React.useEffect(function(){
+    const t = setTimeout(function(){ if(!open) setDot(true); }, 8000);
+    return function(){ clearTimeout(t); };
   }, []);
 
   const send = (txt) => {
     if (!txt || !txt.trim()) return;
     const text = txt.trim();
-    setMsgs(m => m.concat([{r:"u",text,t:ts()}]));
+    setMsgs(function(m){ return m.concat([{r:"u",text:text,t:ts()}]); });
     setInp("");
     setBusy(true);
-    setTimeout(() => {
+    setTimeout(function(){
       const ans = getAns(text);
-      setMsgs(m => m.concat([{r:"b",text:ans.a,q:ans.q||[],t:ts()}]));
+      setMsgs(function(m){ return m.concat([{r:"b",text:ans.a,q:ans.q||[],t:ts()}]); });
       setBusy(false);
       try {
         if (typeof firebase !== "undefined" && firebase.apps && firebase.apps.length) {
@@ -6986,7 +6986,7 @@ const ChatBot = () => {
     setOpen(true); setDot(false);
     if (!init) {
       setInit(true);
-      setTimeout(() => setMsgs([{r:"b",text:"Welcome to OpulentSMM!\n\nWe help creators grow fast with premium social media services.\n\nNew users get special rewards after signup!\n\nWhat do you want to grow?",q:["Instagram","YouTube","TikTok","Other"],t:ts()}]), 200);
+      setTimeout(function(){ setMsgs([{r:"b",text:"Welcome to OpulentSMM!\n\nWe help creators grow fast with premium social media services.\n\nNew users get special rewards after signup!\n\nWhat do you want to grow?",q:["Instagram","YouTube","TikTok","Other"],t:ts()}]), 200);
     }
   };
 
@@ -7004,5 +7004,4 @@ const ChatBot = () => {
               <div style={{fontSize:11,color:"rgba(212,160,23,0.6)",display:"flex",alignItems:"center",gap:4,marginTop:2}}>
                 <span style={{width:6,height:6,background:"#34d399",borderRadius:"50%",display:"inline-block"}}></span> Online
               </div>
-            </div>
-            <button type="button" onClick={() => setO
+ 
