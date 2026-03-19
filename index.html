@@ -1897,7 +1897,19 @@ const AdminChatbot = () => {
   const resolve = async(id) => {
     try{const fs=await getFS();if(fs) await fs.collection("chatSessions").doc(id).set({status:"resolved"},{merge:true});}catch(e){}
     setSessions(p=>p.map(s=>s.id===id?{...s,status:"resolved"}:s));
+    if(sel===id) setSel(null);
     Toast.success("Marked resolved");
+  };
+
+  const deleteSession = async(id) => {
+    if(!window.confirm("Delete this chat session?")) return;
+    try{
+      const fs=await getFS();
+      if(fs) await fs.collection("chatSessions").doc(id).delete();
+      setSessions(p=>p.filter(s=>s.id!==id));
+      if(sel===id) setSel(null);
+      Toast.success("Session deleted");
+    }catch(e){Toast.error("Failed to delete");}
   };
 
   const unread = sessions.filter(s=>!s.hasAdminReply&&s.status!=="resolved").length;
@@ -1908,9 +1920,10 @@ const AdminChatbot = () => {
     h(PgH,{title:"🤖 AI Chat Manager",sub:sessions.length+" sessions · "+unread+" need reply",
       action:h(Btn,{onClick:load,size:"sm",v:"ghost"},"🔄 Refresh")}),
     h('div',{style:{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(130px,1fr))",gap:12,marginBottom:20}},
-      [{l:"Total",v:sessions.length,c:"#c4b5fd"},{l:"Need Reply",v:unread,c:"#f87171"},
-       {l:"Resolved",v:sessions.filter(s=>s.status==="resolved").length,c:"#34d399"},
-       {l:"AI Handled",v:sessions.filter(s=>!s.hasAdminReply).length,c:"#fbbf24"}].map(s=>
+      [{l:"Total Chats",v:sessions.length,c:"#c4b5fd"},{l:"⚠ Need Reply",v:unread,c:"#f87171"},
+       {l:"✅ Resolved",v:sessions.filter(s=>s.status==="resolved").length,c:"#34d399"},
+       {l:"🤖 AI Handled",v:sessions.filter(s=>!s.hasAdminReply).length,c:"#fbbf24"},
+       {l:"🔄 Auto-refresh",v:"15s",c:"#60a5fa"}].map(s=>
         h('div',{key:s.l,style:{background:"rgba(255,255,255,.04)",border:"1px solid rgba(255,255,255,.08)",borderRadius:12,padding:"14px",textAlign:"center"}},
           h('div',{style:{fontSize:22,fontWeight:900,color:s.c,fontFamily:"Syne,sans-serif"}},s.v),
           h('div',{style:{fontSize:10,color:C.muted,marginTop:3}},s.l)
@@ -1957,7 +1970,10 @@ const AdminChatbot = () => {
                   h('div',{style:{fontSize:11,color:C.muted,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}},last?(last.role==="admin"?"You: ":last.role==="bot"?"Bot: ":"User: ")+last.text:"No messages"),
                   h('div',{style:{fontSize:10,color:C.muted,marginTop:2}},(s.messages||[]).length+" msgs")
                 ),
-                s.status!=="resolved"&&h(Btn,{size:"sm",v:"ghost",onClick:e=>{e.stopPropagation();resolve(s.id);}},"✓")
+                h('div',{style:{display:"flex",gap:4}},
+                  s.status!=="resolved"&&h(Btn,{size:"sm",v:"ghost",onClick:e=>{e.stopPropagation();resolve(s.id);}},"✓"),
+                  h(Btn,{size:"sm",v:"danger",onClick:e=>{e.stopPropagation();deleteSession(s.id);}},h('span',{style:{fontSize:12}},"🗑"))
+                )
               )
             );
           })
@@ -2808,37 +2824,178 @@ root.render(React.createElement(App));
   </div>
 
   <script>
-  var _ocbOpen=false,_ocbHistory=[],_ocbTimer=null;
+  /* ── Chatbot State ── */
+  var _ocbOpen=false, _ocbHistory=[], _ocbTimer=null, _ocbUnread=0;
   var _ocbSid="OCB-"+Date.now()+"-"+Math.random().toString(36).slice(2,6);
+
+  /* ── Knowledge Base — 20 topics ── */
   var _ocbKB=[
-    {k:["hi","hello","hey","hii","namaste","start","help"],a:"Welcome to OpulentSMM! &#x1F44B;<br><br>I can help with:<br>&#x2022; Instagram followers, likes &amp; views<br>&#x2022; YouTube views &amp; subscribers<br>&#x2022; Pricing &amp; payment<br>&#x2022; Order tracking<br><br>Type your question!"},
-    {k:["price","cost","rate","how much","kitna","cheap","rs","rupee"],a:"&#x1F4B0; Our Pricing:<br><br><b>Instagram Followers</b><br>1,000 = &#x20B9;149 | 5,000 = &#x20B9;699 | 10,000 = &#x20B9;1,299<br><br><b>YouTube Views</b><br>1,000 = &#x20B9;59 | 5,000 = &#x20B9;249<br><br><b>Instagram Likes</b><br>500 = &#x20B9;99 | 1,000 = &#x20B9;149<br><br>Starting from &#x20B9;0.09/unit!"},
-    {k:["instagram","insta","followers","follow","reel","story","likes"],a:"&#x1F4F8; Instagram Services:<br><br>&#x2714; Indian Stable Followers<br>&#x2714; HQ Premium Followers<br>&#x2714; Reel Views (instant!)<br>&#x2714; Story Views &amp; Post Likes<br><br>&#x26A1; Orders start within 30 mins!<br>From &#x20B9;149 for 1,000 followers.<br><br>Sign up free at opulentsmm.in"},
-    {k:["youtube","yt","views","subscriber","sub"],a:"&#x25B6; YouTube Services:<br><br>&#x2714; High Retention Views<br>&#x2714; Real Subscribers<br>&#x2714; Likes &amp; Comments<br>&#x2714; Safe for monetization!<br><br>Views from &#x20B9;59/1,000<br>Subs from &#x20B9;149/100"},
-    {k:["tiktok","telegram","twitter","facebook"],a:"&#x1F3B5; Other Platforms:<br><br>&#x2714; TikTok Followers &amp; Views<br>&#x2714; Telegram Members<br>&#x2714; Twitter Followers<br>&#x2714; Facebook Likes<br><br>Visit opulentsmm.in for full list!"},
-    {k:["payment","pay","upi","gpay","phonepe","paytm","deposit"],a:"&#x1F4B3; Payment Methods:<br><br>&#x2714; Google Pay &amp; PhonePe<br>&#x2714; Paytm &amp; UPI<br>&#x2714; NEFT / IMPS<br><br>Steps:<br>1. Add funds to wallet<br>2. Scan UPI QR<br>3. Enter UTR number<br>4. Credited in 30 mins!<br><br>Min deposit: &#x20B9;100"},
-    {k:["safe","real","quality","guarantee","refill","drop"],a:"&#x1F6E1; Quality Guarantee:<br><br>&#x2714; 100% Real-looking accounts<br>&#x2714; 30-day refill guarantee<br>&#x2714; No password needed ever<br>&#x2714; Safe for all accounts<br><br>&#x1F3C6; 1,00,000+ orders completed!"},
-    {k:["delivery","time","speed","instant","fast","quick"],a:"&#x26A1; Delivery Speed:<br><br>&#x2022; Likes &amp; Views: 0-30 minutes<br>&#x2022; Followers: 1-12 hours<br>&#x2022; YT Views: 1-6 hours<br>&#x2022; YT Subs: 12-24 hours<br><br>Most orders start in 30 mins!"},
-    {k:["order","buy","purchase","kaise","how to"],a:"&#x1F6D2; How to Order:<br><br>1. Create free account at opulentsmm.in<br>2. Add funds (min &#x20B9;100)<br>3. Choose your service<br>4. Paste your link<br>5. Place order &#x2714;<br><br>Delivery starts automatically!"},
-    {k:["refund","cancel","return","money back"],a:"&#x1F4B0; Refund Policy:<br><br>&#x2714; Full refund if order fails<br>&#x2714; Wallet refund is instant<br>&#x2714; Bank refund: 3-5 days<br><br>Contact WhatsApp for refunds!"},
-    {k:["free","trial","bonus","credit"],a:"&#x1F381; Free Bonus!<br><br>New users get <b>&#x20B9;10 FREE</b> on signup!<br>Plus 20% bonus on first deposit!<br><br>Sign up free at opulentsmm.in"},
-    {k:["account","signup","register","create","join"],a:"&#x1F464; Create Account:<br><br>1. Go to opulentsmm.in<br>2. Click Get Started<br>3. Enter email &amp; password<br>4. Verify email<br>5. Get &#x20B9;10 free! &#x1F381;<br><br>100% free, no card needed!"},
-    {k:["reseller","api","bulk","wholesale","agency"],a:"&#x1F50C; Reseller &amp; API:<br><br>&#x2714; API access<br>&#x2714; Up to 40% discount<br>&#x2714; Bulk pricing<br>&#x2714; White-label option<br><br>Contact WhatsApp for rates!WA_BTN"},
-    {k:["whatsapp","contact","support","agent","human","talk","live"],a:"&#x1F4DE; Our team replies in 5 mins!<br>Click below to chat directly:WA_BTN"},
-    {k:["thank","thanks","ok","okay","great","done","perfect"],a:"You're welcome! &#x1F604;<br><br>Anything else I can help with?<br>Get <b>&#x20B9;10 FREE</b> on signup at opulentsmm.in!"},
+    {
+      k:["hi","hello","hey","hii","namaste","start","help","helo","sup","yo","hy"],
+      a:"Welcome to <b>OpulentSMM</b>! &#x1F44B;<br><br>India's best SMM panel. I can help with:<br>&#x2022; Pricing &amp; services<br>&#x2022; Instagram, YouTube, TikTok<br>&#x2022; How to order<br>&#x2022; Payment &amp; wallet<br>&#x2022; Order tracking<br><br>What do you need help with?",
+      q:["Pricing","Instagram","YouTube","How to Order"]
+    },
+    {
+      k:["price","cost","rate","how much","kitna","charge","cheap","affordable","rs","rupee","inr","paisa","rate list","pricelist"],
+      a:"&#x1F4B0; <b>Our Pricing:</b><br><br>&#x1F4F8; <b>Instagram Followers</b><br>&nbsp;1,000 = &#x20B9;149<br>&nbsp;5,000 = &#x20B9;699<br>&nbsp;10,000 = &#x20B9;1,299<br>&nbsp;20,000 = &#x20B9;2,399<br><br>&#x25B6; <b>YouTube Views</b><br>&nbsp;1,000 = &#x20B9;59<br>&nbsp;5,000 = &#x20B9;249<br>&nbsp;50,000 = &#x20B9;1,999<br><br>&#x2665; <b>Instagram Likes</b><br>&nbsp;500 = &#x20B9;99<br>&nbsp;1,000 = &#x20B9;149<br>&nbsp;5,000 = &#x20B9;399<br><br>Starting from just &#x20B9;0.09/unit! &#x1F525;",
+      q:["Instagram","YouTube","How to Order"]
+    },
+    {
+      k:["instagram","insta","ig","follower","follow","reel","reels","story","stories","like","likes","comment","explore","reach"],
+      a:"&#x1F4F8; <b>Instagram Services:</b><br><br>&#x2714; Indian Stable Followers<br>&#x2714; HQ Premium Followers<br>&#x2714; Reel Views <i>(instant!)</i><br>&#x2714; Story Views<br>&#x2714; Post Likes<br>&#x2714; Comments<br>&#x2714; Saves &amp; Shares<br><br>&#x26A1; Orders start in <b>30 mins!</b><br>From &#x20B9;149 for 1,000 followers<br><br>&#x1F449; Sign up free at opulentsmm.in",
+      q:["Pricing","How to Order","Payment"]
+    },
+    {
+      k:["youtube","yt","video","view","views","subscriber","sub","subs","watch time","watchtime","monetize","monetization"],
+      a:"&#x25B6; <b>YouTube Services:</b><br><br>&#x2714; High Retention Views<br>&#x2714; Real Subscribers<br>&#x2714; Likes &amp; Comments<br>&#x2714; Watch Time Hours<br>&#x2714; Safe for monetization!<br><br>Views from &#x20B9;59/1,000<br>Subscribers from &#x20B9;149/100<br><br>&#x1F449; Order at opulentsmm.in!",
+      q:["Pricing","How to Order","Delivery Time"]
+    },
+    {
+      k:["tiktok","tik tok","telegram","members","twitter","facebook","fb","linkedin","snapchat","pinterest","spotify"],
+      a:"&#x1F3B5; <b>Other Platforms:</b><br><br>&#x2714; TikTok Followers &amp; Views<br>&#x2714; Telegram Members &amp; Views<br>&#x2714; Twitter/X Followers<br>&#x2714; Facebook Page Likes<br>&#x2714; LinkedIn Connections<br>&#x2714; Spotify Streams<br><br>All platforms covered!<br>&#x1F449; Visit opulentsmm.in for full list",
+      q:["Pricing","How to Order"]
+    },
+    {
+      k:["payment","pay","upi","gpay","google pay","phonepe","phone pe","paytm","imps","neft","deposit","add money","fund","wallet","recharge","topup","top up"],
+      a:"&#x1F4B3; <b>Payment Methods:</b><br><br>&#x2714; Google Pay<br>&#x2714; PhonePe<br>&#x2714; Paytm<br>&#x2714; Any UPI ID<br>&#x2714; NEFT / IMPS<br><br>&#x1F4CB; <b>How to Add Funds:</b><br>1&#xFE0F;&#x20E3; Go to Add Funds page<br>2&#xFE0F;&#x20E3; Choose amount (min &#x20B9;100)<br>3&#xFE0F;&#x20E3; Scan UPI QR code<br>4&#xFE0F;&#x20E3; Enter your UTR number<br>5&#xFE0F;&#x20E3; Credited within 30 mins!",
+      q:["How to Order","First Deposit Bonus","Support"]
+    },
+    {
+      k:["safe","real","fake","drop","quality","guarantee","refill","original","authentic","genuine","bot","legit"],
+      a:"&#x1F6E1; <b>Quality Guarantee:</b><br><br>&#x2714; 100% Real-looking accounts<br>&#x2714; <b>30-day refill guarantee</b><br>&#x2714; No password required ever<br>&#x2714; Safe for all account types<br>&#x2714; Non-drop on premium services<br>&#x2714; No sudden drop protection<br><br>&#x1F3C6; <b>1,00,000+ orders</b> completed!<br>Your account is always safe.",
+      q:["Pricing","How to Order"]
+    },
+    {
+      k:["how fast","delivery","time","speed","instant","quick","fast","kab","kitne","start","when will","how long"],
+      a:"&#x26A1; <b>Delivery Speed:</b><br><br>&#x23F1; Instagram Likes/Views: <b>0-30 mins</b><br>&#x23F1; Instagram Followers: <b>1-12 hours</b><br>&#x23F1; YouTube Views: <b>1-6 hours</b><br>&#x23F1; YouTube Subs: <b>12-24 hours</b><br>&#x23F1; TikTok/Telegram: <b>1-6 hours</b><br><br>Most orders start automatically!<br>&#x1F4CA; Track live in your dashboard.",
+      q:["Pricing","How to Order"]
+    },
+    {
+      k:["order","place order","buy","purchase","kaise","how to order","ordering","order karna","kese","karna hai"],
+      a:"&#x1F6D2; <b>How to Order:</b><br><br>1&#xFE0F;&#x20E3; Create free account at opulentsmm.in<br>2&#xFE0F;&#x20E3; Add funds to wallet (min &#x20B9;100)<br>3&#xFE0F;&#x20E3; Go to New Order<br>4&#xFE0F;&#x20E3; Select your service<br>5&#xFE0F;&#x20E3; Paste your profile/post link<br>6&#xFE0F;&#x20E3; Click Place Order &#x2714;<br><br>Delivery starts automatically!",
+      q:["Payment","Pricing","Sign Up Free"]
+    },
+    {
+      k:["refund","cancel","return","money back","wapas","paise wapas","return karna"],
+      a:"&#x1F4B0; <b>Refund Policy:</b><br><br>&#x2714; Full refund if order fails to deliver<br>&#x2714; Wallet refund is <b>instant</b><br>&#x2714; Bank refund: 3-5 business days<br>&#x2714; Partial refund for partial delivery<br><br>&#x26A0; Contact support with your order ID for fastest resolution.",
+      q:["Support","WhatsApp"]
+    },
+    {
+      k:["free","trial","bonus","credit","10 rupee","free credit","welcome bonus","first deposit","signup bonus"],
+      a:"&#x1F381; <b>Free Bonuses:</b><br><br>&#x1F44B; <b>New User Bonus:</b> Get <b>&#x20B9;10 FREE</b> on signup!<br>&#x1F4B0; <b>First Deposit Bonus:</b> Get <b>20% EXTRA</b> on your first deposit!<br><br>Example:<br>Deposit &#x20B9;500 &#x2192; Get &#x20B9;600<br>Deposit &#x20B9;1,000 &#x2192; Get &#x20B9;1,200<br><br>&#x1F449; Sign up free at opulentsmm.in",
+      q:["Sign Up Free","How to Order"]
+    },
+    {
+      k:["account","signup","register","create","join","new account","sign up","log in","login","kaise banaye","register karna"],
+      a:"&#x1F464; <b>Create Your Account:</b><br><br>1&#xFE0F;&#x20E3; Go to opulentsmm.in<br>2&#xFE0F;&#x20E3; Click <b>Get Started</b><br>3&#xFE0F;&#x20E3; Enter your email &amp; password<br>4&#xFE0F;&#x20E3; Verify your email<br>5&#xFE0F;&#x20E3; Get <b>&#x20B9;10 FREE</b> credit! &#x1F381;<br><br>100% free &bull; No credit card needed!",
+      q:["Pricing","How to Order"]
+    },
+    {
+      k:["reseller","api","bulk","wholesale","agency","white label","white-label","panel","smm panel","resell","business"],
+      a:"&#x1F50C; <b>Reseller &amp; API Access:</b><br><br>&#x2714; Full API integration<br>&#x2714; Up to <b>40% discount</b> on services<br>&#x2714; Bulk &amp; wholesale pricing<br>&#x2714; White-label option available<br>&#x2714; Dedicated account manager<br>&#x2714; Custom dashboard access<br><br>Contact us on WhatsApp for reseller pricing!WA_BTN",
+      q:["WhatsApp","Pricing"]
+    },
+    {
+      k:["whatsapp","contact","support","agent","human","talk","speak","live chat","call","operator","help","issue","problem","complaint","not working"],
+      a:"&#x1F4DE; <b>Talk to Our Team:</b><br><br>Our support team replies within <b>5 minutes!</b><br><br>Available: <b>9 AM - 11 PM IST</b><br>For urgent issues: 24/7 WhatsApp<br><br>Click the button below to chat directly:WA_BTN",
+      q:["WhatsApp"]
+    },
+    {
+      k:["track","tracking","status","order status","check order","where is","my order","order id"],
+      a:"&#x1F4E6; <b>Track Your Order:</b><br><br>1&#xFE0F;&#x20E3; Login to opulentsmm.in<br>2&#xFE0F;&#x20E3; Go to <b>My Orders</b> tab<br>3&#xFE0F;&#x20E3; See live status of all orders<br><br><b>Status meanings:</b><br>&#x23F3; Processing = Starting soon<br>&#x1F4CA; In Progress = Delivering now<br>&#x2714; Completed = Done!<br>&#x274C; Cancelled = Refunded to wallet",
+      q:["Support","Order Again"]
+    },
+    {
+      k:["referral","refer","invite","earn","commission","affiliate","refer and earn","referral link","referral code"],
+      a:"&#x1F517; <b>Referral Program:</b><br><br>Earn <b>5% commission</b> on every order your referred users place!<br><br>&#x2714; Share your unique referral link<br>&#x2714; Friend signs up &amp; orders<br>&#x2714; You earn 5% automatically<br>&#x2714; Credited to your wallet instantly<br><br>Find your link in <b>Settings &#x2192; Referral</b>",
+      q:["Sign Up Free","How to Order"]
+    },
+    {
+      k:["influencer","promotion","promote","collaboration","collab","brand deal","creator","content creator"],
+      a:"&#x1F31F; <b>Influencer Program:</b><br><br>Promote OpulentSMM and earn rewards!<br><br><b>Levels &amp; Rewards:</b><br>&#x1F949; Bronze (1K+ followers): 50 Free Followers<br>&#x1F948; Silver (5K+ followers): 100 Free Followers<br>&#x1F947; Gold (10K+ followers): 200 Free Followers<br>&#x1F48E; Diamond (50K+ followers): 500 Free Followers<br><br>Submit proof in <b>Influencer</b> tab after login!",
+      q:["Sign Up Free","Learn More"]
+    },
+    {
+      k:["coupon","discount","promo","code","voucher","offer","deal","sale","coupon code","promo code"],
+      a:"&#x1F3AB; <b>Discount Coupons:</b><br><br>Current active coupon codes:<br>&#x1F381; <b>OPULENT20</b> = 20% off any order<br>&#x1F381; <b>SAVE10</b> = 10% off any order<br><br>Apply coupon when placing your order!<br><br>&#x1F4A1; Also get 20% bonus on first deposit - no coupon needed!",
+      q:["Pricing","How to Order"]
+    },
+    {
+      k:["thank","thanks","ok","okay","great","nice","good","perfect","done","awesome","superb","badhiya","shukriya","dhanyawad"],
+      a:"You're welcome! &#x1F604;&#x1F44D;<br><br>Happy to help! Is there anything else?<br><br>&#x1F381; Remember: New users get <b>&#x20B9;10 FREE</b> on signup at opulentsmm.in!",
+      q:["Pricing","How to Order","Sign Up Free"]
+    },
+    {
+      k:["website","site","link","url","opulent","opulentsmm","where","kaha"],
+      a:"&#x1F310; <b>Our Website:</b><br><br>&#x1F449; <b>opulentsmm.in</b><br><br>Sign up free and get &#x20B9;10 bonus credit instantly!<br><br>&#x1F4F1; Works on all devices - mobile &amp; desktop",
+      q:["Sign Up Free","Pricing"]
+    },
   ];
+
+  /* ── Quick replies map ── */
+  var _ocbQR={
+    "Pricing":         "price",
+    "Instagram":       "instagram",
+    "YouTube":         "youtube",
+    "How to Order":    "how to order",
+    "Payment":         "payment",
+    "Delivery Time":   "how fast",
+    "Quality":         "safe",
+    "Refund":          "refund",
+    "Free Bonus":      "free bonus",
+    "Support":         "support",
+    "WhatsApp":        "whatsapp",
+    "Sign Up Free":    "signup",
+    "Reseller/API":    "reseller",
+    "Track Order":     "track order",
+    "Referral":        "referral",
+    "Influencer":      "influencer",
+    "Coupons":         "coupon",
+    "Order Again":     "order",
+    "Learn More":      "help",
+  };
+
   function _ocbAns(q){
-    var l=q.toLowerCase();
+    var l=q.toLowerCase().trim();
     for(var i=0;i<_ocbKB.length;i++)
       for(var j=0;j<_ocbKB[i].k.length;j++)
-        if(l.indexOf(_ocbKB[i].k[j])!==-1) return _ocbKB[i].a;
-    return "Not sure about that, but our team can help!<br><br>&#x2022; WhatsApp (fastest)<br>&#x2022; Email: support@opulentsmm.inWA_BTN";
+        if(l.indexOf(_ocbKB[i].k[j])!==-1) return {a:_ocbKB[i].a, q:_ocbKB[i].q||[]};
+    return {a:"Not sure about that, but our team can help!<br><br>&#x2022; WhatsApp (fastest reply)<br>&#x2022; Email: support@opulentsmm.inWA_BTN", q:["WhatsApp","Support"]};
   }
+
   function _ocbTs(){var d=new Date();return d.getHours()+":"+("0"+d.getMinutes()).slice(-2);}
-  function _ocbBot(html){
+
+  function _ocbQuickReplies(qs){
+    if(!qs||!qs.length) return null;
+    var wrap=document.createElement("div");
+    wrap.style.cssText="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;align-self:flex-start;max-width:88%";
+    qs.forEach(function(label){
+      var btn=document.createElement("button");
+      btn.textContent=label;
+      btn.style.cssText="padding:5px 11px;background:rgba(124,58,237,.15);border:1px solid rgba(124,58,237,.35);border-radius:20px;color:#c4b5fd;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap";
+      btn.onclick=function(){
+        var q=_ocbQR[label]||label;
+        _ocbUser(label);
+        _ocbTyp();
+        setTimeout(function(){
+          var td=document.getElementById("ocb-td");
+          if(td&&td.parentNode)td.parentNode.removeChild(td);
+          var res=_ocbAns(q);
+          _ocbBotMsg(res.a, res.q);
+          _ocbSave(label, res.a);
+        },600);
+      };
+      wrap.appendChild(btn);
+    });
+    return wrap;
+  }
+
+  function _ocbBotMsg(html, quickReplies){
     var m=document.getElementById("ocb-msgs");if(!m)return;
     var hasWA=html.indexOf("WA_BTN")!==-1;
     html=html.replace(/WA_BTN/g,"");
+    var outer=document.createElement("div");
+    outer.style.cssText="display:flex;flex-direction:column;align-items:flex-start;width:100%";
     var w=document.createElement("div");
     w.style.cssText="align-self:flex-start;display:flex;flex-direction:column;max-width:88%";
     var b=document.createElement("div");b.className="ob";b.innerHTML=html;w.appendChild(b);
@@ -2850,8 +3007,16 @@ root.render(React.createElement(App));
       w.appendChild(a);
     }
     var t=document.createElement("div");t.className="ot";t.textContent=_ocbTs();w.appendChild(t);
-    m.appendChild(w);m.scrollTop=m.scrollHeight;
+    outer.appendChild(w);
+    var qr=_ocbQuickReplies(quickReplies);
+    if(qr) outer.appendChild(qr);
+    m.appendChild(outer);
+    m.scrollTop=m.scrollHeight;
   }
+
+  /* Keep _ocbBot as alias for admin replies (no quick replies) */
+  function _ocbBot(html){ _ocbBotMsg(html,[]); }
+
   function _ocbUser(txt){
     var m=document.getElementById("ocb-msgs");if(!m)return;
     var w=document.createElement("div");
@@ -2860,12 +3025,14 @@ root.render(React.createElement(App));
     var t=document.createElement("div");t.className="ot";t.style.textAlign="right";t.textContent=_ocbTs();w.appendChild(t);
     m.appendChild(w);m.scrollTop=m.scrollHeight;
   }
+
   function _ocbTyp(){
     var m=document.getElementById("ocb-msgs");if(!m)return;
     var d=document.createElement("div");d.className="ob otyp";d.id="ocb-td";
     d.innerHTML="<span></span><span></span><span></span>";
     m.appendChild(d);m.scrollTop=m.scrollHeight;
   }
+
   function _ocbSave(u,b){
     try{
       if(typeof firebase==="undefined"||!firebase.apps||!firebase.apps.length)return;
@@ -2879,6 +3046,7 @@ root.render(React.createElement(App));
       },{merge:true}).catch(function(){});
     }catch(e){}
   }
+
   function _ocbChkAdmin(){
     try{
       if(typeof firebase==="undefined"||!firebase.apps||!firebase.apps.length)return;
@@ -2889,11 +3057,18 @@ root.render(React.createElement(App));
         if(!last)return;
         if(!_ocbHistory.some(function(m){return m.role==="admin"&&m.ts===last.ts;})){
           _ocbHistory.push(last);
-          _ocbBot("<b>Support:</b> "+last.text.replace(/\n/g,"<br>"));
+          /* Show unread dot if chat is closed */
+          if(!_ocbOpen){
+            _ocbUnread++;
+            var dot=document.getElementById("ocb-dot");
+            if(dot){dot.textContent=_ocbUnread;dot.style.display="flex";}
+          }
+          _ocbBot("&#x1F468;&#x200D;&#x1F4BB; <b>Support Team:</b><br>"+last.text.replace(/\\n/g,"<br>"));
         }
       }).catch(function(){});
     }catch(e){}
   }
+
   function ocbSend(){
     var inp=document.getElementById("ocb-inp");
     if(!inp||!inp.value.trim())return;
@@ -2902,29 +3077,38 @@ root.render(React.createElement(App));
     setTimeout(function(){
       var td=document.getElementById("ocb-td");
       if(td&&td.parentNode)td.parentNode.removeChild(td);
-      var ans=_ocbAns(txt);_ocbBot(ans);_ocbSave(txt,ans);
-    },700+Math.random()*600);
+      var res=_ocbAns(txt);
+      _ocbBotMsg(res.a, res.q);
+      _ocbSave(txt, res.a);
+    },700+Math.random()*500);
   }
+
   function ocbClose(){
     var w=document.getElementById("ocb-win");
     if(w)w.style.display="none";
     _ocbOpen=false;
     if(_ocbTimer){clearInterval(_ocbTimer);_ocbTimer=null;}
   }
+
   function ocbToggle(){
     var w=document.getElementById("ocb-win");
     if(!w)return;
     _ocbOpen=!_ocbOpen;
     if(_ocbOpen){
       w.style.display="flex";
+      _ocbUnread=0;
       var dot=document.getElementById("ocb-dot");
       if(dot)dot.style.display="none";
       var m=document.getElementById("ocb-msgs");
       if(m&&m.children.length===0){
         setTimeout(function(){
-          _ocbBot("Welcome to OpulentSMM! &#x1F44B;<br><br>I'm your AI assistant. Ask me about:<br>&#x2022; Pricing &amp; services<br>&#x2022; How to order<br>&#x2022; Payment methods<br>&#x2022; Delivery times<br><br>Type your question below!");
+          _ocbBotMsg(
+            "Welcome to <b>OpulentSMM!</b> &#x1F44B;<br><br>I'm your AI assistant, available 24/7!<br>Ask me anything or tap a quick option:",
+            ["Pricing","Instagram","YouTube","How to Order","Payment","Free Bonus"]
+          );
         },300);
       }
+      /* Poll for admin replies every 8 seconds */
       _ocbTimer=setInterval(_ocbChkAdmin,8000);
       var inp=document.getElementById("ocb-inp");
       if(inp)setTimeout(function(){inp.focus();},400);
@@ -2933,12 +3117,15 @@ root.render(React.createElement(App));
       if(_ocbTimer){clearInterval(_ocbTimer);_ocbTimer=null;}
     }
   }
+
+  /* Show notification dot after 6 seconds */
   setTimeout(function(){
     if(!_ocbOpen){
       var dot=document.getElementById("ocb-dot");
-      if(dot){dot.style.display="flex";}
+      if(dot){dot.textContent="1";dot.style.display="flex";}
     }
-  },7000);
+  },6000);
+  
   </script>
 
   <!-- ══════════ TAWK.TO LIVE CHAT ══════════ -->
