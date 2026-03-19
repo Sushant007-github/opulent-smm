@@ -6968,44 +6968,35 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(React.createElement(App));
   </script>
 
-<!-- OPULENTSMM AI CHATBOT - Full inline styles, always visible -->
+<!-- ═══════════════════════════════════════
+  OPULENTSMM CUSTOM AI CHATBOT
+  - Button is position:fixed directly
+  - No Tawk.to (custom chatbot instead)
+  - Pure vanilla JS + inline styles
+═══════════════════════════════════════ -->
+<style>
+@keyframes cbPulse{0%{transform:scale(1);opacity:.8}100%{transform:scale(1.7);opacity:0}}
+@keyframes cbDot{0%,100%{opacity:.3;transform:scale(.8)}50%{opacity:1;transform:scale(1.1)}}
+#cb-msgs::-webkit-scrollbar{width:3px}
+#cb-msgs::-webkit-scrollbar-thumb{background:rgba(124,58,237,.5);border-radius:3px}
+#cb-inp::placeholder{color:rgba(255,255,255,.3)!important}
+</style>
+
 <script>
 (function(){
-  var _open=false,_hist=[],_timer=null,_unread=0;
-  var _sid="CB-"+Date.now()+"-"+Math.random().toString(36).slice(2,6);
+  var _o=false,_h=[],_t=null,_u=0;
+  var _s="CB-"+Date.now()+"-"+Math.random().toString(36).slice(2,6);
 
   var KB=[
-    {k:["hi","hello","hey","hii","namaste","start","help","helo","sup","yo"],
-     a:"Hey! Welcome to <b>OpulentSMM!</b><br><br>India's best SMM panel. I help creators &amp; businesses grow social media <b>fast &amp; affordably</b>.<br><br>New users get <b>Rs.10 FREE</b> just for signing up!<br><br>Which platform do you want to grow?",
-     q:["Instagram","YouTube","TikTok","Telegram","How it works"]},
-    {k:["instagram","insta","ig","followers","follow","reel","story","likes","comment"],
-     a:"Instagram is our #1 service!<br><br>We offer:<br>- Indian &amp; Premium Followers<br>- Reel Views (go viral!)<br>- Story Views &amp; Post Likes<br>- Comments &amp; Saves<br><br>Orders start in 30 mins!<br>Sign up to unlock full catalogue",
-     q:["Sign Up Free","How it works","Is it safe?"]},
-    {k:["youtube","yt","views","subscriber","sub","video","watch","monetize"],
-     a:"YouTube growth done right!<br><br>We offer:<br>- High Retention Views<br>- Real Subscribers<br>- Watch Time Hours<br>- Safe for monetization!<br><br>Trusted by 1000s of Indian YouTubers!<br>Create free account to see plans!",
-     q:["Sign Up Free","Is it safe?","How fast?"]},
-    {k:["tiktok","telegram","twitter","facebook","fb","social","other","platform"],
-     a:"We cover ALL platforms!<br><br>- TikTok Followers &amp; Views<br>- Telegram Members<br>- Twitter/X Followers<br>- Facebook Page Likes<br>- LinkedIn Connections<br><br>100+ services available after signup!",
-     q:["Sign Up Free","How it works"]},
-    {k:["price","cost","rate","kitna","cheap","rs","rupee","how much","plan","pricing","unlock"],
-     a:"Pricing unlocks after FREE signup - and here's the deal:<br><br>- Get Rs.10 FREE credit just for joining<br>- 20% BONUS on first deposit<br>- Plans start from Rs.0.09/unit<br><br>Signup takes 2 mins. No card needed!",
-     cta:true,q:["Sign Up Free","Tell me more"]},
-    {k:["how","work","process","explain","kaise","step","tell me more"],
-     a:"How OpulentSMM works:<br><br>1. Create free account (2 mins)<br>2. Add wallet via UPI/GPay/Paytm<br>3. Choose service &amp; paste your link<br>4. Watch your account grow!<br><br>Delivery starts automatically!",
-     q:["Sign Up Free","Is it safe?","How fast?"]},
-    {k:["safe","real","fake","drop","quality","guarantee","refill","password","legit","trust"],
-     a:"100% safe - always!<br><br>- We NEVER ask for your password<br>- 30-day refill guarantee<br>- Real-looking accounts only<br>- Non-drop protection<br>- 1,00,000+ orders delivered safely<br><br>Trusted by 10,000+ Indian creators!",
-     q:["Sign Up Free","How fast?"]},
-    {k:["fast","speed","delivery","time","kab","instant","quick","how long","kitne"],
-     a:"Super fast delivery!<br><br>- Likes &amp; Views: 0-30 mins<br>- Followers: 1-12 hours<br>- YT Views: 1-6 hours<br>- Subscribers: 12-24 hours<br><br>Most orders start automatically!",
-     q:["Sign Up Free","Is it safe?"]},
-    {k:["payment","pay","upi","gpay","phonepe","paytm","deposit","add money","fund"],
-     a:"Easy Indian payments!<br><br>- Google Pay<br>- PhonePe<br>- Paytm<br>- Any UPI ID<br>- NEFT / IMPS<br><br>Min: Rs.100. First deposit: +20% bonus!",
-     q:["Sign Up Free"]},
-    {k:["refund","cancel","money back","return","wapas"],
-     a:"Risk-free guarantee!<br><br>- Full refund if order fails<br>- Wallet refund is instant<br>- 30-day follower refill<br><br>98% satisfaction across 1,00,000+ orders!",
-     q:["Sign Up Free"]},
-    {k:["free","bonus","credit","signup","register","account","join","create","sign up","get started"],
-     a:"Getting started is easy and FREE!<br><br>1. Click Sign Up below<br>2. Enter email &amp; password<br>3. Verify email<br>4. Get Rs.10 FREE instantly!<br><br>No card needed. Takes 2 minutes!",
-     cta:true},
- 
+    {k:["hi","hello","hey","hii","namaste","start","help","helo","sup"],a:"Hey! Welcome to <b>OpulentSMM!</b><br><br>India's best SMM panel. I help creators grow on social media <b>fast &amp; affordably</b>.<br><br>New users get <b>Rs.10 FREE</b> on signup!<br><br>Which platform do you want to grow?",q:["Instagram","YouTube","TikTok","Other"]},
+    {k:["instagram","insta","ig","followers","follow","reel","story","likes"],a:"Instagram is our #1 service!<br><br>- Indian &amp; Premium Followers<br>- Reel Views (go viral!)<br>- Story Views &amp; Likes<br>- Comments &amp; Saves<br><br>Orders start in 30 mins!<br>Sign up to unlock full catalogue.",q:["Sign Up Free","How it works","Is it safe?"]},
+    {k:["youtube","yt","views","subscriber","sub","video","watch"],a:"YouTube growth done right!<br><br>- High Retention Views<br>- Real Subscribers<br>- Watch Time Hours<br>- Safe for monetization!<br><br>Sign up to see all plans!",q:["Sign Up Free","Is it safe?","How fast?"]},
+    {k:["tiktok","telegram","twitter","facebook","social","other"],a:"We cover ALL platforms!<br><br>- TikTok Followers &amp; Views<br>- Telegram Members<br>- Twitter/X Followers<br>- Facebook Page Likes<br><br>100+ services after signup!",q:["Sign Up Free","How it works"]},
+    {k:["price","cost","rate","kitna","cheap","rs","rupee","how much","plan","pricing"],a:"Pricing unlocks after FREE signup!<br><br>- Get Rs.10 FREE credit on joining<br>- 20% BONUS on first deposit<br>- Plans from Rs.0.09/unit<br><br>Signup = 2 mins, no card needed!",cta:true,q:["Sign Up Free"]},
+    {k:["how","work","process","explain","kaise","step"],a:"How OpulentSMM works:<br><br>1. Create free account (2 mins)<br>2. Add wallet via UPI/GPay/Paytm<br>3. Choose service + paste link<br>4. Watch your account grow!<br><br>Delivery starts automatically!",q:["Sign Up Free","Is it safe?","How fast?"]},
+    {k:["safe","real","fake","drop","quality","guarantee","refill","password","legit"],a:"100% safe - always!<br><br>- We NEVER ask for your password<br>- 30-day refill guarantee<br>- 1,00,000+ orders delivered<br>- Non-drop protection<br><br>Trusted by 10,000+ Indian creators!",q:["Sign Up Free","How fast?"]},
+    {k:["fast","speed","delivery","time","kab","instant","quick","how long"],a:"Super fast delivery!<br><br>- Likes &amp; Views: 0-30 mins<br>- Followers: 1-12 hours<br>- YT Views: 1-6 hours<br>- Subscribers: 12-24 hours",q:["Sign Up Free","Is it safe?"]},
+    {k:["payment","pay","upi","gpay","phonepe","paytm","deposit","add money"],a:"Easy Indian payments!<br><br>- Google Pay &amp; PhonePe<br>- Paytm &amp; Any UPI<br>- NEFT / IMPS<br><br>Min: Rs.100. First deposit: +20% bonus!",q:["Sign Up Free"]},
+    {k:["refund","cancel","money back","return","wapas"],a:"Risk-free guarantee!<br><br>- Full refund if order fails<br>- Wallet refund instant<br>- 30-day follower refill<br><br>98% satisfaction rate!",q:["Sign Up Free"]},
+    {k:["free","bonus","credit","signup","register","account","join","create","sign up","get started"],a:"Getting started is FREE!<br><br>1. Click Sign Up Free below<br>2. Enter email + password<br>3. Verify email<br>4. Get Rs.10 FREE instantly!<br><br>No card needed. 2 minutes!",cta:true},
+    {k:["referral","refer
