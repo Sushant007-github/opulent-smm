@@ -6973,7 +6973,7 @@ root.render(React.createElement(App));
 
 
 <!-- CHATBOT -->
-<div id="cbc" style="position:fixed!important;bottom:26px!important;right:22px!important;z-index:2147483647!important;display:block!important"></div>
+<div id="cbc" style="display:none"></div>
 
 <style>
 @keyframes cbPulse{0%{transform:scale(1);opacity:.8}100%{transform:scale(1.7);opacity:0}}
@@ -6991,14 +6991,7 @@ root.render(React.createElement(App));
     if(!root){ setTimeout(go, 100); return; }
 
     // SET BUTTON STYLES DIRECTLY ON ELEMENT
-    root.style.cssText = [
-      "position:fixed",
-      "bottom:26px",
-      "right:22px",
-      "z-index:2147483647",
-      "display:block",
-      "font-family:Arial,sans-serif"
-    ].join("!important;") + "!important";
+    // root div not used for button
 
     // Build chat window
     var win = document.createElement("div");
@@ -7048,4 +7041,7 @@ root.render(React.createElement(App));
     btn.id = "cb-btn";
     btn.innerHTML =
       '<div style="position:absolute;inset:-3px;border-radius:50%;border:2px solid rgba(212,160,23,0.5);animation:cbPulse 2s ease-out infinite;pointer-events:none"></div>' +
-      '<svg width="26" height="26" viewBox="0 0 24 24" fill="white"><path d="M20 2H4c-1.1 0-2 0.9-2 2v18l4-4h14c1.1 0 2-0.9 2-2V4c0-1.1-0.9-2-2-2zm-2 12H6v-2h12v2zm0-
+      '<svg width="26" height="26" viewBox="0 0 24 24" fill="white"><path d="M20 2H4c-1.1 0-2 0.9-2 2v18l4-4h14c1.1 0 2-0.9 2-2V4c0-1.1-0.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/></svg>';
+
+    // ALL STYLES INLINE WITH IMPORTANT
+    btn.style.cssText = "position:fixed;bottom:26px;right:22px;z-index:2147483647;width:62px;height:62px;border-radius:50%;background:linear-gradient(135deg,#d4a017,#f5c842);border:none;cursor:pointer;display:flex;al
