@@ -6968,80 +6968,45 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(React.createElement(App));
   </script>
 
-</body>
-</html>
-
-
-<!-- CHATBOT -->
-<div id="cbc" style="display:none"></div>
-
+<!-- OPULENTSMM CHATBOT -->
 <style>
-@keyframes cbPulse{0%{transform:scale(1);opacity:.8}100%{transform:scale(1.7);opacity:0}}
+@keyframes cbP{0%{transform:scale(1);opacity:.8}100%{transform:scale(1.65);opacity:0}}
+#cbwin{display:none;position:fixed;bottom:96px;right:16px;width:310px;height:450px;background:#0a0a0f;border:1px solid rgba(212,160,23,.35);border-radius:20px;flex-direction:column;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.9);z-index:2147483647;font-family:Arial,sans-serif}
+@media(max-width:480px){#cbwin{width:calc(100vw - 20px);right:10px;bottom:90px;height:400px}}
 </style>
 
+<div id="cbwin">
+  <div style="background:linear-gradient(135deg,#1a1200,#2a1e00);padding:13px 15px;display:flex;align-items:center;gap:10px;flex-shrink:0;border-bottom:1px solid rgba(212,160,23,.2)">
+    <div style="width:34px;height:34px;border-radius:50%;background:rgba(212,160,23,.15);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0">&#x1F916;</div>
+    <div style="flex:1">
+      <div style="font-weight:800;color:#f5c842;font-size:13px">OpulentSMM AI</div>
+      <div style="font-size:11px;color:rgba(212,160,23,.6);display:flex;align-items:center;gap:4px;margin-top:2px">
+        <span style="width:6px;height:6px;background:#34d399;border-radius:50%;display:inline-block"></span> Online
+      </div>
+    </div>
+    <button type="button" onclick="cbClose()" style="background:rgba(212,160,23,.1);border:1px solid rgba(212,160,23,.2);border-radius:8px;width:28px;height:28px;cursor:pointer;color:#f5c842;font-size:16px;display:flex;align-items:center;justify-content:center">X</button>
+  </div>
+  <div id="cbmsgs" style="flex:1;overflow-y:auto;padding:11px;display:flex;flex-direction:column;gap:7px"></div>
+  <div style="padding:9px 11px;border-top:1px solid rgba(212,160,23,.1);display:flex;gap:7px;flex-shrink:0;background:#080810">
+    <input id="cbinp" type="text" placeholder="Ask anything..." autocomplete="off"
+      style="flex:1;background:rgba(255,255,255,.05);border:1px solid rgba(212,160,23,.25);border-radius:9px;padding:8px 11px;color:#f0f0f0;font-size:13px;font-family:Arial,sans-serif;outline:none"
+      onkeydown="if(event.keyCode==13){event.preventDefault();cbSend()}"/>
+    <button type="button" onclick="cbSend()" style="width:35px;height:35px;background:linear-gradient(135deg,#d4a017,#f5c842);border:none;border-radius:9px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="white"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+    </button>
+  </div>
+</div>
+
+<button type="button" onclick="cbOpen()" id="cbbtn"
+  style="position:fixed;bottom:26px;right:22px;z-index:2147483647;width:62px;height:62px;border-radius:50%;background:linear-gradient(135deg,#d4a017,#f5c842);border:none;cursor:pointer;box-shadow:0 6px 24px rgba(212,160,23,.6);display:flex;align-items:center;justify-content:center;outline:none">
+  <div style="position:absolute;inset:-3px;border-radius:50%;border:2px solid rgba(212,160,23,.5);animation:cbP 2s ease-out infinite;pointer-events:none"></div>
+  <svg width="26" height="26" viewBox="0 0 24 24" fill="white"><path d="M20 2H4c-1.1 0-2 0.9-2 2v18l4-4h14c1.1 0 2-0.9 2-2V4c0-1.1-0.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/></svg>
+</button>
+
 <script>
-(function(){
-  var open = false;
-  var inited = false;
-  var hist = [];
-  var sid = "CB" + Date.now();
-
-  function go(){
-    var root = document.getElementById("cbc");
-    if(!root){ setTimeout(go, 100); return; }
-
-    // SET BUTTON STYLES DIRECTLY ON ELEMENT
-    // root div not used for button
-
-    // Build chat window
-    var win = document.createElement("div");
-    win.id = "cb-win";
-    win.style.cssText = [
-      "position:fixed",
-      "bottom:96px",
-      "right:18px",
-      "width:310px",
-      "height:455px",
-      "background:#0a0a0f",
-      "border:1px solid rgba(212,160,23,0.35)",
-      "border-radius:20px",
-      "flex-direction:column",
-      "overflow:hidden",
-      "box-shadow:0 20px 60px rgba(0,0,0,0.9)",
-      "z-index:2147483647",
-      "display:none"
-    ].join("!important;") + "!important";
-
-    win.innerHTML =
-      '<div style="background:linear-gradient(135deg,#1a1200,#2a1e00);border-bottom:1px solid rgba(212,160,23,0.25);padding:13px 15px;display:flex;align-items:center;gap:10px;flex-shrink:0">' +
-        '<div style="width:34px;height:34px;border-radius:50%;background:rgba(212,160,23,0.15);display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0">&#x1F916;</div>' +
-        '<div style="flex:1">' +
-          '<div style="font-weight:800;color:#f5c842;font-size:13px">OpulentSMM AI</div>' +
-          '<div style="font-size:11px;color:rgba(212,160,23,0.6);display:flex;align-items:center;gap:4px;margin-top:2px">' +
-            '<span style="width:6px;height:6px;background:#34d399;border-radius:50%;display:inline-block"></span>' +
-            ' Sales Assistant - Online' +
-          '</div>' +
-        '</div>' +
-        '<button onclick="cbClose()" type="button" style="background:rgba(212,160,23,0.1);border:1px solid rgba(212,160,23,0.2);border-radius:8px;width:28px;height:28px;cursor:pointer;color:rgba(212,160,23,0.8);font-size:18px;display:flex;align-items:center;justify-content:center;flex-shrink:0">x</button>' +
-      '</div>' +
-      '<div id="cb-msgs" style="flex:1;overflow-y:auto;padding:11px;display:flex;flex-direction:column;gap:7px"></div>' +
-      '<div style="padding:9px 11px;border-top:1px solid rgba(212,160,23,0.12);display:flex;gap:7px;flex-shrink:0;background:rgba(8,8,15,0.98)">' +
-        '<input id="cb-inp" type="text" placeholder="Ask me anything..." autocomplete="off" ' +
-          'style="flex:1;background:rgba(255,255,255,0.05);border:1px solid rgba(212,160,23,0.25);border-radius:9px;padding:8px 11px;color:#f0f0f0;font-size:13px;font-family:Arial,sans-serif;outline:none" ' +
-          'id="cb-inp-el" />' +
-        '<button onclick="cbSend()" type="button" ' +
-          'style="width:35px;height:35px;background:linear-gradient(135deg,#d4a017,#f5c842);border:none;border-radius:9px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0">' +
-          '<svg width="13" height="13" viewBox="0 0 24 24" fill="white"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>' +
-        '</button>' +
-      '</div>';
-
-    // Build toggle button  
-    var btn = document.createElement("button");
-    btn.type = "button";
-    btn.id = "cb-btn";
-    btn.innerHTML =
-      '<div style="position:absolute;inset:-3px;border-radius:50%;border:2px solid rgba(212,160,23,0.5);animation:cbPulse 2s ease-out infinite;pointer-events:none"></div>' +
-      '<svg width="26" height="26" viewBox="0 0 24 24" fill="white"><path d="M20 2H4c-1.1 0-2 0.9-2 2v18l4-4h14c1.1 0 2-0.9 2-2V4c0-1.1-0.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/></svg>';
-
-    // ALL STYLES INLINE WITH IMPORTANT
-    btn.style.cssText = "position:fixed;bottom:26px;right:22px;z-index:2147483647;width:62px;height:62px;border-radius:50%;background:linear-gradient(135deg,#d4a017,#f5c842);border:none;cursor:pointer;display:flex;al
+var cbH=[],cbS="CB"+Date.now(),cbI=false;
+var KB=[
+  {k:["hi","hello","hey","hii","namaste","start","helo"],a:"Welcome to OpulentSMM!\n\nWe help creators grow fast with premium social media services.\n\nNew users get special rewards after signup!\n\nWhat do you want to grow?",q:["Instagram","YouTube","TikTok","Other"]},
+  {k:["instagram","insta","ig"],a:"Instagram is our most popular platform!\n\nMultiple packages based on quality and speed.\n\nLooking for premium or fast delivery?",q:["Premium Quality","Fast Delivery","Budget Friendly"]},
+  {k:["youtube","yt"],a:"YouTube is growing fast!\n\nViews, Subscribers, Likes and Watch Time.\n\nAll safe for monetization.\n\nWhat do you need?",q:["More Views","Subscribers","Other"]},
+  {k:["tiktok","tok"],a:"Ti
