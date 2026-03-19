@@ -6968,71 +6968,52 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(React.createElement(App));
   </script>
 
-<!-- ═══ OPULENTSMM CONVERSION CHATBOT ═══ -->
-<script>
-window.onload = function() {
+</body>
+</html>
 
-  /* ── KNOWLEDGE BASE ──────────────────────────── */
-  var KB = [
-    {
-      k: ["hi","hello","hey","hii","namaste","helo","sup","yo","start"],
-      a: "Welcome to OpulentSMM! 🚀\n\nWe help creators & businesses grow fast with premium social media services.\n\nWhat do you want to grow today?",
-      q: ["📸 Instagram","▶️ YouTube","🎵 TikTok","🌐 Other"]
-    },
-    {
-      k: ["instagram","insta","ig","📸"],
-      a: "Great choice! 🔥\n\nInstagram is our most popular platform.\n\nWe offer multiple packages based on quality and delivery speed.\n\nAre you looking for:",
-      q: ["💎 Premium Growth","⚡ Fast Growth","💰 Budget Growth","📊 See All Options"]
-    },
-    {
-      k: ["youtube","yt","▶️"],
-      a: "YouTube is growing fast! 📈\n\nWe have services for Views, Subscribers, Likes and Watch Time.\n\nAll safe for monetization.\n\nWhat are you targeting?",
-      q: ["🎯 More Views","👥 Subscribers","💰 Budget Growth","📊 See All Options"]
-    },
-    {
-      k: ["tiktok","tok","🎵"],
-      a: "TikTok growth is 🔥 right now!\n\nWe have services for Views, Followers and Likes.\n\nFast delivery, high quality.\n\nWhat do you need?",
-      q: ["👁 More Views","👥 Followers","❤️ Likes","📊 See All Options"]
-    },
-    {
-      k: ["telegram","twitter","facebook","other","🌐"],
-      a: "We cover all major platforms! 🌐\n\nTelegram, Twitter/X, Facebook and more.\n\nCreate a free account to see the full service catalogue with pricing.",
-      q: ["🚀 Create Free Account","💬 Tell me more"]
-    },
-    {
-      k: ["premium","💎","best","top","quality","high quality"],
-      a: "Premium growth is our speciality 💎\n\nOur premium packages deliver:\n✅ Highest quality\n✅ Stable & long-lasting\n✅ Non-drop protection\n✅ Refill guarantee\n\nFull details inside dashboard.",
-      q: ["🚀 Create Free Account","⚡ Tell me about Fast"]
-    },
-    {
-      k: ["fast","quick","instant","speed","⚡","urgent"],
-      a: "Our Fast packages start delivering quickly! ⚡\n\nPerfect for:\n→ New posts you want to boost\n→ Launching a campaign\n→ Quick visibility boost\n\nReady to get started?",
-      q: ["🚀 Create Free Account","💎 Tell me about Premium"]
-    },
-    {
-      k: ["budget","cheap","affordable","low","less","minimum","💰"],
-      a: "We have options for every budget! 💰\n\nStarting from very low prices with quality service.\n\n🎁 New users also get special rewards after signup!\n\nSign up free to see all options.",
-      q: ["🚀 Create Free Account","🎁 What rewards?"]
-    },
-    {
-      k: ["price","cost","rate","kitna","how much","pricing","charges","fee","rupee","rs","inr"],
-      a: "We have different pricing based on quality and delivery speed 💎\n\nPricing is available inside the dashboard only.\n\n👉 Create free account to unlock all pricing and packages instantly.",
-      q: ["🚀 Create Free Account","💬 Tell me more first"]
-    },
-    {
-      k: ["reward","bonus","free","offer","discount","gift","special","🎁"],
-      a: "🎁 New users get special rewards after signup!\n\nThis is our way of welcoming you to OpulentSMM.\n\nCreate your free account now to claim it before it expires!",
-      q: ["🚀 Create Free Account","❓ More questions first"]
-    },
-    {
-      k: ["safe","secure","real","trust","legit","fake","risk","original"],
-      a: "Safety is our #1 priority 🛡️\n\nOur services are:\n✅ Safe for all accounts\n✅ No password required\n✅ Stable & reliable\n✅ Trusted by thousands of users daily\n\nYour account is always protected.",
-      q: ["🚀 Create Free Account","⏱ How fast is delivery?"]
-    },
-    {
-      k: ["delivery","time","long","when","kab","how","fast delivery","start"],
-      a: "Most services start quickly after order and deliver gradually ⚡\n\nDelivery speed depends on the package you choose.\n\nFull details shown at checkout inside your dashboard.",
-      q: ["🚀 Create Free Account","🛡️ Is it safe?"]
-    },
-    {
-      k: ["refund","cancel",
+
+<!-- OPULENTSMM CHATBOT -->
+<style>
+  #xbtn{position:fixed;bottom:26px;right:22px;z-index:2147483647;width:62px;height:62px;border-radius:50%;background:linear-gradient(135deg,#d4a017,#f5c842);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 24px rgba(212,160,23,0.6)}
+  #xbtn::after{content:'';position:absolute;inset:-3px;border-radius:50%;border:2px solid rgba(212,160,23,0.5);animation:xp 2s ease-out infinite}
+  @keyframes xp{0%{transform:scale(1);opacity:0.8}100%{transform:scale(1.65);opacity:0}}
+  #xbadge{position:absolute;top:-1px;right:-1px;width:17px;height:17px;background:#ef4444;border-radius:50%;border:2px solid #06060a;font-size:9px;color:#fff;display:none;align-items:center;justify-content:center;font-weight:900}
+  #xwin{position:fixed;bottom:98px;right:18px;width:315px;height:460px;background:#0a0a0f;border:1px solid rgba(212,160,23,0.35);border-radius:20px;display:none;flex-direction:column;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.9);z-index:2147483647}
+  @media(max-width:480px){#xbtn{bottom:82px;right:14px}#xwin{width:calc(100vw - 24px);right:12px;bottom:158px;height:420px}}
+</style>
+
+<!-- CHAT BUTTON — hardcoded HTML, always in DOM -->
+<button id="xbtn">
+  <span id="xbadge">1</span>
+  <svg width="26" height="26" viewBox="0 0 24 24" fill="white"><path d="M20 2H4c-1.1 0-2 0.9-2 2v18l4-4h14c1.1 0 2-0.9 2-2V4c0-1.1-0.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/></svg>
+</button>
+
+<!-- CHAT WINDOW — hardcoded HTML -->
+<div id="xwin">
+  <div style="background:linear-gradient(135deg,#1a1200,#2a1e00);border-bottom:1px solid rgba(212,160,23,0.25);padding:13px 15px;display:flex;align-items:center;gap:10px;flex-shrink:0">
+    <div style="width:36px;height:36px;border-radius:50%;background:rgba(212,160,23,0.15);border:1px solid rgba(212,160,23,0.4);display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0">&#x1F916;</div>
+    <div style="flex:1">
+      <div style="font-weight:800;color:#f5c842;font-size:13px;font-family:Arial,sans-serif">OpulentSMM AI</div>
+      <div style="font-size:11px;color:rgba(212,160,23,0.6);display:flex;align-items:center;gap:4px;margin-top:2px;font-family:Arial,sans-serif">
+        <span style="width:6px;height:6px;background:#34d399;border-radius:50%;display:inline-block"></span>
+        Sales Assistant &bull; Online
+      </div>
+    </div>
+    <button id="xclose" style="background:rgba(212,160,23,0.1);border:1px solid rgba(212,160,23,0.2);border-radius:8px;width:28px;height:28px;cursor:pointer;color:rgba(212,160,23,0.8);font-size:16px;display:flex;align-items:center;justify-content:center">&#x2715;</button>
+  </div>
+  <div id="xmsgs" style="flex:1;overflow-y:auto;padding:11px;display:flex;flex-direction:column;gap:7px"></div>
+  <div style="padding:9px 11px;border-top:1px solid rgba(212,160,23,0.12);display:flex;gap:7px;flex-shrink:0;background:rgba(8,8,15,0.98)">
+    <input id="xinp" type="text" placeholder="Type a message..." autocomplete="off"
+      style="flex:1;background:rgba(255,255,255,0.05);border:1px solid rgba(212,160,23,0.25);border-radius:9px;padding:8px 11px;color:#f0f0f0;font-size:13px;font-family:Arial,sans-serif;outline:none"/>
+    <button id="xsend" style="width:35px;height:35px;background:linear-gradient(135deg,#d4a017,#f5c842);border:none;border-radius:9px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="white"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+    </button>
+  </div>
+</div>
+
+<script>
+(function(){
+  var open=false,hist=[],sid="CB"+Date.now(),timer=null;
+
+  var KB=[
+    {k:["hi","hello","hey","hii","namaste","helo","start","sup"],a:"Welcome to OpulentSMM!\n\nWe help creators & businesses grow fast with premium social media services.\n\nNew users get special rewards after signup!\n\nWhat do you want to grow today?",q:["Instagram Instagram","YouTube YouTube","Ti
