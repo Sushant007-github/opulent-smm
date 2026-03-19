@@ -114,31 +114,31 @@ captureReferral(); // Run immediately on page load
 // IG Likes:     1k=₹100, 5k=₹250,  10k=₹500,  20k=₹1800
 const SERVICES = [
   // ── INSTAGRAM ────────────────────────────────────────────────────
-  { id:1, platform:"Instagram", icon:"📸", name:"Instagram Followers – Indian Stable",
+  { id:1, platform:"Instagram", icon:"📸", name:"Instagram Followers – Stable",
     desc:"100% Indian stable followers. Gradual natural delivery. No-drop guarantee for 30 days. Safe for all account types.",
     speed:"0–12 hrs", min:1000, max:100000, cat:"Followers", badge:"🔥 Best Seller",
     quality:["Non Drop","Refill Available","High Quality"], speedTag:"Normal",
     tiers:[{qty:1000,price:149},{qty:5000,price:699},{qty:10000,price:1299},{qty:20000,price:2399}] },
 
-  { id:2, platform:"Instagram", icon:"📸", name:"Instagram Followers – HQ Premium",
+  { id:2, platform:"Instagram", icon:"📸", name:"Instagram Followers – Premium",
     desc:"Premium quality Indian followers with high retention. Best for personal brands and verified accounts.",
     speed:"0–6 hrs", min:500, max:50000, cat:"Followers", badge:"💎 Premium",
     quality:["High Quality","Non Drop","Refill Available"], speedTag:"Fast",
     tiers:[{qty:500,price:99},{qty:1000,price:179},{qty:5000,price:849},{qty:10000,price:1599}] },
 
-  { id:3, platform:"Instagram", icon:"📸", name:"Instagram Likes – Indian Stable",
+  { id:3, platform:"Instagram", icon:"📸", name:"Instagram Likes – High Quality",
     desc:"Real Indian likes. Instant start. Pushes post to Explore page for organic reach boost.",
     speed:"0–30 min", min:100, max:50000, cat:"Likes", badge:"⚡ Instant",
     quality:["High Quality","Non Drop"], speedTag:"Instant",
     tiers:[{qty:1000,price:29},{qty:5000,price:99},{qty:10000,price:179},{qty:50000,price:799}] },
 
-  { id:4, platform:"Instagram", icon:"📸", name:"Instagram Reel Views – Indian",
+  { id:4, platform:"Instagram", icon:"📸", name:"Instagram Reel Views – Fast",
     desc:"Indian reel views. Boosts your reel to Explore & For You pages. Best for viral growth strategy.",
     speed:"0–2 hrs", min:1000, max:500000, cat:"Views", badge:"📈 Trending",
     quality:["High Quality","Non Drop"], speedTag:"Fast",
     tiers:[{qty:1000,price:12},{qty:5000,price:45},{qty:10000,price:79},{qty:50000,price:349},{qty:100000,price:599}] },
 
-  { id:5, platform:"Instagram", icon:"📸", name:"Instagram Story Views",
+  { id:5, platform:"Instagram", icon:"📸", name:"Instagram Story Views – Instant",
     desc:"Boost story views from Indian accounts. Improves reach and profile visibility significantly.",
     speed:"0–1 hr", min:1000, max:200000, cat:"Views",
     quality:["High Quality"], speedTag:"Instant",
@@ -149,74 +149,74 @@ const SERVICES = [
     speed:"0–6 hrs", min:10, max:1000, price:5, cat:"Comments",
     quality:["High Quality"], speedTag:"Normal" },
 
-  { id:7, platform:"Instagram", icon:"📸", name:"Instagram Saves – Indian",
+  { id:7, platform:"Instagram", icon:"📸", name:"Instagram Saves – High Retention",
     desc:"Post saves from real Indian accounts. Saves are a top ranking signal on Instagram algorithm.",
     speed:"0–3 hrs", min:500, max:20000, price:0.15, cat:"Engagement",
     quality:["High Quality"], speedTag:"Normal" },
 
   // ── YOUTUBE ──────────────────────────────────────────────────────
-  { id:8, platform:"YouTube", icon:"▶️", name:"YouTube Views – Indian HQ",
+  { id:8, platform:"YouTube", icon:"▶️", name:"YouTube Views – High Retention",
     desc:"High-retention Indian views with watch time boost. Helps reach monetization thresholds faster.",
     speed:"1–24 hrs", min:1000, max:500000, cat:"Views", badge:"🏆 Top Rated",
     quality:["High Quality","Non Drop"], speedTag:"Normal",
     tiers:[{qty:1000,price:69},{qty:5000,price:299},{qty:10000,price:549}] },
 
-  { id:9, platform:"YouTube", icon:"▶️", name:"YouTube Subscribers – Indian",
+  { id:9, platform:"YouTube", icon:"▶️", name:"YouTube Subscribers – Stable",
     desc:"Real Indian subscribers. Grows channel credibility and helps monetize faster.",
     speed:"1–48 hrs", min:100, max:50000, price:3.50, cat:"Followers",
     quality:["High Quality","Refill Available"], speedTag:"Normal" },
 
-  { id:10, platform:"YouTube", icon:"▶️", name:"YouTube Likes – Indian",
+  { id:10, platform:"YouTube", icon:"▶️", name:"YouTube Likes – Fast",
     desc:"Boost your video with Indian likes. Increases trust and ranking in search results.",
     speed:"1–12 hrs", min:100, max:50000, price:1.20, cat:"Likes",
     quality:["High Quality"], speedTag:"Fast" },
 
   // ── TELEGRAM ─────────────────────────────────────────────────────
-  { id:11, platform:"Telegram", icon:"✈️", name:"Telegram Members – Indian",
+  { id:11, platform:"Telegram", icon:"✈️", name:"Telegram Members – Targeted",
     desc:"Real Indian members for your Telegram channel or group. Boosts credibility and trust.",
     speed:"0–12 hrs", min:100, max:200000, cat:"Members", badge:"🇮🇳 Indian",
     quality:["High Quality","Non Drop"], speedTag:"Normal",
     tiers:[{qty:1000,price:149},{qty:5000,price:599},{qty:10000,price:1099}] },
 
-  { id:12, platform:"Telegram", icon:"✈️", name:"Telegram Post Views",
+  { id:12, platform:"Telegram", icon:"✈️", name:"Telegram Post Views – Instant",
     desc:"Increase view count on your Telegram posts and channels. Instant delivery.",
     speed:"0–30 min", min:500, max:500000, price:0.05, cat:"Views",
     quality:["High Quality"], speedTag:"Instant" },
 
   // ── TIKTOK ───────────────────────────────────────────────────────
-  { id:13, platform:"TikTok", icon:"🎵", name:"TikTok Views – Worldwide",
+  { id:13, platform:"TikTok", icon:"🎵", name:"TikTok Views – Fast",
     desc:"Push content to For You pages worldwide. Fast delivery, no password needed.",
     speed:"0–6 hrs", min:1000, max:1000000, price:0.09, cat:"Views",
     quality:["High Quality"], speedTag:"Fast" },
 
-  { id:14, platform:"TikTok", icon:"🎵", name:"TikTok Followers – Global",
+  { id:14, platform:"TikTok", icon:"🎵", name:"TikTok Followers – Stable",
     desc:"Grow your TikTok presence fast with real-looking followers worldwide.",
     speed:"0–12 hrs", min:100, max:100000, price:1.50, cat:"Followers",
     quality:["High Quality","Non Drop"], speedTag:"Normal" },
 
-  { id:15, platform:"TikTok", icon:"🎵", name:"TikTok Likes – Global",
+  { id:15, platform:"TikTok", icon:"🎵", name:"TikTok Likes – Instant",
     desc:"Instant likes for your TikTok videos. Safe and fast delivery guaranteed.",
     speed:"0–2 hrs", min:100, max:100000, price:0.50, cat:"Likes",
     quality:["High Quality"], speedTag:"Instant" },
 
   // ── FACEBOOK ─────────────────────────────────────────────────────
-  { id:16, platform:"Facebook", icon:"👍", name:"Facebook Page Likes – Indian",
+  { id:16, platform:"Facebook", icon:"👍", name:"Facebook Page Likes – Stable",
     desc:"Indian page likes for your Facebook business page. Looks 100% natural and organic.",
     speed:"1–48 hrs", min:100, max:50000, price:1.10, cat:"Likes",
     quality:["High Quality","Non Drop"], speedTag:"Normal" },
 
-  { id:17, platform:"Facebook", icon:"👍", name:"Facebook Post Likes",
+  { id:17, platform:"Facebook", icon:"👍", name:"Facebook Post Likes – Fast",
     desc:"Boost engagement on your Facebook posts with real-looking likes.",
     speed:"0–6 hrs", min:100, max:20000, price:0.80, cat:"Likes",
     quality:["High Quality"], speedTag:"Fast" },
 
   // ── TWITTER ──────────────────────────────────────────────────────
-  { id:18, platform:"Twitter", icon:"🐦", name:"Twitter / X Followers",
+  { id:18, platform:"Twitter", icon:"🐦", name:"Twitter Followers – Stable",
     desc:"Boost your credibility with a higher follower count. Gradual natural delivery.",
     speed:"1–24 hrs", min:100, max:50000, price:1.80, cat:"Followers",
     quality:["High Quality"], speedTag:"Normal" },
 
-  { id:19, platform:"Twitter", icon:"🐦", name:"Twitter / X Likes",
+  { id:19, platform:"Twitter", icon:"🐦", name:"Twitter Likes – Fast",
     desc:"Engagement boost for your tweets and posts. Fast delivery worldwide.",
     speed:"0–6 hrs", min:50, max:20000, price:0.55, cat:"Likes",
     quality:["High Quality"], speedTag:"Fast" },
@@ -1081,7 +1081,7 @@ const LivePurchaseNotif = () => {
     {name:"Vikram P.",service:"Instagram Reel Views",qty:"10,000",loc:"Pune"},
     {name:"Anita J.",service:"Telegram Members",qty:"1,000",loc:"Chennai"},
     {name:"Ravi T.",service:"YouTube Subscribers",qty:"500",loc:"Kolkata"},
-    {name:"Meera D.",service:"Instagram Story Views",qty:"5,000",loc:"Ahmedabad"},
+    {name:"Meera D.",service:"Instagram Story Views – Instant",qty:"5,000",loc:"Ahmedabad"},
   ];
   React.useEffect(()=>{
     const show=()=>{
@@ -3225,7 +3225,7 @@ const PaymentUTRScreen = ({ amount, method, qrUrl, userName, userEmail, onBack, 
             <div style={{fontSize:10,color:C.muted,marginBottom:2,textTransform:"uppercase",letterSpacing:".06em"}}>UPI ID</div>
             <div style={{fontWeight:800,color:"#c4b5fd",fontSize:13,letterSpacing:".01em"}}>{UPI_ID}</div>
           </div>
-          <button onClick={()=>{navigator.clipboard&&navigator.clipboard.writeText(UPI_ID).catch(()=>{}); setErr("✅ UPI ID Copied!");setTimeout(()=>setErr(""),2000);}}
+          <button onClick={()=>{navigator.clipboard?.writeText(UPI_ID).catch(()=>{}); setErr("✅ UPI ID Copied!");setTimeout(()=>setErr(""),2000);}}
             style={{background:"rgba(124,58,237,.25)",border:"1px solid rgba(124,58,237,.5)",borderRadius:7,
               padding:"6px 12px",color:"#c4b5fd",fontSize:11,fontWeight:700,cursor:"pointer"}}>Copy</button>
         </div>
@@ -4523,7 +4523,7 @@ const UserProfile = ({ userName, userEmail, balance, orders, onLogout }) => {
               <input readOnly value={refCode} style={{flex:1,background:"rgba(255,255,255,.04)",
                 border:"1px solid rgba(212,160,23,.3)",borderRadius:10,padding:"11px 14px",
                 color:C.goldL,fontWeight:800,fontSize:14,fontFamily:"monospace"}}/>
-              <Btn v="gold" size="sm" onClick={()=>{ navigator.clipboard&&navigator.clipboard.writeText(refCode); Toast.success("Code copied!"); }}>Copy Code</Btn>
+              <Btn v="gold" size="sm" onClick={()=>{ navigator.clipboard?.writeText(refCode); Toast.success("Code copied!"); }}>Copy Code</Btn>
             </div>
             <label style={{display:"block",fontSize:11,fontWeight:700,color:C.muted,letterSpacing:".07em",marginBottom:7,textTransform:"uppercase"}}>Your Shareable Referral URL</label>
             <div style={{display:"flex",gap:10,marginBottom:20}}>
@@ -6968,61 +6968,71 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(React.createElement(App));
   </script>
 
-<!-- ═══ OpulentSMM AI Chatbot ═══ -->
-<style>
-@keyframes cbPulse{0%{transform:scale(1);opacity:0.8}100%{transform:scale(1.65);opacity:0}}
-@keyframes cbBlink{0%,100%{opacity:0.3;transform:scale(0.8)}50%{opacity:1;transform:scale(1.1)}}
-</style>
-<div id="chat-root" style="position:fixed;bottom:24px;right:20px;z-index:2147483647"></div>
+<!-- ═══ OPULENTSMM CONVERSION CHATBOT ═══ -->
 <script>
-(function(){
-  var READY = false;
+window.onload = function() {
 
-  function tryMount(){
-    if(READY) return;
-    if(typeof React==="undefined"||typeof ReactDOM==="undefined"||typeof ReactDOM.createRoot==="undefined"){
-      setTimeout(tryMount,100); return;
-    }
-    READY = true;
-    var el = document.getElementById("chat-root");
-    if(!el) return;
-
-    var h = React.createElement;
-    var useState = React.useState;
-    var useEffect = React.useEffect;
-    var useRef = React.useRef;
-
-    var KB=[
-      {k:["hi","hello","hey","hii","namaste","help","start","helo"],
-       a:"Hey! Welcome to OpulentSMM!\n\nI help creators grow on Instagram, YouTube and more.\n\nNew users get Rs0.10 FREE on signup!\n\nWhich platform do you want to grow?",
-       q:["Instagram","YouTube","TikTok","Other"]},
-      {k:["instagram","insta","ig","followers","follow","reel","story","likes","comment"],
-       a:"Instagram is our #1 service!\n\n- Indian & Premium Followers\n- Reel Views (go viral!)\n- Story Views & Post Likes\n- Comments & Saves\n\nOrders start in 30 mins!\nSign up to unlock full catalogue.",
-       q:["Sign Up Free","How it works","Is it safe?"]},
-      {k:["youtube","yt","views","subscriber","sub","video","watch","monetize"],
-       a:"YouTube growth done right!\n\n- High Retention Views\n- Real Subscribers\n- Watch Time Hours\n- Safe for monetization!\n\nSign up to see all plans!",
-       q:["Sign Up Free","Is it safe?","How fast?"]},
-      {k:["tiktok","telegram","twitter","facebook","social","other","platform"],
-       a:"We cover ALL platforms!\n\n- TikTok Followers & Views\n- Telegram Members\n- Twitter/X Followers\n- Facebook Page Likes\n\n100+ services after signup!",
-       q:["Sign Up Free","How it works"]},
-      {k:["price","cost","rate","kitna","cheap","rupee","how much","plan","pricing"],
-       a:"Pricing unlocks after FREE signup!\n\n- Rs0.10 FREE credit on joining\n- 20% BONUS on first deposit\n- Plans from Rs0.0.09 per unit\n\nSignup = 2 mins, no card needed!",
-       cta:true,q:["Sign Up Free"]},
-      {k:["how","work","process","kaise","step","explain"],
-       a:"How it works:\n\n1. Create free account\n2. Add wallet via UPI/GPay\n3. Choose service & paste link\n4. Watch your account grow!\n\nDelivery starts automatically!",
-       q:["Sign Up Free","Is it safe?","How fast?"]},
-      {k:["safe","real","fake","drop","quality","guarantee","refill","legit","password"],
-       a:"100% safe - always!\n\n- We NEVER ask for your password\n- 30-day refill guarantee\n- 1,00,000+ orders delivered\n- Non-drop protection\n\nTrusted by 10,000+ Indian creators!",
-       q:["Sign Up Free"]},
-      {k:["fast","speed","delivery","time","kab","instant","how long","kitne"],
-       a:"Super fast delivery!\n\n- Likes & Views: 0-30 mins\n- Followers: 1-12 hours\n- YT Views: 1-6 hours\n- Subscribers: 12-24 hours\n\nMost orders start automatically!",
-       q:["Sign Up Free"]},
-      {k:["payment","pay","upi","gpay","phonepe","paytm","deposit","money","wallet"],
-       a:"Easy Indian payments!\n\n- Google Pay & PhonePe\n- Paytm & Any UPI\n- NEFT / IMPS\n\nMin Rs0.100.\nFirst deposit gets +20% bonus!",
-       q:["Sign Up Free"]},
-      {k:["refund","cancel","money back","wapas","return"],
-       a:"Risk-free guarantee!\n\n- Full refund if order fails\n- Wallet refund is instant\n- 30-day follower refill\n\n98% satisfaction rate!",
-       q:["Sign Up Free"]},
-      {k:["free","bonus","signup","register","account","join","sign up","create","get started"],
-       a:"Getting started is FREE!\n\n1. Click Sign Up Free below\n2. Enter email + password\n3. Verify email\n4. Get Rs0.10 FREE instantly!\n\nNo card needed, only 2 minutes!",
-       cta:
+  /* ── KNOWLEDGE BASE ──────────────────────────── */
+  var KB = [
+    {
+      k: ["hi","hello","hey","hii","namaste","helo","sup","yo","start"],
+      a: "Welcome to OpulentSMM! 🚀\n\nWe help creators & businesses grow fast with premium social media services.\n\nWhat do you want to grow today?",
+      q: ["📸 Instagram","▶️ YouTube","🎵 TikTok","🌐 Other"]
+    },
+    {
+      k: ["instagram","insta","ig","📸"],
+      a: "Great choice! 🔥\n\nInstagram is our most popular platform.\n\nWe offer multiple packages based on quality and delivery speed.\n\nAre you looking for:",
+      q: ["💎 Premium Growth","⚡ Fast Growth","💰 Budget Growth","📊 See All Options"]
+    },
+    {
+      k: ["youtube","yt","▶️"],
+      a: "YouTube is growing fast! 📈\n\nWe have services for Views, Subscribers, Likes and Watch Time.\n\nAll safe for monetization.\n\nWhat are you targeting?",
+      q: ["🎯 More Views","👥 Subscribers","💰 Budget Growth","📊 See All Options"]
+    },
+    {
+      k: ["tiktok","tok","🎵"],
+      a: "TikTok growth is 🔥 right now!\n\nWe have services for Views, Followers and Likes.\n\nFast delivery, high quality.\n\nWhat do you need?",
+      q: ["👁 More Views","👥 Followers","❤️ Likes","📊 See All Options"]
+    },
+    {
+      k: ["telegram","twitter","facebook","other","🌐"],
+      a: "We cover all major platforms! 🌐\n\nTelegram, Twitter/X, Facebook and more.\n\nCreate a free account to see the full service catalogue with pricing.",
+      q: ["🚀 Create Free Account","💬 Tell me more"]
+    },
+    {
+      k: ["premium","💎","best","top","quality","high quality"],
+      a: "Premium growth is our speciality 💎\n\nOur premium packages deliver:\n✅ Highest quality\n✅ Stable & long-lasting\n✅ Non-drop protection\n✅ Refill guarantee\n\nFull details inside dashboard.",
+      q: ["🚀 Create Free Account","⚡ Tell me about Fast"]
+    },
+    {
+      k: ["fast","quick","instant","speed","⚡","urgent"],
+      a: "Our Fast packages start delivering quickly! ⚡\n\nPerfect for:\n→ New posts you want to boost\n→ Launching a campaign\n→ Quick visibility boost\n\nReady to get started?",
+      q: ["🚀 Create Free Account","💎 Tell me about Premium"]
+    },
+    {
+      k: ["budget","cheap","affordable","low","less","minimum","💰"],
+      a: "We have options for every budget! 💰\n\nStarting from very low prices with quality service.\n\n🎁 New users also get special rewards after signup!\n\nSign up free to see all options.",
+      q: ["🚀 Create Free Account","🎁 What rewards?"]
+    },
+    {
+      k: ["price","cost","rate","kitna","how much","pricing","charges","fee","rupee","rs","inr"],
+      a: "We have different pricing based on quality and delivery speed 💎\n\nPricing is available inside the dashboard only.\n\n👉 Create free account to unlock all pricing and packages instantly.",
+      q: ["🚀 Create Free Account","💬 Tell me more first"]
+    },
+    {
+      k: ["reward","bonus","free","offer","discount","gift","special","🎁"],
+      a: "🎁 New users get special rewards after signup!\n\nThis is our way of welcoming you to OpulentSMM.\n\nCreate your free account now to claim it before it expires!",
+      q: ["🚀 Create Free Account","❓ More questions first"]
+    },
+    {
+      k: ["safe","secure","real","trust","legit","fake","risk","original"],
+      a: "Safety is our #1 priority 🛡️\n\nOur services are:\n✅ Safe for all accounts\n✅ No password required\n✅ Stable & reliable\n✅ Trusted by thousands of users daily\n\nYour account is always protected.",
+      q: ["🚀 Create Free Account","⏱ How fast is delivery?"]
+    },
+    {
+      k: ["delivery","time","long","when","kab","how","fast delivery","start"],
+      a: "Most services start quickly after order and deliver gradually ⚡\n\nDelivery speed depends on the package you choose.\n\nFull details shown at checkout inside your dashboard.",
+      q: ["🚀 Create Free Account","🛡️ Is it safe?"]
+    },
+    {
+      k: ["refund","cancel",
