@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>OpulentSMM - Best SMM Panel for Instagram, YouTube &amp; Social Media Growth</title>
+  <title>OpulentSMM - Premium Social Media Growth Platform | SMM Panel India</title>
   <meta name="description" content="Buy Instagram followers, likes, views and social media services at affordable prices. Fast delivery, secure UPI payments and 24/7 support. India's most trusted SMM panel."/>
   <meta name="keywords" content="SMM panel India, buy Instagram followers, cheap SMM panel, Instagram likes, YouTube views, TikTok followers, social media growth, buy followers India, OpulentSMM"/>
   <meta name="robots" content="index, follow"/>
@@ -925,6 +925,7 @@ const MobileBar = ({ page, setPage, isAdmin, onLogout }) => {
   // User bottom tabs (5 fit perfectly)
   const uItems = [
     {id:"overview", i:"⊞", l:"Home"},
+    {id:"growthpacks", i:"GP", l:"Packs"},
     {id:"neworder", i:"✦", l:"Order"},
     {id:"orders",   i:"📦", l:"Orders"},
     {id:"wallet",   i:"◈", l:"Wallet"},
@@ -2120,6 +2121,7 @@ const UserDash = ({ userName, userEmail, onLogout }) => {
 
   const NAV=[
     {id:"overview",   label:"Overview",      icon:"⊞"},
+    {id:"growthpacks",label:"Growth Packs",  icon:"GP"},
     {id:"neworder",   label:"New Order",     icon:"✦"},
     {id:"orders",     label:"My Orders",     icon:"📦"},
     {id:"wallet",     label:"Wallet",        icon:"◈"},
@@ -2490,6 +2492,7 @@ const UserNewOrder = ({ orders, addOrderSync, balance, setBalance, setPage }) =>
   const [couponMsg,setCouponMsg]=useState("");
   const [linkErr,setLinkErr]=useState("");
   const [loading,setLoading]=useState(false);
+  const [orderAgreed,setOrderAgreed]=useState(false);
 
   const filtered=(pf==="All"?SERVICES:SERVICES.filter(s=>s.platform===pf)).filter(s=>!s.hidden);
   // Price calc: use tiers if available, else price per unit
@@ -2740,9 +2743,20 @@ const UserNewOrder = ({ orders, addOrderSync, balance, setBalance, setPage }) =>
                   fontFamily:mono?"monospace":"inherit",wordBreak:"break-all",textAlign:"right",maxWidth:"58%"}}>{v}</span>
               </div>
             ))}
-            <div style={{display:"flex",gap:12,marginTop:24}}>
-              <Btn onClick={place} loading={loading} style={{flex:1,justifyContent:"center"}} size="lg">🚀 Place Order</Btn>
-              <Btn v="ghost" onClick={()=>setStep(2)} style={{flex:1,justifyContent:"center"}}>← Edit</Btn>
+            <div style={{marginTop:20,padding:"14px 16px",background:"rgba(239,68,68,0.06)",border:"1px solid rgba(239,68,68,0.2)",borderRadius:11}}>
+              <div style={{fontWeight:700,color:"#f87171",fontSize:12,marginBottom:8}}>Important Instructions</div>
+              {["Account must be PUBLIC","Turn OFF Review Flagged Content on Instagram","Do NOT change username during delivery","Ensure your link is correct","Delivery: 0-24 hours","No refunds after order starts"].map(function(r,i){ return <div key={i} style={{fontSize:11,color:"rgba(255,255,255,0.5)",marginBottom:3}}>- {r}</div>; })}
+              <div style={{marginTop:8,padding:"6px 10px",background:"rgba(234,179,8,0.1)",borderRadius:8}}>
+                <span style={{color:"#fbbf24",fontWeight:700,fontSize:11}}>90% of failed orders are due to private accounts!</span>
+              </div>
+            </div>
+            <label style={{display:"flex",alignItems:"center",gap:10,margin:"14px 0",cursor:"pointer"}}>
+              <input type="checkbox" checked={orderAgreed} onChange={function(e){setOrderAgreed(e.target.checked);}} style={{width:16,height:16,cursor:"pointer"}}/>
+              <span style={{fontSize:12,color:"rgba(255,255,255,0.5)"}}>I agree to all instructions. My account is PUBLIC.</span>
+            </label>
+            <div style={{display:"flex",gap:12,marginTop:8}}>
+              <Btn onClick={place} loading={loading} disabled={!orderAgreed} style={{flex:1,justifyContent:"center",opacity:orderAgreed?1:0.5}} size="lg">Place Order</Btn>
+              <Btn v="ghost" onClick={function(){setStep(2);}} style={{flex:1,justifyContent:"center"}}>Edit</Btn>
             </div>
           </Card>
         </div>
@@ -7009,31 +7023,4 @@ root.render(React.createElement(App));
         if(profLink.indexOf("http")!==0){ setProfErr("Enter valid URL"); return; }
         if(!reelLink.trim()){ setReelErr("Please enter reel/post link"); return; }
         if(reelLink.indexOf("http")!==0){ setReelErr("Enter valid URL"); return; }
-        if(!agreed){ alert("Please agree to instructions"); return; }
-        var bal=getBalance();
-        if(sel.price>bal){ alert("Insufficient balance. Please add funds."); return; }
-        setLoading(true);
-        setTimeout(function(){
-          // Deduct balance
-          var newBal=parseFloat((bal-sel.price).toFixed(2));
-          sessionStorage.setItem("nx_bal",newBal);
-          // Save to Firebase
-          try{
-            if(typeof firebase!=="undefined"&&firebase.apps&&firebase.apps.length){
-              var today=new Date().toISOString().split("T")[0];
-              var ordId="ORD-"+Date.now();
-              firebase.firestore().collection("orders").add({
-                id:ordId, service:"Bundle: "+sel.name, platform:"Instagram",
-                icon:"gift", qty:1, price:sel.price, status:"Pending",
-                date:today, link:profLink, reelLink:reelLink, notes:notes,
-                isBundle:true, bundlePack:sel.id, bundleItems:sel.items,
-                userEmail:sessionStorage.getItem("nx_email")||"anonymous",
-                userName:sessionStorage.getItem("nx_name")||"Visitor",
-                type:"bundle"
-              }).catch(function(){});
-              firebase.firestore().collection("bundleOrders").add({
-                type:"bundle", pack:sel.id, packName:sel.name,
-                profileLink:profLink, reelLink:reelLink, notes:notes,
-                price:sel.price, status:"pending",
-                userEmail:sessionStorage.getItem("nx_email")||"anonymous",
-                userName:se
+        if(!agreed){ alert("Please agree t
