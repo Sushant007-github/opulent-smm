@@ -965,7 +965,7 @@ const MobileBar = ({ page, setPage, isAdmin, onLogout }) => {
         background:"rgba(6,6,12,.97)",backdropFilter:"blur(24px)",
         borderTop:`1px solid ${C.border}`,padding:"8px 0 env(safe-area-inset-bottom,10px)"}}>
         {uItems.map(item=>(
-          <button key={item.id} onClick={()=>setPage(item.id)} style={{
+          <button key={item.id} onClick={function(){if(item.id==="growthpacks"){if(typeof window.openGrowthPacks==="function")window.openGrowthPacks();}else{setPage(item.id);}}} style={{
             flex:1,display:"flex",flexDirection:"column",alignItems:"center",gap:3,
             background:"none",border:"none",cursor:"pointer",padding:"6px 4px",
             color:page===item.id?"#c4b5fd":C.muted,transition:"color .2s"}}>
@@ -1963,6 +1963,7 @@ const UserDash = ({ userName, userEmail, onLogout }) => {
   const [orders,setOrders]=useState([]);
   const [balance,setBalance]=useState(0);
   const [txns,setTxns]=useState([]);
+  React.useEffect(function(){ window._userBalance=balance; },[balance]);
   const [announcements]=useState([]);
   const [showProfile,setShowProfile]=useState(false);
   const [dashLoading,setDashLoading]=useState(false);
@@ -2175,7 +2176,7 @@ const UserDash = ({ userName, userEmail, onLogout }) => {
         </div>
 
         <nav style={{flex:1}}>
-          {NAV.map(item=><NavItem key={item.id} item={item} active={page===item.id} onClick={()=>goPage(item.id)}/>)}
+          {NAV.map(item=><NavItem key={item.id} item={item} active={page===item.id&&item.id!=="growthpacks"} onClick={function(){if(item.id==="growthpacks"){if(typeof window.openGrowthPacks==="function")window.openGrowthPacks();}else{goPage(item.id);}}}/>)}
         </nav>
 
         <Divider/>
@@ -7016,11 +7017,6 @@ root.render(React.createElement(App));
 
       function close(){ document.getElementById("gp-root").style.display="none"; }
 
-      function getBalance(){ return parseFloat(sessionStorage.getItem("nx_bal")||"0"); }
-
-      function placeOrder(){
-        if(!profLink.trim()){ setProfErr("Please enter profile link"); return; }
-        if(profLink.indexOf("http")!==0){ setProfErr("Enter valid URL"); return; }
-        if(!reelLink.trim()){ setReelErr("Please enter reel/post link"); return; }
-        if(reelLink.indexOf("http")!==0){ setReelErr("Enter valid URL"); return; }
-        if(!agreed){ alert("Please agree t
+      function getBalance(){
+        var b=parseFloat(sessionStorage.getItem("nx_bal")||"0");
+        if(!b&&window._userBalance) b=parseFloat(window._userBalance|
