@@ -181,10 +181,7 @@ const SERVICES = [
   { id:12, platform:"Telegram", icon:"✈️", name:"Telegram Post Views – Instant", hidden:true,
     desc:"Increase view count on Telegram posts.", speed:"0–30 min", min:500, max:500000, price:0.05, cat:"Views",
     quality:["High Quality"], speedTag:"Instant" },
-  //SKIP",
-    desc:"Increase view count on your Telegram posts and channels. Instant delivery.",
-    speed:"0–30 min", min:500, max:500000, price:0.05, cat:"Views",
-    quality:["High Quality"], speedTag:"Instant" },
+
 
   // ── TIKTOK ───────────────────────────────────────────────────────
   { id:13, platform:"TikTok", icon:"🎵", name:"TikTok Views – Worldwide",
@@ -7036,4 +7033,7 @@ root.render(React.createElement(App));
               }).catch(function(){});
               firebase.firestore().collection("bundleOrders").add({
                 type:"bundle", pack:sel.id, packName:sel.name,
-      
+                profileLink:profLink, reelLink:reelLink, notes:notes,
+                price:sel.price, status:"pending",
+                userEmail:sessionStorage.getItem("nx_email")||"anonymous",
+                userName:se
