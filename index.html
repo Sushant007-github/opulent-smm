@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>OpulentSMM - Premium Social Media Growth Platform | SMM Panel India</title>
+  <title>OpulentSMM - Best SMM Panel for Instagram, YouTube &amp; Social Media Growth</title>
   <meta name="description" content="Buy Instagram followers, likes, views and social media services at affordable prices. Fast delivery, secure UPI payments and 24/7 support. India's most trusted SMM panel."/>
   <meta name="keywords" content="SMM panel India, buy Instagram followers, cheap SMM panel, Instagram likes, YouTube views, TikTok followers, social media growth, buy followers India, OpulentSMM"/>
   <meta name="robots" content="index, follow"/>
@@ -179,9 +179,9 @@ const SERVICES = [
     tiers:[{qty:1000,price:149},{qty:5000,price:599},{qty:10000,price:1099}] },
 
   { id:12, platform:"Telegram", icon:"✈️", name:"Telegram Post Views – Instant", hidden:true,
-    desc:"Increase view count on Telegram posts.", speed:"0–30 min", min:500, max:500000, price:0.05, cat:"Views",
+    desc:"Increase view count on your Telegram posts and channels. Instant delivery.",
+    speed:"0–30 min", min:500, max:500000, price:0.05, cat:"Views",
     quality:["High Quality"], speedTag:"Instant" },
-
 
   // ── TIKTOK ───────────────────────────────────────────────────────
   { id:13, platform:"TikTok", icon:"🎵", name:"TikTok Views – Worldwide",
@@ -925,7 +925,6 @@ const MobileBar = ({ page, setPage, isAdmin, onLogout }) => {
   // User bottom tabs (5 fit perfectly)
   const uItems = [
     {id:"overview", i:"⊞", l:"Home"},
-    {id:"growthpacks", i:"GP", l:"Packs"},
     {id:"neworder", i:"✦", l:"Order"},
     {id:"orders",   i:"📦", l:"Orders"},
     {id:"wallet",   i:"◈", l:"Wallet"},
@@ -965,7 +964,7 @@ const MobileBar = ({ page, setPage, isAdmin, onLogout }) => {
         background:"rgba(6,6,12,.97)",backdropFilter:"blur(24px)",
         borderTop:`1px solid ${C.border}`,padding:"8px 0 env(safe-area-inset-bottom,10px)"}}>
         {uItems.map(item=>(
-          <button key={item.id} onClick={function(){if(item.id==="growthpacks"){if(typeof window.openGrowthPacks==="function")window.openGrowthPacks();}else{setPage(item.id);}}} style={{
+          <button key={item.id} onClick={()=>setPage(item.id)} style={{
             flex:1,display:"flex",flexDirection:"column",alignItems:"center",gap:3,
             background:"none",border:"none",cursor:"pointer",padding:"6px 4px",
             color:page===item.id?"#c4b5fd":C.muted,transition:"color .2s"}}>
@@ -1963,7 +1962,6 @@ const UserDash = ({ userName, userEmail, onLogout }) => {
   const [orders,setOrders]=useState([]);
   const [balance,setBalance]=useState(0);
   const [txns,setTxns]=useState([]);
-  React.useEffect(function(){ window._userBalance=balance; },[balance]);
   const [announcements]=useState([]);
   const [showProfile,setShowProfile]=useState(false);
   const [dashLoading,setDashLoading]=useState(false);
@@ -2122,7 +2120,6 @@ const UserDash = ({ userName, userEmail, onLogout }) => {
 
   const NAV=[
     {id:"overview",   label:"Overview",      icon:"⊞"},
-    {id:"growthpacks",label:"Growth Packs",  icon:"GP"},
     {id:"neworder",   label:"New Order",     icon:"✦"},
     {id:"orders",     label:"My Orders",     icon:"📦"},
     {id:"wallet",     label:"Wallet",        icon:"◈"},
@@ -2136,7 +2133,6 @@ const UserDash = ({ userName, userEmail, onLogout }) => {
   const renderPage=()=>{
     switch(page){
       case "overview":   return <UserOverview orders={orders} balance={balance} setPage={goPage} userName={userName} announcements={announcements} userEmail={userEmail}/>;
-      case "growthpacks": { if(typeof window.openGrowthPacks==="function") window.openGrowthPacks(); return <UserOverview orders={orders} balance={balance} setPage={goPage} userName={userName} announcements={announcements} userEmail={userEmail}/>; }
       case "neworder":   return <UserNewOrder orders={orders} addOrderSync={addOrderSync} balance={balance} setBalance={setBalanceSync} setPage={goPage}/>;
       case "orders":     return <UserOrders orders={orders} setOrders={setOrders} userEmail={userEmail}/>;
       case "wallet":     return <UserWallet balance={balance} txns={txns} userEmail={userEmail}/>;
@@ -2176,10 +2172,14 @@ const UserDash = ({ userName, userEmail, onLogout }) => {
         </div>
 
         <nav style={{flex:1}}>
-          {NAV.map(item=><NavItem key={item.id} item={item} active={page===item.id&&item.id!=="growthpacks"} onClick={function(){if(item.id==="growthpacks"){if(typeof window.openGrowthPacks==="function")window.openGrowthPacks();}else{goPage(item.id);}}}/>)}
+          {NAV.map(item=><NavItem key={item.id} item={item} active={page===item.id} onClick={()=>goPage(item.id)}/>)}
         </nav>
 
         <Divider/>
+        <button onClick={function(){if(typeof gpOpen==="function")gpOpen();}} style={{display:"flex",alignItems:"center",gap:11,width:"100%",padding:"10px 12px",marginBottom:4,background:"rgba(212,160,23,0.08)",border:"1px solid rgba(212,160,23,0.2)",borderRadius:10,color:"#f5c842",fontWeight:700,fontSize:13,cursor:"pointer"}}>
+          <span style={{fontSize:16}}>GP</span>
+          <span>Growth Packs</span>
+        </button>
         <button onClick={onLogout} style={{display:"flex",alignItems:"center",gap:10,padding:"10px 12px",
           marginTop:10,width:"100%",background:"rgba(239,68,68,.08)",border:"1px solid rgba(239,68,68,.2)",
           borderRadius:10,color:"#f87171",fontSize:13,fontWeight:600,cursor:"pointer",transition:"all .2s"}}
@@ -2398,7 +2398,7 @@ const UserOverview = ({ orders, balance, setPage, userName, announcements, userE
       {/* QUICK ACTIONS */}
       <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(190px,1fr))",gap:12,marginBottom:24}}>
         {[
-          {icon:"✦",label:"New Order", sub:"Buy followers, likes & more",page:"neworder",grad:C.gP},
+          {icon:"GP",label:"Growth Packs", sub:"Bundle packages for fast growth",page:"growthpacks",grad:C.gGold},{icon:"✦",label:"New Order", sub:"Buy followers, likes & more",page:"neworder",grad:C.gP},
           {icon:"⊕",label:"Add Funds", sub:"Top up your ₹ wallet",      page:"addfunds",grad:C.gG},
           {icon:"📦",label:"My Orders", sub:"Track all your orders",       page:"orders",  grad:C.gB},
           {icon:"💬",label:"Support",   sub:"Chat with our team",          page:"support", grad:C.gGr},
@@ -2493,7 +2493,6 @@ const UserNewOrder = ({ orders, addOrderSync, balance, setBalance, setPage }) =>
   const [couponMsg,setCouponMsg]=useState("");
   const [linkErr,setLinkErr]=useState("");
   const [loading,setLoading]=useState(false);
-  const [orderAgreed,setOrderAgreed]=useState(false);
 
   const filtered=(pf==="All"?SERVICES:SERVICES.filter(s=>s.platform===pf)).filter(s=>!s.hidden);
   // Price calc: use tiers if available, else price per unit
@@ -2744,20 +2743,9 @@ const UserNewOrder = ({ orders, addOrderSync, balance, setBalance, setPage }) =>
                   fontFamily:mono?"monospace":"inherit",wordBreak:"break-all",textAlign:"right",maxWidth:"58%"}}>{v}</span>
               </div>
             ))}
-            <div style={{marginTop:20,padding:"14px 16px",background:"rgba(239,68,68,0.06)",border:"1px solid rgba(239,68,68,0.2)",borderRadius:11}}>
-              <div style={{fontWeight:700,color:"#f87171",fontSize:12,marginBottom:8}}>Important Instructions</div>
-              {["Account must be PUBLIC","Turn OFF Review Flagged Content on Instagram","Do NOT change username during delivery","Ensure your link is correct","Delivery: 0-24 hours","No refunds after order starts"].map(function(r,i){ return <div key={i} style={{fontSize:11,color:"rgba(255,255,255,0.5)",marginBottom:3}}>- {r}</div>; })}
-              <div style={{marginTop:8,padding:"6px 10px",background:"rgba(234,179,8,0.1)",borderRadius:8}}>
-                <span style={{color:"#fbbf24",fontWeight:700,fontSize:11}}>90% of failed orders are due to private accounts!</span>
-              </div>
-            </div>
-            <label style={{display:"flex",alignItems:"center",gap:10,margin:"14px 0",cursor:"pointer"}}>
-              <input type="checkbox" checked={orderAgreed} onChange={function(e){setOrderAgreed(e.target.checked);}} style={{width:16,height:16,cursor:"pointer"}}/>
-              <span style={{fontSize:12,color:"rgba(255,255,255,0.5)"}}>I agree to all instructions. My account is PUBLIC.</span>
-            </label>
-            <div style={{display:"flex",gap:12,marginTop:8}}>
-              <Btn onClick={place} loading={loading} disabled={!orderAgreed} style={{flex:1,justifyContent:"center",opacity:orderAgreed?1:0.5}} size="lg">Place Order</Btn>
-              <Btn v="ghost" onClick={function(){setStep(2);}} style={{flex:1,justifyContent:"center"}}>Edit</Btn>
+            <div style={{display:"flex",gap:12,marginTop:24}}>
+              <Btn onClick={place} loading={loading} style={{flex:1,justifyContent:"center"}} size="lg">🚀 Place Order</Btn>
+              <Btn v="ghost" onClick={()=>setStep(2)} style={{flex:1,justifyContent:"center"}}>← Edit</Btn>
             </div>
           </Card>
         </div>
@@ -6983,40 +6971,41 @@ function App() {
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(React.createElement(App));
   </script>
-</body>
-</html>
 
-<!-- GROWTH PACKS - Separate React root, outside Babel, cannot crash main app -->
-<div id="gp-root" style="display:none;position:fixed;inset:0;background:#06060a;z-index:800;overflow-y:auto"></div>
+<!-- ═══ GROWTH PACKS OVERLAY - Pure HTML/CSS/JS, no React, no Babel ═══ -->
+<style>
+#gpOverlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:#06060a;z-index:99999;overflow-y:auto;font-family:Arial,sans-serif;color:#f0f0f0}
+#gpOverlay h1{font-size:20px;font-weight:900;color:#f5c842;margin:0 0 4px 0}
+#gpOverlay p{font-size:13px;color:rgba(255,255,255,0.5);margin:0 0 20px 0}
+.gp-pack{padding:18px;border-radius:14px;margin-bottom:14px;cursor:pointer;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08)}
+.gp-pack.popular{background:linear-gradient(135deg,rgba(212,160,23,0.12),rgba(124,58,237,0.06));border:2px solid rgba(212,160,23,0.5);box-shadow:0 0 24px rgba(212,160,23,0.12)}
+.gp-badge{display:inline-block;background:linear-gradient(135deg,#d4a017,#f5c842);color:#000;font-size:10px;font-weight:900;padding:2px 12px;border-radius:12px;margin-bottom:10px}
+.gp-name{font-size:16px;font-weight:800;color:#f5c842;margin-bottom:2px}
+.gp-tag{font-size:12px;color:rgba(255,255,255,0.5);margin-bottom:10px}
+.gp-price{font-size:26px;font-weight:900;color:#f5c842}
+.gp-item{font-size:12px;color:rgba(255,255,255,0.5);margin-bottom:3px}
+.gp-btn{display:block;width:100%;padding:10px;background:rgba(212,160,23,0.15);border:1px solid rgba(212,160,23,0.3);border-radius:8px;color:#f5c842;font-size:12px;font-weight:700;text-align:center;margin-top:12px;cursor:pointer}
+.popular .gp-name{color:#f5c842}
+#gpForm{display:none}
+#gpList{display:block}
+.gp-input{width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);border-radius:9px;padding:10px 12px;color:#f0f0f0;font-size:13px;margin-bottom:12px;box-sizing:border-box;outline:none}
+.gp-warn{background:rgba(239,68,68,0.07);border:1px solid rgba(239,68,68,0.25);border-radius:10px;padding:14px;margin-bottom:14px}
+.gp-warn-title{color:#f87171;font-weight:800;font-size:13px;margin-bottom:8px}
+.gp-warn-item{color:rgba(255,255,255,0.5);font-size:12px;margin-bottom:4px}
+.gp-alert{background:rgba(234,179,8,0.12);border:1px solid rgba(234,179,8,0.3);border-radius:8px;padding:8px 12px;color:#fbbf24;font-weight:700;font-size:12px;margin-top:8px}
+.gp-check-label{display:flex;align-items:flex-start;gap:10px;padding:12px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.08);border-radius:10px;margin-bottom:14px;cursor:pointer}
+.gp-check-label span{font-size:12px;color:rgba(255,255,255,0.5);line-height:1.6}
+#gpPlaceBtn{width:100%;padding:14px;background:rgba(255,255,255,0.05);border:none;border-radius:11px;color:rgba(255,255,255,0.3);font-size:14px;font-weight:800;cursor:not-allowed;margin-bottom:8px}
+#gpPlaceBtn.active{background:linear-gradient(135deg,#7c3aed,#a855f7);color:#fff;cursor:pointer}
+#gpDone{display:none;text-align:center;padding:40px 20px}
+</style>
 
-<script>
-(function(){
-  // Wait for React to be ready
-  function mountGP(){
-    if(!window.React||!window.ReactDOM||!ReactDOM.createRoot){
-      setTimeout(mountGP,200); return;
-    }
-
-    var e = React.createElement;
-    var PACKS = [
-      {id:"starter",   name:"Starter Pack",   price:299, popular:false, tag:"Perfect to start your growth",    items:["1,000 Followers","2,000 Likes","5,000 Views"]},
-      {id:"influencer",name:"Influencer Pack", price:499, popular:true,  tag:"Best for fast growth",            items:["2,000 Followers","5,000 Likes","10,000 Views"]},
-      {id:"viral",     name:"Viral Pack",      price:999, popular:false, tag:"For influencers, brands & agencies", items:["5,000 Followers","10,000 Likes","50,000 Views"]}
-    ];
-
-    function App(){
-      var s0=React.useState(null);    var sel=s0[0];        var setSel=s0[1];
-      var s1=React.useState("");      var profLink=s1[0];   var setProfLink=s1[1];
-      var s2=React.useState("");      var reelLink=s2[0];   var setReelLink=s2[1];
-      var s3=React.useState("");      var notes=s3[0];      var setNotes=s3[1];
-      var s4=React.useState(false);   var agreed=s4[0];     var setAgreed=s4[1];
-      var s5=React.useState("");      var profErr=s5[0];    var setProfErr=s5[1];
-      var s6=React.useState("");      var reelErr=s6[0];    var setReelErr=s6[1];
-      var s7=React.useState(false);   var loading=s7[0];    var setLoading=s7[1];
-      var s8=React.useState(false);   var done=s8[0];       var setDone=s8[1];
-
-      function close(){ document.getElementById("gp-root").style.display="none"; }
-
-      function getBalance(){
-        var b=parseFloat(sessionStorage.getItem("nx_bal")||"0");
-        if(!b&&window._userBalance) b=parseFloat(window._userBalance|
+<div id="gpOverlay">
+  <div style="max-width:520px;margin:0 auto;padding:20px">
+    <!-- TOP BAR -->
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;padding-bottom:14px;border-bottom:1px solid rgba(255,255,255,0.08)">
+      <div>
+        <div style="font-size:18px;font-weight:900;color:#f5c842">Growth Packs</div>
+        <div style="font-size:12px;color:rgba(255,255,255,0.4)">All-in-One Growth Packages</div>
+      </div>
+      <button onclick="gpClose()" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:7px 14px;color:#e8e8f2;font-size:12px;cursor:
