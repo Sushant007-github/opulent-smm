@@ -2560,6 +2560,21 @@ const UserNewOrder = ({ orders, addOrderSync, balance, setBalance, setPage }) =>
     else { setDisc(0); setCouponMsg(coupon?"❌ Invalid code. Check and try again.":""); }
   };
 
+  const bundlePlace=function(){
+    if(!link.trim()||link.indexOf("http")!==0){alert("Enter valid profile link");return;}
+    if(!reelLink.trim()||reelLink.indexOf("http")!==0){alert("Enter valid reel link");return;}
+    if(bundlePrice>balance){alert("Insufficient balance. Add funds first.");return;}
+    setLoading(true);
+    setTimeout(function(){
+      var bname=bundle==="starter"?"Starter Pack":bundle==="influencer"?"Influencer Pack":"Viral Pack";
+      var ord={id:uid(),service:"Bundle: "+bname,platform:"Instagram",icon:"GP",qty:1,price:bundlePrice,status:"Pending",date:today(),link:link,reelLink:reelLink,notes:bundleNotes,isBundle:true,bundlePack:bundle,type:"bundle",userEmail:sessionStorage.getItem("nx_email")||"anon",userName:sessionStorage.getItem("nx_name")||"Visitor"};
+      addOrderSync(ord);
+      setBalance(function(b){return parseFloat((b-bundlePrice).toFixed(2));});
+      try{if(typeof firebase!=="undefined"&&firebase.apps&&firebase.apps.length){firebase.firestore().collection("bundleOrders").add({type:"bundle",pack:bundle,packName:bname,profileLink:link,reelLink:reelLink,notes:bundleNotes,price:bundlePrice,status:"pending",userEmail:sessionStorage.getItem("nx_email")||"anon",userName:sessionStorage.getItem("nx_name")||"Visitor",date:today(),ts:Date.now()}).catch(function(){});}}catch(ex){}
+      window.selectedPack=null;
+      setLoading(false);setStep(4);
+    },1200);
+  };
   const place=()=>{
     if(total>balance){ alert("Insufficient balance! Go to Add Funds."); return; }
     setLoading(true);
@@ -2608,20 +2623,7 @@ const UserNewOrder = ({ orders, addOrderSync, balance, setBalance, setPage }) =>
           <div style={{fontSize:11,color:"rgba(255,255,255,0.5)",marginBottom:3}}>- Do NOT change username during delivery</div>
           <div style={{fontSize:11,color:"rgba(255,255,255,0.5)"}}>- Delivery: 0-24 hours. No refunds after start.</div>
         </div>
-        <Btn onClick={function(){
-          if(!link.trim()||link.indexOf("http")!==0){alert("Enter valid profile link");return;}
-          if(!reelLink.trim()||reelLink.indexOf("http")!==0){alert("Enter valid reel link");return;}
-          if(bundlePrice>balance){alert("Insufficient balance. Add funds first.");return;}
-          setLoading(true);
-          setTimeout(function(){
-            var ord={id:uid(),service:"Bundle: "+(bundle==="starter"?"Starter Pack":bundle==="influencer"?"Influencer Pack":"Viral Pack"),platform:"Instagram",icon:"GP",qty:1,price:bundlePrice,status:"Pending",date:today(),link:link,reelLink:reelLink,notes:bundleNotes,isBundle:true,bundlePack:bundle,type:"bundle",userEmail:sessionStorage.getItem("nx_email")||"anon",userName:sessionStorage.getItem("nx_name")||"Visitor"};
-            addOrderSync(ord);
-            setBalance(function(b){return parseFloat((b-bundlePrice).toFixed(2));});
-            try{if(typeof firebase!=="undefined"&&firebase.apps&&firebase.apps.length){firebase.firestore().collection("bundleOrders").add({type:"bundle",pack:bundle,packName:ord.service,profileLink:link,reelLink:reelLink,notes:bundleNotes,price:bundlePrice,status:"pending",userEmail:sessionStorage.getItem("nx_email")||"anon",userName:sessionStorage.getItem("nx_name")||"Visitor",date:today(),ts:Date.now()}).catch(function(){});}}catch(ex){}
-            window.selectedPack=null;
-            setLoading(false);setStep(4);
-          },1200);
-        }} loading={loading} style={{width:"100%",justifyContent:"center"}}>Place Bundle Order - Rs.{bundlePrice}</Btn>
+        <Btn onClick={bundlePlace} loading={loading} style={{width:"100%",justifyContent:"center"}}>Place Bundle Order - Rs.{bundlePrice}</Btn>
         <Btn v="ghost" onClick={function(){window.selectedPack=null;setPage("overview");}} style={{width:"100%",justifyContent:"center",marginTop:8}}>Cancel - Back to Dashboard</Btn>
       </div>}
 
@@ -6966,4 +6968,4 @@ function App() {
   const goScreen=(s, replace=false)=>{
     const state={screen:s};
     if(replace) window.history.replaceState(state,"",window.location.pathname);
-    else window.history.pushState(state
+    else window.history.pushState(state,"",window.location.pathname);
