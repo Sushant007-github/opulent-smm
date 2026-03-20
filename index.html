@@ -2792,14 +2792,39 @@ const UserOrders = ({ orders, setOrders, userEmail="" }) => {
   const pctMap={"Pending":5,"Processing":60,"Completed":100,"Cancelled":0,"Refunded":0};
   const colMap={"Pending":"#f59e0b","Processing":"#3b82f6","Completed":"#10b981","Cancelled":"#ef4444","Refunded":"#a855f7"};
 
-  const doRefill=async(o)=>{
+  const doRefill=function(o){
+    // 15-day check
+    var orderDate = o.date ? new Date(o.date) : null;
+    if(orderDate){
+      var daysDiff = Math.floor((Date.now() - orderDate.getTime()) / (1000*60*60*24));
+      if(daysDiff < 15){
+        var daysLeft = 15 - daysDiff;
+        Toast.info("Refill available after "+daysLeft+" more day"+(daysLeft===1?"":"s")+" (15 days from order date)");
+        return;
+      }
+    }
     var reason=prompt("Refill reason? (e.g. followers dropped)");
     if(!reason||!reason.trim()){return;}
-    try{
-      const fs=await getFS(); if(!fs){Toast.error("Connection error");return;}
-      await fs.collection("refillRequests").add({orderId:o.id,service:o.service||"",userEmail:userEmail||"",qty:o.qty||0,date:today(),ts:Date.now(),status:"pending",reason:reason.trim()});
-      Toast.success("Refill submitted! Admin will process within 24hrs.");
-    }catch(e){Toast.error("Failed to submit refill");}
+    getFS().then(function(fs){
+      if(!fs){Toast.error("Connection error");return;}
+      fs.collection("refillRequests").add({
+        orderId:o.id||"",
+        service:o.service||"",
+        userEmail:userEmail||"",
+        qty:o.qty||0,
+        date:today(),
+        ts:Date.now(),
+        status:"pending",
+        reason:reason.trim()
+      }).then(function(){
+        Toast.success("Refill submitted! Admin will process within 24hrs.");
+      }).catch(function(err){
+        console.error("Refill error:",err);
+        Toast.error("Failed: "+err.message);
+      });
+    }).catch(function(){
+      Toast.error("Connection error. Try again.");
+    });
   };
 
   return (
@@ -2894,7 +2919,10 @@ const UserOrders = ({ orders, setOrders, userEmail="" }) => {
               <div style={{display:"flex",gap:7}}>
                 {o.status==="Pending"&&<button onClick={()=>cancel(o.id)} style={{background:"rgba(239,68,68,.12)",border:"1px solid rgba(239,68,68,.3)",borderRadius:7,padding:"5px 11px",color:"#f87171",fontSize:11,fontWeight:700,cursor:"pointer"}}>✕ Cancel</button>}
                 {o.status==="Completed"&&<button onClick={()=>setPage("neworder")} style={{background:"rgba(16,185,129,.08)",border:"1px solid rgba(16,185,129,.25)",borderRadius:7,padding:"5px 11px",color:"#34d399",fontSize:11,fontWeight:700,cursor:"pointer"}}>🔁 Reorder</button>}
-                {o.status==="Completed"&&<button onClick={()=>doRefill(o)} style={{background:"rgba(96,165,250,.08)",border:"1px solid rgba(96,165,250,.25)",borderRadius:7,padding:"5px 11px",color:"#60a5fa",fontSize:11,fontWeight:700,cursor:"pointer"}}>Refill</button>}
+                {o.status==="Completed"&&<div>
+                  <button onClick={()=>doRefill(o)} style={{background:"rgba(96,165,250,.08)",border:"1px solid rgba(96,165,250,.25)",borderRadius:7,padding:"5px 11px",color:"#60a5fa",fontSize:11,fontWeight:700,cursor:"pointer"}}>Refill</button>
+                  <div style={{fontSize:9,color:"rgba(255,255,255,0.35)",marginTop:3,textAlign:"center"}}>Available after 15 days</div>
+                </div>}
                 <button onClick={()=>window.open(`https://wa.me/${WHATSAPP_NUM}?text=Hi, I need help with order ${o.id} - ${o.service}`,"_blank")} style={{background:"rgba(124,58,237,.08)",border:"1px solid rgba(124,58,237,.25)",borderRadius:7,padding:"5px 11px",color:"#c4b5fd",fontSize:11,fontWeight:700,cursor:"pointer"}}>💬 Help</button>
               </div>
             </div>
