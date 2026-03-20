@@ -4125,7 +4125,7 @@ const UserInfluencer = ({ userEmail="", userName="" }) => {
 
   // Referral code for this user
   const refCode=React.useMemo(()=>`OPULENT-${((userName||"USER").slice(0,4)).toUpperCase()}${(userEmail.charCodeAt(0)*37+userEmail.length*13+1000)%9000+1000}`,[userEmail,userName]);
-  const refURL=`${window.location.origin}?ref=${refCode.toLowerCase()}`;
+  const refURL='https://opulentsmm.in?ref='+refCode.toLowerCase();
 
   const handleProofImg=(e)=>{
     const file=e.target.files[0]; if(!file) return;
@@ -4223,7 +4223,7 @@ const UserInfluencer = ({ userEmail="", userName="" }) => {
               style={{flex:1,minWidth:180,background:"rgba(255,255,255,.04)",border:"1px solid rgba(212,160,23,.3)",
                 borderRadius:9,padding:"9px 12px",color:"#c4b5fd",fontSize:11,fontFamily:"monospace",
                 overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}/>
-            <button onClick={()=>{ navigator.clipboard&&navigator.clipboard.writeText(refURL); Toast.success("Referral URL copied!"); }}
+            <button onClick={function(){ navigator.clipboard&&navigator.clipboard.writeText(refURL); Toast.success("Referral URL copied!"); }}
               style={{padding:"9px 16px",background:"rgba(212,160,23,.15)",border:"1px solid rgba(212,160,23,.3)",
                 borderRadius:9,color:"#f5c842",fontSize:12,fontWeight:700,cursor:"pointer",whiteSpace:"nowrap"}}>
               📋 Copy
@@ -4589,7 +4589,7 @@ const UserProfile = ({ userName, userEmail, balance, orders, onLogout }) => {
               <input readOnly value={refCode} style={{flex:1,background:"rgba(255,255,255,.04)",
                 border:"1px solid rgba(212,160,23,.3)",borderRadius:10,padding:"11px 14px",
                 color:C.goldL,fontWeight:800,fontSize:14,fontFamily:"monospace"}}/>
-              <Btn v="gold" size="sm" onClick={()=>{ navigator.clipboard?.writeText(refCode); Toast.success("Code copied!"); }}>Copy Code</Btn>
+              <Btn v="gold" size="sm" onClick={function(){ navigator.clipboard&&navigator.clipboard.writeText(refCode); Toast.success("Code copied!"); }}>Copy Code</Btn>
             </div>
             <label style={{display:"block",fontSize:11,fontWeight:700,color:C.muted,letterSpacing:".07em",marginBottom:7,textTransform:"uppercase"}}>Your Shareable Referral URL</label>
             <div style={{display:"flex",gap:10,marginBottom:20}}>
@@ -4597,7 +4597,7 @@ const UserProfile = ({ userName, userEmail, balance, orders, onLogout }) => {
                 style={{flex:1,background:"rgba(255,255,255,.04)",border:"1px solid rgba(212,160,23,.3)",
                   borderRadius:10,padding:"11px 14px",color:"#c4b5fd",fontWeight:600,fontSize:12,fontFamily:"monospace",
                   overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}/>
-              <Btn v="gold" size="sm" onClick={()=>{ navigator.clipboard?.writeText(`https://opulentsmm.in?ref=${refCode.toLowerCase()}`); Toast.success("URL copied!"); }}>Copy URL</Btn>
+              <Btn v="gold" size="sm" onClick={()=>{ navigator.clipboard&&navigator.clipboard.writeText('https://opulentsmm.in?ref='+refCode.toLowerCase()); Toast.success("URL copied!"); }}>Copy URL</Btn>
             </div>
             <div style={{background:"rgba(212,160,23,.06)",border:"1px solid rgba(212,160,23,.15)",borderRadius:12,padding:"14px 16px",marginBottom:16}}>
               <div style={{fontSize:11,color:C.goldL,fontWeight:700,marginBottom:6}}>💡 How it works</div>
@@ -6264,8 +6264,42 @@ const AdminPayments = () => {
         }
       }catch(e){console.error("totalDeposit update failed:",e);}
 
+      // Pay referral commission (5%) to referrer on deposit approval
+      try{
+        const uDataSnap = await fs.collection("users").doc(key).get();
+        const referredBy = uDataSnap.exists ? (uDataSnap.data().referredBy || "") : "";
+        if(referredBy && referredBy.trim().length > 0){
+          // Find referral record
+          const refSnap = await fs.collection("referrals")
+            .where("referralCode","==",referredBy.toLowerCase().trim())
+            .where("newUserEmail","==",dep.email.toLowerCase().trim()).get();
+          if(!refSnap.empty){
+            const refDoc = refSnap.docs[0];
+            const alreadyRewarded = refDoc.data().rewarded || false;
+            if(!alreadyRewarded){
+              // Find referrer wallet using refCode to email mapping
+              const refUserSnap = await fs.collection("users")
+                .where("referralCode","==",referredBy.toLowerCase().trim()).get();
+              if(!refUserSnap.empty){
+                const refUserEmail = refUserSnap.docs[0].data().email || "";
+                if(refUserEmail){
+                  const refWalletKey = refUserEmail.toLowerCase().trim().replace(/[@.]/g,"_");
+                  const refWalletSnap = await fs.collection("wallets").doc(refWalletKey).get();
+                  const refCurrentBal = refWalletSnap.exists ? (refWalletSnap.data().balance||0) : 0;
+                  const commission = parseFloat((Number(dep.amount)*0.05).toFixed(2));
+                  const refNewBal = parseFloat((refCurrentBal+commission).toFixed(2));
+                  await fs.collection("wallets").doc(refWalletKey).set({balance:refNewBal,email:refUserEmail.toLowerCase().trim(),ts:Date.now()});
+                  await fs.collection("referrals").doc(refDoc.id).set({rewarded:true,commissionPaid:commission,rewardedAt:Date.now()},{merge:true});
+                  await DB.pushNotification(refUserEmail,"referral_reward","Referral Commission!","You earned Rs."+commission+" commission from your referral "+dep.userName+"!","wallet");
+                }
+              }
+            }
+          }
+        }
+      }catch(refErr){ console.error("Referral commission failed:",refErr); }
+
       // Push notification to customer
-      await DB.pushNotification(dep.email,"deposit_approved","💰 Deposit Approved!",`₹${dep.amount} added to your wallet${bonusAdded>0?` + ₹${bonusAdded} first deposit bonus!`:""}. New balance: ₹${confirmedBal}`,"wallet");
+      await DB.pushNotification(dep.email,"deposit_approved","?? Deposit Approved!","₹"+dep.amount+" added to your wallet"+(bonusAdded>0?" + ₹"+bonusAdded+" first deposit bonus!":"")+". New balance: ₹"+confirmedBal,"wallet");
 
       setDeps(d=>d.map(x=>x.id===dep.id?{...x,status:"approved"}:x));
       Toast.success(`✅ Approved ₹${dep.amount} for ${dep.userName}! Balance: ₹${confirmedBal}${bonusAdded>0?` (+₹${bonusAdded} bonus)`:""}`);
