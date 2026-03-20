@@ -4,7 +4,7 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>OpulentSMM - Best SMM Panel for Instagram, YouTube &amp; Social Media Growth</title>
-  <meta name="description" content="OpulentSMM - India's best SMM panel. Buy Instagram followers, YouTube views, TikTok likes &amp; more. Fast delivery, UPI payments, 24/7 support. Bundle packs from ₹299. Trusted by 10,000+ creators."/>
+  <meta name="description" content="Buy Instagram followers, likes, views and social media services at affordable prices. Fast delivery, secure UPI payments and 24/7 support. India's most trusted SMM panel."/>
   <meta name="keywords" content="SMM panel India, buy Instagram followers, cheap SMM panel, Instagram likes, YouTube views, TikTok followers, social media growth, buy followers India, OpulentSMM"/>
   <meta name="robots" content="index, follow"/>
   <meta name="theme-color" content="#7c3aed"/>
@@ -13,8 +13,8 @@
   <meta name="language" content="English"/>
   <link rel="canonical" href="https://opulentsmm.in"/>
   <!-- Open Graph -->
-  <meta property="og:title" content="OpulentSMM - Best SMM Panel India | Instagram, YouTube, TikTok Growth"/>
-  <meta property="og:description" content="India's best SMM panel. Instagram followers from ₹179, Reel Views from ₹21. Bundle packs from ₹299. Fast delivery, UPI payments, 30-day refill guarantee."/>
+  <meta property="og:title" content="OpulentSMM - Best SMM Panel for Instagram, YouTube &amp; Social Media Growth"/>
+  <meta property="og:description" content="Buy Instagram followers, likes, views and social media services at affordable prices. Fast delivery and secure payments. Trusted by 10,000+ users."/>
   <meta property="og:type" content="website"/>
   <meta property="og:url" content="https://opulentsmm.in"/>
   <meta property="og:site_name" content="OpulentSMM"/>
@@ -25,7 +25,7 @@
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image"/>
   <meta name="twitter:title" content="OpulentSMM - Best SMM Panel India | Buy Followers, Likes, Views"/>
-  <meta name="twitter:description" content="Best SMM panel India. Instagram followers ₹179, Reel Views ₹21. Bundle packs ₹299-₹999. UPI payments. Fast delivery."/>
+  <meta name="twitter:description" content="Buy Instagram followers, YouTube views &amp; more. Fast delivery. UPI payments. 24/7 support. Starting ₹0.09."/>
   <meta name="twitter:image" content="https://opulentsmm.in/og-image.png"/>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
@@ -178,7 +178,10 @@ const SERVICES = [
     quality:["High Quality","Non Drop"], speedTag:"Normal",
     tiers:[{qty:1000,price:149},{qty:5000,price:599},{qty:10000,price:1099}] },
 
-  { id:12, platform:"Telegram", icon:"✈️", name:"Telegram Post Views",
+  { id:12, platform:"Telegram", icon:"✈️", name:"Telegram Post Views – Instant", hidden:true,
+    desc:"Increase view count on Telegram posts.", speed:"0–30 min", min:500, max:500000, price:0.05, cat:"Views",
+    quality:["High Quality"], speedTag:"Instant" },
+  //SKIP",
     desc:"Increase view count on your Telegram posts and channels. Instant delivery.",
     speed:"0–30 min", min:500, max:500000, price:0.05, cat:"Views",
     quality:["High Quality"], speedTag:"Instant" },
@@ -222,11 +225,6 @@ const SERVICES = [
     quality:["High Quality"], speedTag:"Fast" },
 ];
 
-const BUNDLES = [
-  { id:"B1", name:"Starter Pack",    price:299, popular:false, items:["1K Followers","2K Likes","5K Reel Views"] },
-  { id:"B2", name:"Influencer Pack", price:499, popular:true,  items:["2K Followers","5K Likes","10K Reel Views"] },
-  { id:"B3", name:"Viral Pack",      price:999, popular:false, items:["5K Followers","10K Likes","50K Reel Views"] },
-];
 const PLATFORMS = ["All","Instagram","YouTube","Facebook","TikTok","Twitter"];
 
 // ─── Service Badge Config ─────────────────────────────────────
@@ -930,8 +928,6 @@ const MobileBar = ({ page, setPage, isAdmin, onLogout }) => {
   // User bottom tabs (5 fit perfectly)
   const uItems = [
     {id:"overview", i:"⊞", l:"Home"},
-    {id:"growthpacks", i:"🎁", l:"Packs"},
-    {id:"growthpacks", i:"GP", l:"Packs"},
     {id:"neworder", i:"✦", l:"Order"},
     {id:"orders",   i:"📦", l:"Orders"},
     {id:"wallet",   i:"◈", l:"Wallet"},
@@ -1236,7 +1232,7 @@ const Landing = ({ goLogin, goSignup }) => {
 
           {/* Subtext — minimal */}
           <p style={{fontSize:17,color:"#7070a0",maxWidth:460,margin:"0 auto 40px",lineHeight:1.7,fontWeight:400}}>
-            Real followers, likes &amp; views for Instagram, YouTube, TikTok and more. From <strong style={{color:C.goldL}}>₹21</strong>.
+            Real followers, likes &amp; views for Instagram, YouTube, TikTok and more. From <strong style={{color:C.goldL}}>₹0.09</strong>.
           </p>
 
           {/* CTAs */}
@@ -1266,7 +1262,7 @@ const Landing = ({ goLogin, goSignup }) => {
 
           {/* Platform pills */}
           <div style={{display:"flex",gap:8,justifyContent:"center",flexWrap:"wrap"}}>
-            {["📸 Instagram","▶️ YouTube","🎵 TikTok","🐦 Twitter","💬 WhatsApp","👍 Facebook"].map(p=>(
+            {["📸 Instagram","▶️ YouTube","🎵 TikTok","🐦 Twitter","✈️ Telegram","👍 Facebook"].map(p=>(
               <span key={p} style={{background:"rgba(124,58,237,.08)",border:"1px solid rgba(124,58,237,.2)",
                 borderRadius:50,padding:"5px 14px",fontSize:11,fontWeight:600,color:"#6060a0"}}>{p}</span>
             ))}
@@ -2127,8 +2123,6 @@ const UserDash = ({ userName, userEmail, onLogout }) => {
 
   const NAV=[
     {id:"overview",   label:"Overview",      icon:"⊞"},
-    {id:"growthpacks",label:"Growth Packs",  icon:"🎁"},
-    {id:"growthpacks",label:"Growth Packs",  icon:"GP"},
     {id:"neworder",   label:"New Order",     icon:"✦"},
     {id:"orders",     label:"My Orders",     icon:"📦"},
     {id:"wallet",     label:"Wallet",        icon:"◈"},
@@ -2142,8 +2136,7 @@ const UserDash = ({ userName, userEmail, onLogout }) => {
   const renderPage=()=>{
     switch(page){
       case "overview":   return <UserOverview orders={orders} balance={balance} setPage={goPage} userName={userName} announcements={announcements} userEmail={userEmail}/>;
-      case "growthpacks": return <GrowthPacks balance={balance} addOrderSync={addOrderSync} setBalance={setBalanceSync} setPage={goPage}/>;
-      case "growthpacks": return <GrowthPacks balance={balance} addOrderSync={addOrderSync} setBalance={setBalanceSync} setPage={goPage}/>;
+      case "growthpacks": { if(typeof window.openGrowthPacks==="function") window.openGrowthPacks(); return <UserOverview orders={orders} balance={balance} setPage={goPage} userName={userName} announcements={announcements} userEmail={userEmail}/>; }
       case "neworder":   return <UserNewOrder orders={orders} addOrderSync={addOrderSync} balance={balance} setBalance={setBalanceSync} setPage={goPage}/>;
       case "orders":     return <UserOrders orders={orders} setOrders={setOrders} userEmail={userEmail}/>;
       case "wallet":     return <UserWallet balance={balance} txns={txns} userEmail={userEmail}/>;
@@ -2534,21 +2527,14 @@ const UserNewOrder = ({ orders, addOrderSync, balance, setBalance, setPage }) =>
     else { setDisc(0); setCouponMsg(coupon?"❌ Invalid code. Check and try again.":""); }
   };
 
-  const isBundl=sel&&sel.isBundl;
   const place=()=>{
-    const fp=isBundl?sel.price:total;
-    if(fp>balance){ alert("Insufficient balance! Go to Add Funds."); return; }
+    if(total>balance){ alert("Insufficient balance! Go to Add Funds."); return; }
     setLoading(true);
     setTimeout(()=>{
-      if(isBundl){
-        addOrderSync({ id:uid(), service:"Bundle: "+sel.name, platform:"Instagram", icon:"🎁",
-          qty:1, price:sel.price, status:"Pending", date:today(), link, isBundle:true, bundleItems:sel.items });
-        setBalance(function(b){ return parseFloat((b-sel.price).toFixed(2)); });
-      } else {
-        addOrderSync({ id:uid(), service:sel.name, platform:sel.platform, icon:sel.icon,
-          qty, price:parseFloat(total.toFixed(2)), status:"Pending", date:today(), link });
-        setBalance(function(b){ return parseFloat((b-total).toFixed(2)); });
-      }
+      const newOrd={ id:uid(), service:sel.name, platform:sel.platform, icon:sel.icon,
+        qty, price:parseFloat(total.toFixed(2)), status:"Pending", date:today(), link };
+      addOrderSync(newOrd);
+      setBalance(b=>parseFloat((b-total).toFixed(2)));
       setLoading(false); setStep(4);
     },1400);
   };
@@ -2591,25 +2577,6 @@ const UserNewOrder = ({ orders, addOrderSync, balance, setBalance, setPage }) =>
 
       {/* STEP 1 */}
       {step===1&&<>
-        {/* ── Bundle Packs ── */}
-        <div style={{marginBottom:22,padding:16,background:"rgba(212,160,23,0.05)",border:"1px solid rgba(212,160,23,0.25)",borderRadius:14}}>
-          <div style={{fontWeight:800,color:C.goldL,fontSize:14,marginBottom:4}}>🎁 Bundle Packs</div>
-          <div style={{fontSize:12,color:C.muted,marginBottom:12}}>Bundles give better results than single services</div>
-          <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(150px,1fr))",gap:10}}>
-            {BUNDLES.map(function(b){
-              return (
-                <div key={b.id} onClick={function(){ setSel({id:b.id,name:b.name,price:b.price,icon:"🎁",platform:"Instagram",isBundl:true,items:b.items,speed:"1-24 hrs",cat:"Bundle"}); setStep(3); }} style={{padding:12,borderRadius:12,cursor:"pointer",position:"relative",background:b.popular?"rgba(212,160,23,0.12)":"rgba(255,255,255,0.03)",border:b.popular?"2px solid rgba(212,160,23,0.5)":"1px solid rgba(255,255,255,0.08)"}}>
-                  {b.popular&&<div style={{fontSize:9,fontWeight:900,color:"#000",background:"linear-gradient(135deg,#d4a017,#f5c842)",borderRadius:6,padding:"2px 8px",marginBottom:6,display:"inline-block"}}>MOST POPULAR</div>}
-                  <div style={{fontWeight:800,fontSize:13,color:b.popular?C.goldL:"#e8e8f2",marginBottom:4}}>{b.name}</div>
-                  <div style={{fontSize:20,fontWeight:900,color:b.popular?"#f5c842":"#c4b5fd",marginBottom:6}}>&#x20B9;{b.price}</div>
-                  {b.items.map(function(it,j){ return <div key={j} style={{fontSize:11,color:C.muted,marginBottom:1}}>+ {it}</div>; })}
-                  {b.popular&&<div style={{marginTop:6,fontSize:10,color:"rgba(212,160,23,0.8)",fontWeight:700}}>Recommended for best growth</div>}
-                </div>
-              );
-            })}
-          </div>
-        </div>
-
         <div style={{display:"flex",gap:8,flexWrap:"wrap",marginBottom:20}}>
           {PLATFORMS.map(p=>(
             <button key={p} onClick={()=>setPf(p)} style={{background:pf===p?C.gP:"rgba(255,255,255,.04)",
@@ -6911,140 +6878,162 @@ const AdminAnnounce = ({ announcements, setAnnouncements }) => {
 // ═══════════════════════════════════════════════════════════════
 //  ROOT
 // ═══════════════════════════════════════════════════════════════
-
-
-
-// Growth Packs Component - pure React.createElement, no JSX
-var GrowthPacks = function(props) {
-  var balance = props.balance;
-  var addOrderSync = props.addOrderSync;
-  var setBalance = props.setBalance;
-  var setPage = props.setPage;
-
-  var selState = React.useState(null);
-  var sel = selState[0]; var setSel = selState[1];
-  var profileState = React.useState("");
-  var profileLink = profileState[0]; var setProfileLink = profileState[1];
-  var reelState = React.useState("");
-  var reelLink = reelState[0]; var setReelLink = reelState[1];
-  var notesState = React.useState("");
-  var notes = notesState[0]; var setNotes = notesState[1];
-  var agreedState = React.useState(false);
-  var agreed = agreedState[0]; var setAgreed = agreedState[1];
-  var profileErrState = React.useState("");
-  var profileErr = profileErrState[0]; var setProfileErr = profileErrState[1];
-  var reelErrState = React.useState("");
-  var reelErr = reelErrState[0]; var setReelErr = reelErrState[1];
-  var loadingState = React.useState(false);
-  var loading = loadingState[0]; var setLoading = loadingState[1];
-  var doneState = React.useState(false);
-  var done = doneState[0]; var setDone = doneState[1];
-
-  var h = React.createElement;
-
-  var PACKS = [
-    { id:"starter",    name:"Starter Pack",    price:299, emoji:"[PACK1]", popular:false,
-      tag:"Perfect to start your growth",
-      items:["1,000 Followers","2,000 Likes","5,000 Views"] },
-    { id:"influencer", name:"Influencer Pack",  price:499, emoji:"[PACK2]", popular:true,
-      tag:"Best for fast growth",
-      items:["2,000 Followers","5,000 Likes","10,000 Views"] },
-    { id:"viral",      name:"Viral Pack",       price:999, emoji:"[PACK3]", popular:false,
-      tag:"For influencers, brands & agencies",
-      items:["5,000 Followers","10,000 Likes","50,000 Views"] },
-  ];
-
-  function validateURL(url) {
-    if (!url || !url.trim()) return "Please enter link";
-    if (url.indexOf("http") !== 0) return "Enter valid URL starting with http";
-    return "";
-  }
-
-  function handleSelect(pack) {
-    setSel(pack);
-    setProfileLink(""); setReelLink(""); setNotes("");
-    setAgreed(false); setProfileErr(""); setReelErr(""); setDone(false);
-  }
-
-  function handlePlace() {
-    var pe = validateURL(profileLink);
-    var re2 = validateURL(reelLink);
-    setProfileErr(pe); setReelErr(re2);
-    if (pe || re2) return;
-    if (!agreed) { alert("Please agree to instructions first"); return; }
-    if (sel.price > balance) { alert("Insufficient balance. Go to Add Funds."); return; }
-    setLoading(true);
-    setTimeout(function() {
-      var today2 = new Date().toISOString().split("T")[0];
-      var ord = {
-        id: "ORD-" + Date.now(),
-        service: "Bundle: " + sel.name,
-        platform: "Instagram",
-        icon: "gift",
-        qty: 1,
-        price: sel.price,
-        status: "Pending",
-        date: today2,
-        link: profileLink,
-        reelLink: reelLink,
-        notes: notes,
-        isBundle: true,
-        bundlePack: sel.id,
-        bundleItems: sel.items,
-        type: "bundle"
-      };
-      addOrderSync(ord);
-      setBalance(function(b) { return parseFloat((b - sel.price).toFixed(2)); });
-      try {
-        if (typeof firebase !== "undefined" && firebase.apps && firebase.apps.length) {
-          firebase.firestore().collection("bundleOrders").add({
-            type: "bundle", pack: sel.id, packName: sel.name,
-            profileLink: profileLink, reelLink: reelLink, notes: notes,
-            price: sel.price, status: "pending",
-            userName: sessionStorage.getItem("nx_name") || "Visitor",
-            userEmail: sessionStorage.getItem("nx_email") || "anonymous",
-            date: today2, ts: Date.now()
-          }).catch(function() {});
-        }
-      } catch(e) {}
-      setLoading(false); setDone(true);
-    }, 1200);
-  }
-
-  var cardStyle = {
-    background: "rgba(255,255,255,0.03)",
-    border: "1px solid rgba(255,255,255,0.08)",
-    borderRadius: 14,
-    padding: 20,
-    marginBottom: 14
+function App() {
+  // ── SPA routing: detect hidden admin route via URL hash ──────
+  const getInitialScreen = () => {
+    const hash = window.location.hash;
+    if(hash === "#secure-opulent-dashboard-9821") return "adminlogin";
+    return sessionStorage.getItem("nx_screen") || "landing";
   };
 
-  var inputStyle = {
-    width: "100%",
-    background: "rgba(255,255,255,0.06)",
-    border: "1px solid rgba(255,255,255,0.12)",
-    borderRadius: 9,
-    padding: "10px 12px",
-    color: "#f0f0f0",
-    fontSize: 13,
-    fontFamily: "Arial,sans-serif",
-    outline: "none",
-    boxSizing: "border-box",
-    marginBottom: 12,
-    display: "block"
+  const savedScreen = getInitialScreen();
+  const savedName   = sessionStorage.getItem("nx_name")||"";
+  const savedEmail  = sessionStorage.getItem("nx_email")||"";
+
+  const [screen,setScreen]=useState(savedScreen);
+  const [userName,setUserName]=useState(savedName);
+  const [userEmail,setUserEmail]=useState(savedEmail);
+
+  // ── History API: push state on screen change ──────────────
+  const goScreen=(s, replace=false)=>{
+    const state={screen:s};
+    if(replace) window.history.replaceState(state,"",window.location.pathname);
+    else window.history.pushState(state,"",window.location.pathname);
+    setScreen(s);
   };
 
-  var labelStyle = {
-    display: "block",
-    fontSize: 11,
-    fontWeight: 700,
-    color: "rgba(255,255,255,0.5)",
-    marginBottom: 6,
-    letterSpacing: "0.05em",
-    textTransform: "uppercase"
+  // ── Listen to browser back/forward button ─────────────────
+  useEffect(()=>{
+    // Set initial history state so back button has something to go to
+    window.history.replaceState({screen:savedScreen},"",window.location.pathname);
+
+    const handlePop=(e)=>{
+      const s = e.state?.screen||"landing";
+      // If going back to landing while logged in → just go to overview, not logout
+      if(s==="landing" && sessionStorage.getItem("nx_screen")==="user"){
+        setScreen("user");
+        // Push a new state so they can't keep going back
+        window.history.pushState({screen:"user"},"",window.location.pathname);
+        return;
+      }
+      if(s==="landing" && sessionStorage.getItem("nx_screen")==="admin"){
+        setScreen("admin");
+        window.history.pushState({screen:"admin"},"",window.location.pathname);
+        return;
+      }
+      setScreen(s);
+    };
+    const handleHash = () => {
+      if(window.location.hash === "#secure-opulent-dashboard-9821") setScreen("adminlogin");
+    };
+    window.addEventListener("popstate", handlePop);
+    window.addEventListener("hashchange", handleHash);
+    return()=>{ window.removeEventListener("popstate", handlePop); window.removeEventListener("hashchange", handleHash); };
+  },[]);
+
+  const loginUser=(name,email="")=>{
+    const normEmail = (email||"").toLowerCase().trim();
+    setUserName(name);
+    setUserEmail(normEmail);
+    sessionStorage.setItem("nx_screen","user");
+    sessionStorage.setItem("nx_name",name);
+    sessionStorage.setItem("nx_email",normEmail);
+    DB.addUser({
+      id:"USR-"+Date.now(),
+      name: name||(normEmail.split("@")[0]),
+      email: normEmail,
+      balance:0, orders:0,
+      joined:today(), status:"Active",
+    });
+    goScreen("user");
+  };
+  const loginAdmin=()=>{ sessionStorage.setItem("nx_screen","admin"); goScreen("admin"); };
+  const logout=()=>{
+    sessionStorage.clear();
+    goScreen("landing", true);
+    setUserName(""); setUserEmail("");
   };
 
-  var btnStyle = {
-    width: "100%",
-    padding: "14px 20px",
- 
+  return (
+    <>
+      <GS/>
+      <ToastContainer/>
+      {screen==="landing"    && <Landing goLogin={()=>goScreen("login")} goSignup={()=>goScreen("signup")}/>}
+      {screen==="signup"     && <Signup goLogin={()=>goScreen("login")} onSuccess={(n,e)=>loginUser(n,e)}/>}
+      {screen==="login"      && <Login goSignup={()=>goScreen("signup")} onUserLogin={(n,e)=>loginUser(n,e)} onAdminLogin={()=>goScreen("adminlogin")}/>}
+      {screen==="adminlogin" && <AdminLogin onAdminLogin={loginAdmin} goBack={()=>goScreen("landing")}/>}
+      {screen==="user"       && <UserDash userName={userName||"User"} userEmail={userEmail} onLogout={logout}/>}
+      {screen==="admin"      && <AdminDash onLogout={logout}/>}
+    </>
+  );
+}
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(React.createElement(App));
+  </script>
+</body>
+</html>
+
+<!-- GROWTH PACKS - Separate React root, outside Babel, cannot crash main app -->
+<div id="gp-root" style="display:none;position:fixed;inset:0;background:#06060a;z-index:800;overflow-y:auto"></div>
+
+<script>
+(function(){
+  // Wait for React to be ready
+  function mountGP(){
+    if(!window.React||!window.ReactDOM||!ReactDOM.createRoot){
+      setTimeout(mountGP,200); return;
+    }
+
+    var e = React.createElement;
+    var PACKS = [
+      {id:"starter",   name:"Starter Pack",   price:299, popular:false, tag:"Perfect to start your growth",    items:["1,000 Followers","2,000 Likes","5,000 Views"]},
+      {id:"influencer",name:"Influencer Pack", price:499, popular:true,  tag:"Best for fast growth",            items:["2,000 Followers","5,000 Likes","10,000 Views"]},
+      {id:"viral",     name:"Viral Pack",      price:999, popular:false, tag:"For influencers, brands & agencies", items:["5,000 Followers","10,000 Likes","50,000 Views"]}
+    ];
+
+    function App(){
+      var s0=React.useState(null);    var sel=s0[0];        var setSel=s0[1];
+      var s1=React.useState("");      var profLink=s1[0];   var setProfLink=s1[1];
+      var s2=React.useState("");      var reelLink=s2[0];   var setReelLink=s2[1];
+      var s3=React.useState("");      var notes=s3[0];      var setNotes=s3[1];
+      var s4=React.useState(false);   var agreed=s4[0];     var setAgreed=s4[1];
+      var s5=React.useState("");      var profErr=s5[0];    var setProfErr=s5[1];
+      var s6=React.useState("");      var reelErr=s6[0];    var setReelErr=s6[1];
+      var s7=React.useState(false);   var loading=s7[0];    var setLoading=s7[1];
+      var s8=React.useState(false);   var done=s8[0];       var setDone=s8[1];
+
+      function close(){ document.getElementById("gp-root").style.display="none"; }
+
+      function getBalance(){ return parseFloat(sessionStorage.getItem("nx_bal")||"0"); }
+
+      function placeOrder(){
+        if(!profLink.trim()){ setProfErr("Please enter profile link"); return; }
+        if(profLink.indexOf("http")!==0){ setProfErr("Enter valid URL"); return; }
+        if(!reelLink.trim()){ setReelErr("Please enter reel/post link"); return; }
+        if(reelLink.indexOf("http")!==0){ setReelErr("Enter valid URL"); return; }
+        if(!agreed){ alert("Please agree to instructions"); return; }
+        var bal=getBalance();
+        if(sel.price>bal){ alert("Insufficient balance. Please add funds."); return; }
+        setLoading(true);
+        setTimeout(function(){
+          // Deduct balance
+          var newBal=parseFloat((bal-sel.price).toFixed(2));
+          sessionStorage.setItem("nx_bal",newBal);
+          // Save to Firebase
+          try{
+            if(typeof firebase!=="undefined"&&firebase.apps&&firebase.apps.length){
+              var today=new Date().toISOString().split("T")[0];
+              var ordId="ORD-"+Date.now();
+              firebase.firestore().collection("orders").add({
+                id:ordId, service:"Bundle: "+sel.name, platform:"Instagram",
+                icon:"gift", qty:1, price:sel.price, status:"Pending",
+                date:today, link:profLink, reelLink:reelLink, notes:notes,
+                isBundle:true, bundlePack:sel.id, bundleItems:sel.items,
+                userEmail:sessionStorage.getItem("nx_email")||"anonymous",
+                userName:sessionStorage.getItem("nx_name")||"Visitor",
+                type:"bundle"
+              }).catch(function(){});
+              firebase.firestore().collection("bundleOrders").add({
+                type:"bundle", pack:sel.id, packName:sel.name,
+      
