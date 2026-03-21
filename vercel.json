@@ -1,8 +1,6 @@
 {
   "routes": [
-    { "src": "/react.min.js",     "dest": "/react.min.js"     },
-    { "src": "/react-dom.min.js", "dest": "/react-dom.min.js" },
-    { "src": "/logo.png",         "dest": "/logo.png"         },
-    { "src": "/(.*)",             "dest": "/index.html"       }
+    { "handle": "filesystem" },
+    { "src": "/(.*)", "dest": "/index.html" }
   ]
 }
