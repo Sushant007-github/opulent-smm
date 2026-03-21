@@ -3,64 +3,21 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>OpulentSMM - Best SMM Panel for Instagram, YouTube &amp; Social Media Growth</title>
-  <meta name="description" content="Buy Instagram followers, likes, views and social media services at affordable prices. Fast delivery, secure UPI payments and 24/7 support. India's most trusted SMM panel."/>
-  <meta name="keywords" content="SMM panel India, buy Instagram followers, cheap SMM panel, Instagram likes, YouTube views, TikTok followers, social media growth, buy followers India, OpulentSMM"/>
+  <title>Nexus SMM – Best Social Media Marketing Panel India</title>
+  <meta name="description" content="Buy Instagram followers, YouTube views, TikTok likes and social media growth services with Nexus SMM. Fast delivery, secure UPI payments, 24/7 support."/>
+  <meta name="keywords" content="SMM panel India, buy Instagram followers, YouTube views, TikTok likes, social media marketing, cheap SMM panel"/>
   <meta name="robots" content="index, follow"/>
-  <meta name="theme-color" content="#7c3aed"/>
-  <meta name="author" content="OpulentSMM"/>
-  <meta name="geo.region" content="IN"/>
-  <meta name="language" content="English"/>
-  <link rel="canonical" href="https://opulentsmm.in"/>
-  <!-- Open Graph -->
-  <meta property="og:title" content="OpulentSMM - Best SMM Panel for Instagram, YouTube &amp; Social Media Growth"/>
-  <meta property="og:description" content="Buy Instagram followers, likes, views and social media services at affordable prices. Fast delivery and secure payments. Trusted by 10,000+ users."/>
+  <meta property="og:title" content="Nexus SMM – Best Social Media Marketing Panel"/>
+  <meta property="og:description" content="Buy Instagram followers, YouTube views, TikTok likes and more. Fast delivery. Starting from ₹0.09."/>
   <meta property="og:type" content="website"/>
-  <meta property="og:url" content="https://opulentsmm.in"/>
-  <meta property="og:site_name" content="OpulentSMM"/>
-  <meta property="og:image" content="https://opulentsmm.in/og-image.png"/>
-  <meta property="og:image:width" content="1200"/>
-  <meta property="og:image:height" content="630"/>
-  <meta property="og:locale" content="en_IN"/>
-  <!-- Twitter Card -->
+  <meta property="og:url" content="https://nexus-smm.vercel.app"/>
   <meta name="twitter:card" content="summary_large_image"/>
-  <meta name="twitter:title" content="OpulentSMM - Best SMM Panel India | Buy Followers, Likes, Views"/>
-  <meta name="twitter:description" content="Buy Instagram followers, YouTube views &amp; more. Fast delivery. UPI payments. 24/7 support. Starting ₹0.09."/>
-  <meta name="twitter:image" content="https://opulentsmm.in/og-image.png"/>
+  <meta name="twitter:title" content="Nexus SMM – Best SMM Panel India"/>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800;900&family=DM+Sans:wght@400;500;600;700&display=swap"/>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800;900&family=DM+Sans:wght@400;500;600;700&display=swap" media="print" onload="this.media='all'"/>
-  <meta name="format-detection" content="telephone=yes"/>
-  <meta name="mobile-web-app-capable" content="yes"/>
-  <meta name="apple-mobile-web-app-capable" content="yes"/>
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
-  <meta name="apple-mobile-web-app-title" content="OpulentSMM"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <script type="application/ld+json">
-  {
-    "@context":"https://schema.org",
-    "@type":"Organization",
-    "name":"OpulentSMM",
-    "url":"https://opulentsmm.in",
-    "logo":"https://opulentsmm.in/logo.png",
-    "description":"India's best SMM panel. Buy Instagram followers, YouTube views, TikTok likes at lowest prices. Fast delivery, secure payments.",
-    "foundingDate":"2024",
-    "areaServed":"IN",
-    "contactPoint":[
-      {"@type":"ContactPoint","contactType":"customer support","availableLanguage":["English","Hindi"],"url":"https://wa.me/918767282776"},
-      {"@type":"ContactPoint","contactType":"technical support","email":"support@opulentsmm.in"}
-    ],
-    "sameAs":["https://opulentsmm.in"]
-  }
-  </script>
-  <script type="application/ld+json">
-  {
-    "@context":"https://schema.org",
-    "@type":"WebSite",
-    "name":"OpulentSMM",
-    "url":"https://opulentsmm.in",
-    "potentialAction":{"@type":"SearchAction","target":"https://opulentsmm.in/?q={search_term_string}","query-input":"required name=search_term_string"}
-  }
+  {"@context":"https://schema.org","@type":"Organization","name":"Nexus SMM","url":"https://nexus-smm.vercel.app","description":"India's best SMM panel for Instagram, YouTube, TikTok growth","contactPoint":{"@type":"ContactPoint","contactType":"customer support","availableLanguage":"English, Hindi"}}
   </script>
   <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
   <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
@@ -72,12 +29,16 @@
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 </head>
 <body>
+<div style="padding:15px; display:flex; align-items:center; gap:10px;">
+  <img src="./logo.png" style="height:50px;">
+  <h2 style="color:gold; margin:0;">Opulent SMM</h2>
+</div>
   <div id="root"></div>
   <script type="text/babel" data-presets="react">
 const { useState, useEffect, useRef, useCallback } = React;
 
 /* ═══════════════════════════════════════════════════════════════
-   OPULENTSMM PLATFORM — FINAL SECURE BUILD
+   NEXUS SMM PLATFORM — FINAL SECURE BUILD
    Admin password is stored ONLY in Firebase Auth — never in code.
    To change admin password: Firebase Console → Authentication → Users
 ═══════════════════════════════════════════════════════════════ */
@@ -87,26 +48,11 @@ const ADMIN_EMAIL = "admin@opluentedge.com";
 // NO password stored here — Firebase Auth handles it securely
 
 // ── CONTACT CONFIG — update these with your real details ──────
-const WHATSAPP_NUM   = "918767282776";   // Your WhatsApp number (with country code, no +)
+const WHATSAPP_NUM   = "918787282776";   // Your WhatsApp number (with country code, no +)
 const UPI_ID         = "sushantyetekar45-3@okicici";
-const UPI_NAME       = "OpulentSMM";
-const SUPPORT_EMAIL  = "support@opulentsmm.in";
-const BUSINESS_NAME  = "OpulentSMM";
-
-// ─── Referral / Influencer Tracking ──────────────────────────
-// Captures ?ref= param from URL and stores in localStorage
-const captureReferral = () => {
-  try {
-    const params = new URLSearchParams(window.location.search);
-    const ref = params.get("ref");
-    if(ref && ref.trim().length > 0 && ref.trim().length <= 32) {
-      localStorage.setItem("opulent_ref", ref.trim().toLowerCase().replace(/[^a-z0-9_-]/g,""));
-    }
-  } catch(e) {}
-};
-const getReferral = () => { try { return localStorage.getItem("opulent_ref")||""; } catch{ return ""; } };
-const clearReferral = () => { try { localStorage.removeItem("opulent_ref"); } catch{} };
-captureReferral(); // Run immediately on page load
+const UPI_NAME       = "Nexus SMM";
+const SUPPORT_EMAIL  = "support@nexus-smm.in"; // Your support email
+const BUSINESS_NAME  = "Nexus SMM";
 
 // Price per unit at base qty (1k). Tiered pricing shown in order form.
 // IG Followers: 1k=₹349, 5k=₹1339, 10k=₹2699, 20k=₹6999
@@ -114,139 +60,115 @@ captureReferral(); // Run immediately on page load
 // IG Likes:     1k=₹100, 5k=₹250,  10k=₹500,  20k=₹1800
 const SERVICES = [
   // ── INSTAGRAM ────────────────────────────────────────────────────
-  { id:1, platform:"Instagram", icon:"📸", name:"Instagram Followers – Stable",
+  { id:1, platform:"Instagram", icon:"📸", name:"Instagram Followers – Indian Stable",
     desc:"100% Indian stable followers. Gradual natural delivery. No-drop guarantee for 30 days. Safe for all account types.",
     speed:"0–12 hrs", min:1000, max:100000, cat:"Followers", badge:"🔥 Best Seller",
     quality:["Non Drop","Refill Available","High Quality"], speedTag:"Normal",
-    tiers:[{qty:1000,price:99},{qty:5000,price:449},{qty:10000,price:849}] },
+    tiers:[{qty:1000,price:149},{qty:5000,price:699},{qty:10000,price:1299},{qty:20000,price:2399}] },
 
-  { id:2, platform:"Instagram", icon:"📸", name:"Instagram Followers – Premium",
+  { id:2, platform:"Instagram", icon:"📸", name:"Instagram Followers – HQ Premium",
     desc:"Premium quality Indian followers with high retention. Best for personal brands and verified accounts.",
     speed:"0–6 hrs", min:500, max:50000, cat:"Followers", badge:"💎 Premium",
     quality:["High Quality","Non Drop","Refill Available"], speedTag:"Fast",
-    tiers:[{qty:500,price:79},{qty:1000,price:139},{qty:5000,price:649}] },
+    tiers:[{qty:500,price:99},{qty:1000,price:179},{qty:5000,price:849},{qty:10000,price:1599}] },
 
-  { id:3, platform:"Instagram", icon:"📸", name:"Instagram Likes – HQ",
+  { id:3, platform:"Instagram", icon:"📸", name:"Instagram Likes – Indian Stable",
     desc:"Real Indian likes. Instant start. Pushes post to Explore page for organic reach boost.",
     speed:"0–30 min", min:100, max:50000, cat:"Likes", badge:"⚡ Instant",
     quality:["High Quality","Non Drop"], speedTag:"Instant",
-    tiers:[{qty:1000,price:39},{qty:5000,price:149},{qty:10000,price:249}] },
+    tiers:[{qty:1000,price:29},{qty:5000,price:99},{qty:10000,price:179},{qty:50000,price:799}] },
 
-  { id:4, platform:"Instagram", icon:"📸", name:"Instagram Reel Views – HQ",
+  { id:4, platform:"Instagram", icon:"📸", name:"Instagram Reel Views – Indian",
     desc:"Indian reel views. Boosts your reel to Explore & For You pages. Best for viral growth strategy.",
     speed:"0–2 hrs", min:1000, max:500000, cat:"Views", badge:"📈 Trending",
     quality:["High Quality","Non Drop"], speedTag:"Fast",
-    tiers:[{qty:1000,price:15},{qty:5000,price:59},{qty:10000,price:99},{qty:50000,price:399}] },
+    tiers:[{qty:1000,price:12},{qty:5000,price:45},{qty:10000,price:79},{qty:50000,price:349},{qty:100000,price:599}] },
 
   { id:5, platform:"Instagram", icon:"📸", name:"Instagram Story Views",
     desc:"Boost story views from Indian accounts. Improves reach and profile visibility significantly.",
     speed:"0–1 hr", min:1000, max:200000, cat:"Views",
     quality:["High Quality"], speedTag:"Instant",
-    tiers:[{qty:1000,price:15},{qty:5000,price:59},{qty:10000,price:99},{qty:50000,price:399}] },
+    tiers:[{qty:1000,price:12},{qty:5000,price:45},{qty:10000,price:79},{qty:50000,price:349}] },
 
-  { id:6, platform:"Instagram", icon:"📸", name:"Instagram Comments – Random",
-    desc:"Random positive comments from real-looking Indian profiles. Great for boosting engagement.",
-    speed:"0–6 hrs", min:100, max:10000, cat:"Comments",
-    quality:["High Quality"], speedTag:"Normal",
-    tiers:[{qty:1000,price:119},{qty:5000,price:599},{qty:10000,price:1200}] },
+  { id:6, platform:"Instagram", icon:"📸", name:"Instagram Comments – Custom",
+    desc:"Positive custom comments from Indian-looking profiles. You provide the comment text.",
+    speed:"0–6 hrs", min:10, max:1000, price:5, cat:"Comments",
+    quality:["High Quality"], speedTag:"Normal" },
 
-  { id:7, platform:"Instagram", icon:"📸", name:"Instagram Saves",
+  { id:7, platform:"Instagram", icon:"📸", name:"Instagram Saves – Indian",
     desc:"Post saves from real Indian accounts. Saves are a top ranking signal on Instagram algorithm.",
-    speed:"0–3 hrs", min:1000, max:20000, cat:"Engagement",
-    quality:["High Quality"], speedTag:"Normal",
-    tiers:[{qty:1000,price:49},{qty:5000,price:249},{qty:10000,price:499}] },
+    speed:"0–3 hrs", min:500, max:20000, price:0.15, cat:"Engagement",
+    quality:["High Quality"], speedTag:"Normal" },
 
   // ── YOUTUBE ──────────────────────────────────────────────────────
-  { id:8, platform:"YouTube", icon:"▶️", name:"YouTube Views – Stable",
-    desc:"High-retention views with watch time boost. Helps reach monetization thresholds faster.",
-    speed:"1–24 hrs", min:1000, max:500000, cat:"Views", badge:"Top Rated",
+  { id:8, platform:"YouTube", icon:"▶️", name:"YouTube Views – Indian HQ",
+    desc:"High-retention Indian views with watch time boost. Helps reach monetization thresholds faster.",
+    speed:"1–24 hrs", min:1000, max:500000, cat:"Views", badge:"🏆 Top Rated",
     quality:["High Quality","Non Drop"], speedTag:"Normal",
-    tiers:[{qty:1000,price:149},{qty:5000,price:599},{qty:10000,price:999}] },
+    tiers:[{qty:1000,price:69},{qty:5000,price:299},{qty:10000,price:549}] },
 
-  { id:9, platform:"YouTube", icon:"▶️", name:"YouTube Subscribers – Stable",
-    desc:"Contact our support team to order YouTube subscribers. WhatsApp us for best pricing.",
-    speed:"1–48 hrs", min:100, max:50000, cat:"Followers", contactOnly:true,
-    quality:["High Quality","Refill Available"], speedTag:"Normal",
-    tiers:[{qty:1000,price:999}] },
+  { id:9, platform:"YouTube", icon:"▶️", name:"YouTube Subscribers – Indian",
+    desc:"Real Indian subscribers. Grows channel credibility and helps monetize faster.",
+    speed:"1–48 hrs", min:100, max:50000, price:3.50, cat:"Followers",
+    quality:["High Quality","Refill Available"], speedTag:"Normal" },
 
-  { id:10, platform:"YouTube", icon:"▶️", name:"YouTube Likes – Fast",
-    desc:"Boost your video likes. Increases trust and ranking in search results.",
-    speed:"1–12 hrs", min:100, max:50000, cat:"Likes",
-    quality:["High Quality"], speedTag:"Fast",
-    tiers:[{qty:1000,price:149},{qty:5000,price:749}] },
+  { id:10, platform:"YouTube", icon:"▶️", name:"YouTube Likes – Indian",
+    desc:"Boost your video with Indian likes. Increases trust and ranking in search results.",
+    speed:"1–12 hrs", min:100, max:50000, price:1.20, cat:"Likes",
+    quality:["High Quality"], speedTag:"Fast" },
 
   // ── TELEGRAM ─────────────────────────────────────────────────────
-  { id:11, platform:"Telegram", icon:"✈️", name:"Telegram Members – Targeted", hidden:true,
+  { id:11, platform:"Telegram", icon:"✈️", name:"Telegram Members – Indian",
     desc:"Real Indian members for your Telegram channel or group. Boosts credibility and trust.",
     speed:"0–12 hrs", min:100, max:200000, cat:"Members", badge:"🇮🇳 Indian",
     quality:["High Quality","Non Drop"], speedTag:"Normal",
     tiers:[{qty:1000,price:149},{qty:5000,price:599},{qty:10000,price:1099}] },
 
-  { id:12, platform:"Telegram", icon:"✈️", name:"Telegram Post Views – Instant", hidden:true,
+  { id:12, platform:"Telegram", icon:"✈️", name:"Telegram Post Views",
     desc:"Increase view count on your Telegram posts and channels. Instant delivery.",
     speed:"0–30 min", min:500, max:500000, price:0.05, cat:"Views",
     quality:["High Quality"], speedTag:"Instant" },
 
   // ── TIKTOK ───────────────────────────────────────────────────────
-  { id:13, platform:"TikTok", icon:"🎵", name:"TikTok Views – Worldwide", hidden:true,
+  { id:13, platform:"TikTok", icon:"🎵", name:"TikTok Views – Worldwide",
     desc:"Push content to For You pages worldwide. Fast delivery, no password needed.",
     speed:"0–6 hrs", min:1000, max:1000000, price:0.09, cat:"Views",
     quality:["High Quality"], speedTag:"Fast" },
 
-  { id:14, platform:"TikTok", icon:"🎵", name:"TikTok Followers – Global", hidden:true,
+  { id:14, platform:"TikTok", icon:"🎵", name:"TikTok Followers – Global",
     desc:"Grow your TikTok presence fast with real-looking followers worldwide.",
     speed:"0–12 hrs", min:100, max:100000, price:1.50, cat:"Followers",
     quality:["High Quality","Non Drop"], speedTag:"Normal" },
 
-  { id:15, platform:"TikTok", icon:"🎵", name:"TikTok Likes – Global", hidden:true,
+  { id:15, platform:"TikTok", icon:"🎵", name:"TikTok Likes – Global",
     desc:"Instant likes for your TikTok videos. Safe and fast delivery guaranteed.",
     speed:"0–2 hrs", min:100, max:100000, price:0.50, cat:"Likes",
     quality:["High Quality"], speedTag:"Instant" },
 
   // ── FACEBOOK ─────────────────────────────────────────────────────
-  { id:16, platform:"Facebook", icon:"👍", name:"Facebook Followers – Stable",
-    desc:"Real Facebook followers. Safe gradual delivery. Non-drop guarantee.",
-    speed:"1–48 hrs", min:100, max:50000, cat:"Followers",
-    quality:["High Quality","Non Drop"], speedTag:"Normal",
-    tiers:[{qty:1000,price:399},{qty:5000,price:1799},{qty:10000,price:3299}] },
+  { id:16, platform:"Facebook", icon:"👍", name:"Facebook Page Likes – Indian",
+    desc:"Indian page likes for your Facebook business page. Looks 100% natural and organic.",
+    speed:"1–48 hrs", min:100, max:50000, price:1.10, cat:"Likes",
+    quality:["High Quality","Non Drop"], speedTag:"Normal" },
 
-  { id:17, platform:"Facebook", icon:"👍", name:"Facebook Post Likes – HQ",
-    desc:"High quality likes for your Facebook posts. Fast delivery.",
-    speed:"0–6 hrs", min:100, max:20000, cat:"Likes",
-    quality:["High Quality"], speedTag:"Fast",
-    tiers:[{qty:1000,price:150},{qty:5000,price:599},{qty:10000,price:1099}] },
-
-  { id:21, platform:"Facebook", icon:"👍", name:"Facebook Followers – Premium",
-    desc:"Premium quality Facebook followers with high retention.",
-    speed:"0–24 hrs", min:100, max:20000, cat:"Followers",
-    quality:["High Quality","Non Drop","Refill Available"], speedTag:"Fast",
-    tiers:[{qty:1000,price:499},{qty:5000,price:2299},{qty:10000,price:4299}] },
-
-  { id:22, platform:"Facebook", icon:"👍", name:"Facebook Reel Likes – Premium",
-    desc:"Premium likes for your Facebook Reels. Boosts reach and engagement.",
-    speed:"0–6 hrs", min:100, max:50000, cat:"Likes",
-    quality:["High Quality"], speedTag:"Fast",
-    tiers:[{qty:1000,price:199},{qty:5000,price:849},{qty:10000,price:1499}] },
-
-    { id:23, platform:"Facebook", icon:"👍", name:"Facebook Video Views",
-    desc:"Boost view count on your Facebook videos. Fast and safe delivery.",
-    speed:"0–6 hrs", min:1000, max:500000, cat:"Views",
-    quality:["High Quality"], speedTag:"Fast",
-    tiers:[{qty:1000,price:89},{qty:5000,price:399},{qty:10000,price:749}] },
+  { id:17, platform:"Facebook", icon:"👍", name:"Facebook Post Likes",
+    desc:"Boost engagement on your Facebook posts with real-looking likes.",
+    speed:"0–6 hrs", min:100, max:20000, price:0.80, cat:"Likes",
+    quality:["High Quality"], speedTag:"Fast" },
 
   // ── TWITTER ──────────────────────────────────────────────────────
-  { id:18, platform:"Twitter", icon:"🐦", name:"Twitter Followers – Stable",
+  { id:18, platform:"Twitter", icon:"🐦", name:"Twitter / X Followers",
     desc:"Boost your credibility with a higher follower count. Gradual natural delivery.",
     speed:"1–24 hrs", min:100, max:50000, price:1.80, cat:"Followers",
     quality:["High Quality"], speedTag:"Normal" },
 
-  { id:19, platform:"Twitter", icon:"🐦", name:"Twitter Likes – Fast",
+  { id:19, platform:"Twitter", icon:"🐦", name:"Twitter / X Likes",
     desc:"Engagement boost for your tweets and posts. Fast delivery worldwide.",
     speed:"0–6 hrs", min:50, max:20000, price:0.55, cat:"Likes",
     quality:["High Quality"], speedTag:"Fast" },
 ];
 
-const PLATFORMS = ["All","Instagram","YouTube","Facebook","Twitter"];
+const PLATFORMS = ["All","Instagram","YouTube","TikTok","Telegram","Facebook","Twitter"];
 
 // ─── Service Badge Config ─────────────────────────────────────
 const BADGE_CONFIG = {
@@ -264,43 +186,27 @@ const QUALITY_TAGS = ["High Quality","Non Drop","Refill Available"];
 const SPEED_TAGS   = ["Instant","Fast","Normal"];
 
 // Internal coupons – never shown to user, only validated on entry
-const VALID_COUPONS = { "OPULENT20":20, "SAVE10":10, "FIRST50":50 };
+const VALID_COUPONS = { "NEXUS20":20, "SAVE10":10, "FIRST50":50 };
 
 const fmt = (n) => "₹" + parseFloat(n).toFixed(2);
 
 // ─── Marketing Config ─────────────────────────────────────────
-const FIRST_DEPOSIT_BONUS_PCT = 10; // Rs.10 flat bonus on first deposit (min deposit Rs.100)
+const FIRST_DEPOSIT_BONUS_PCT = 20; // 20% bonus on first deposit
 const REFERRAL_COMMISSION_PCT = 5;  // 5% commission on referrals
 const FREE_TRIAL_AMOUNT = 10;       // ₹10 free trial credit for new signups
 
 // ─── Influencer Level System ──────────────────────────────────
 const INFLUENCER_LEVELS = [
-  { level:"Bronze",  icon:"🥉", minFollowers:1000,   minActiveUsers:5,    reward:"50 Free Followers",   rewardQty:50,   color:"#cd7f32", bg:"rgba(205,127,50,.15)",  border:"rgba(205,127,50,.3)"  },
-  { level:"Silver",  icon:"🥈", minFollowers:5000,   minActiveUsers:20,   reward:"100 Free Followers",  rewardQty:100,  color:"#c0c0c0", bg:"rgba(192,192,192,.15)", border:"rgba(192,192,192,.3)" },
-  { level:"Gold",    icon:"🥇", minFollowers:10000,  minActiveUsers:50,   reward:"200 Free Followers",  rewardQty:200,  color:"#ffd700", bg:"rgba(255,215,0,.15)",   border:"rgba(255,215,0,.3)"   },
-  { level:"Diamond", icon:"💎", minFollowers:50000,  minActiveUsers:150,  reward:"500 Free Followers",  rewardQty:500,  color:"#60a5fa", bg:"rgba(96,165,250,.15)",  border:"rgba(96,165,250,.3)"  },
-  { level:"VIP",     icon:"👑", minFollowers:100000, minActiveUsers:300,  reward:"1000 Free Followers", rewardQty:1000, color:"#a855f7", bg:"rgba(168,85,247,.15)",  border:"rgba(168,85,247,.3)"  },
-  { level:"VVIP",    icon:"💫", minFollowers:500000, minActiveUsers:1000, reward:"3000 Free Followers", rewardQty:3000, color:"#f5c842", bg:"rgba(245,200,66,.15)",   border:"rgba(245,200,66,.3)"  },
+  { level:"Bronze",  icon:"🥉", minFollowers:1000,   reward:"50 Free Followers",   rewardQty:50,   color:"#cd7f32", bg:"rgba(205,127,50,.15)" },
+  { level:"Silver",  icon:"🥈", minFollowers:5000,   reward:"100 Free Followers",  rewardQty:100,  color:"#c0c0c0", bg:"rgba(192,192,192,.15)" },
+  { level:"Gold",    icon:"🥇", minFollowers:10000,  reward:"200 Free Followers",  rewardQty:200,  color:"#ffd700", bg:"rgba(255,215,0,.15)" },
+  { level:"Diamond", icon:"💎", minFollowers:50000,  reward:"500 Free Followers",  rewardQty:500,  color:"#60a5fa", bg:"rgba(96,165,250,.15)" },
+  { level:"VIP",     icon:"👑", minFollowers:100000, reward:"1000 Free Followers", rewardQty:1000, color:"#a855f7", bg:"rgba(168,85,247,.15)" },
+  { level:"VVIP",    icon:"💫", minFollowers:500000, reward:"3000 Free Followers", rewardQty:3000, color:"#f5c842", bg:"rgba(245,200,66,.15)" },
 ];
 
-// ── Influencer helpers ──────────────────────────────────────
-const ACTIVE_USER_MIN_DEPOSIT = 100;
-const ACTIVE_USER_MIN_ORDERS  = 1;
-const getInfluencerLevel = (followers, activeUsers) => {
-  const f=parseInt(followers)||0, a=parseInt(activeUsers)||0;
-  const eligible=INFLUENCER_LEVELS.filter(l=>f>=l.minFollowers && a>=l.minActiveUsers);
-  return eligible.length ? eligible[eligible.length-1] : null;
-};
-const getNextInfluencerLevel = (followers, activeUsers) => {
-  const f=parseInt(followers)||0, a=parseInt(activeUsers)||0;
-  const cur=getInfluencerLevel(f,a);
-  if(!cur) return INFLUENCER_LEVELS[0];
-  const idx=INFLUENCER_LEVELS.findIndex(l=>l.level===cur.level);
-  return idx<INFLUENCER_LEVELS.length-1 ? INFLUENCER_LEVELS[idx+1] : null;
-};
-
 // ── Wipe any old localStorage data once ──────────────────────
-(()=>{ try{ Object.keys(localStorage).filter(k=>k.startsWith("nx_") && k!=="opulent_ref").forEach(k=>localStorage.removeItem(k)); }catch{} })();
+(()=>{ try{ Object.keys(localStorage).filter(k=>k.startsWith("nx_")).forEach(k=>localStorage.removeItem(k)); }catch{} })();
 const uid = () => "ORD-" + String(Math.floor(Math.random()*9000)+1000);
 const today = () => new Date().toISOString().slice(0,10);
 const sanitize = (str) => String(str||"").replace(/<[^>]*>/g,"").replace(/[<>"'&]/g,"").trim().slice(0,500);
@@ -397,27 +303,7 @@ const DB = {
   },
 
   addOrder(o){
-    getFS().then(async fs=>{
-      if(!fs) return;
-      fs.collection("orders").add(o).catch(console.error);
-      // ── Increment totalOrders for active-user tracking ──
-      if(o.userEmail){
-        try{
-          const uKey=o.userEmail.toLowerCase().trim().replace(/[@.]/g,"_");
-          const uSnap=await fs.collection("users").doc(uKey).get();
-          const prev=uSnap.exists?(uSnap.data().totalOrders||0):0;
-          const newTotal=prev+1;
-          await fs.collection("users").doc(uKey).set({totalOrders:newTotal},{merge:true});
-          // Mark referral as active if threshold met
-          if(newTotal>=ACTIVE_USER_MIN_ORDERS && uSnap.exists && uSnap.data().referredBy){
-            const rSnap=await fs.collection("referrals")
-              .where("newUserEmail","==",o.userEmail.toLowerCase().trim()).get();
-            for(const d of rSnap.docs)
-              await d.ref.set({isActive:true,totalOrders:newTotal},{merge:true});
-          }
-        }catch(e){console.error("totalOrders update failed:",e);}
-      }
-    });
+    getFS().then(fs=>{ if(fs) fs.collection("orders").add(o).catch(console.error); });
   },
 
   updateOrder(id,status){
@@ -443,37 +329,12 @@ const DB = {
       const key=user.email.toLowerCase().trim().replace(/[@.]/g,"_");
       const snap = await fs.collection("users").doc(key).get().catch(()=>null);
       if(snap && !snap.exists){
-        const userData = {
-          ...user,
-          balance:      FREE_TRIAL_AMOUNT,
-          referral:     user.referral || "",
-          referredBy:   user.referral || "",
-          totalDeposit: 0,
-          totalOrders:  0,
-          joinedAt:     Date.now(),
-        };
-        await fs.collection("users").doc(key).set(userData).catch(console.error);
+        await fs.collection("users").doc(key).set({...user,balance:FREE_TRIAL_AMOUNT}).catch(console.error);
         // Give free trial credit
         const wKey=user.email.toLowerCase().trim().replace(/[@.]/g,"_");
         await fs.collection("wallets").doc(wKey).set({
           balance:FREE_TRIAL_AMOUNT, email:user.email.toLowerCase().trim(), ts:Date.now()
         }).catch(console.error);
-        // Track referral conversion
-        if(user.referral) {
-          try {
-            await fs.collection("referrals").add({
-              referralCode:  user.referral,
-              newUserEmail:  user.email.toLowerCase().trim(),
-              newUserName:   user.name || "",
-              convertedAt:   Date.now(),
-              date:          new Date().toISOString().slice(0,10),
-              rewarded:      false,
-              isActive:      false,
-              totalDeposit:  0,
-              totalOrders:   0,
-            });
-          } catch(e) { console.error("Referral track failed:", e); }
-        }
       }
     });
   },
@@ -507,7 +368,6 @@ const DB = {
       userName: req.userName || req.email.split("@")[0],
       amount: Number(req.amount),
       utr: req.utr.trim(),
-      screenshot: req.screenshot || null,
       method: req.method || "UPI",
       status: "pending",
       date: req.date,
@@ -719,74 +579,18 @@ const GS = () => (
   <style>{`
     @import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800;900&family=DM+Sans:wght@400;500;600;700&display=swap');
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-    html{scroll-behavior:smooth}
-    body{background:#06060a;color:#e8e8f2;font-family:'DM Sans',sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+    body{background:#06060a;color:#e8e8f2;font-family:'DM Sans',sans-serif}
     ::-webkit-scrollbar{width:5px;height:5px}
     ::-webkit-scrollbar-track{background:rgba(255,255,255,.02)}
-    ::-webkit-scrollbar-thumb{background:rgba(212,160,23,.4);border-radius:4px}
-    ::-webkit-scrollbar-thumb:hover{background:rgba(212,160,23,.7)}
+    ::-webkit-scrollbar-thumb{background:rgba(124,58,237,.5);border-radius:4px}
     input,textarea,select,button{font-family:'DM Sans',sans-serif}
-    input:focus,textarea:focus{outline:none;border-color:rgba(212,160,23,.6)!important;box-shadow:0 0 0 3px rgba(212,160,23,.1)}
-    select:focus{outline:none;border-color:rgba(212,160,23,.6)!important;}
-    img{max-width:100%;height:auto;display:block}
-    /* ── Keyframes ── */
-    @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+    input:focus,textarea:focus{outline:none;border-color:rgba(124,58,237,.6)!important;box-shadow:0 0 0 3px rgba(124,58,237,.12)}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
     @keyframes fadeIn{from{opacity:0}to{opacity:1}}
-    @keyframes fadeInScale{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:scale(1)}}
     @keyframes spin{to{transform:rotate(360deg)}}
     @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
-    @keyframes pulseRing{0%{box-shadow:0 0 0 0 rgba(212,160,23,.4)}70%{box-shadow:0 0 0 10px rgba(212,160,23,0)}100%{box-shadow:0 0 0 0 rgba(212,160,23,0)}}
-    @keyframes glow{0%,100%{box-shadow:0 0 20px rgba(212,160,23,.25),0 4px 32px rgba(0,0,0,.4)}50%{box-shadow:0 0 40px rgba(212,160,23,.55),0 4px 32px rgba(0,0,0,.4)}}
-    @keyframes glowPurple{0%,100%{box-shadow:0 0 20px rgba(124,58,237,.3)}50%{box-shadow:0 0 40px rgba(124,58,237,.6)}}
+    @keyframes glow{0%,100%{box-shadow:0 0 20px rgba(124,58,237,.3)}50%{box-shadow:0 0 40px rgba(124,58,237,.6)}}
     @keyframes slideDown{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
-    @keyframes slideUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-    @keyframes shimmer{0%{background-position:-1000px 0}100%{background-position:1000px 0}}
-    @keyframes popIn{0%{transform:scale(0)}80%{transform:scale(1.15)}100%{transform:scale(1)}}
-    @keyframes countUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-    @keyframes toastIn{from{opacity:0;transform:translateX(110%)}to{opacity:1;transform:translateX(0)}}
-    @keyframes toastOut{from{opacity:1;transform:translateX(0)}to{opacity:0;transform:translateX(110%)}}
-    @keyframes floatY{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
-    @keyframes borderGlow{0%,100%{border-color:rgba(212,160,23,.2)}50%{border-color:rgba(212,160,23,.6)}}
-    @keyframes gradientShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
-    /* ── Page transitions ── */
-    .page-enter{animation:fadeUp .35s ease forwards;}
-    /* ── Skeleton ── */
-    .skeleton{background:linear-gradient(90deg,rgba(255,255,255,.04) 25%,rgba(255,255,255,.09) 50%,rgba(255,255,255,.04) 75%);background-size:1000px 100%;animation:shimmer 1.8s infinite linear;border-radius:8px;}
-    /* ── Badges ── */
-    .notif-badge{animation:popIn .3s ease forwards;}
-    .count-anim{animation:countUp .6s ease forwards;}
-    /* ── Cards ── */
-    .svc-card-hover{transition:transform .25s ease,box-shadow .25s ease,border-color .25s ease!important;}
-    .svc-card-hover:hover{transform:translateY(-5px)!important;box-shadow:0 20px 56px rgba(212,160,23,.12),0 8px 24px rgba(0,0,0,.4)!important;border-color:rgba(212,160,23,.35)!important;}
-    .svc-card-locked{filter:blur(3px);pointer-events:none;user-select:none;}
-    /* ── Toasts ── */
-    .toast-enter{animation:toastIn .35s ease forwards;}
-    .toast-exit{animation:toastOut .35s ease forwards;}
-    /* ── Pills ── */
-    .pill{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;}
-    /* ── Tables ── */
-    tbody tr{transition:background .15s;}
-    tbody tr:hover{background:rgba(212,160,23,.04)!important;}
-    /* ── Input focus ── */
-    input:focus,textarea:focus,select:focus{border-color:rgba(212,160,23,.7)!important;box-shadow:0 0 0 3px rgba(212,160,23,.1)!important;}
-    /* ── Image modal ── */
-    .img-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;animation:fadeIn .2s ease;cursor:pointer;overflow-y:auto;}
-    .img-modal-inner{position:relative;max-width:90vw;max-height:90vh;animation:fadeInScale .25s ease;}
-    .img-modal-inner img{width:100%;height:auto;object-fit:contain;border-radius:12px;border:1px solid rgba(212,160,23,.3);max-height:85vh;}
-    .img-modal-close{position:absolute;top:-14px;right:-14px;width:32px;height:32px;border-radius:50%;background:#d4a017;color:#000;border:none;font-size:16px;font-weight:900;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(0,0,0,.4);}
-    /* ── Responsive images everywhere ── */
-    .resp-img{width:100%!important;height:auto!important;object-fit:contain!important;}
-    /* ── Urgency badge ── */
-    .urgency-badge{animation:pulseRing 2s infinite;}
-    /* ── Locked overlay ── */
-    .locked-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,transparent 0%,rgba(6,6,10,.97) 65%);border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding:24px;z-index:2;}
-    /* ── Hero gradient text ── */
-    .hero-grad{background:linear-gradient(135deg,#f5c842 0%,#d4a017 40%,#f0f0ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-size:200% 200%;animation:gradientShift 4s ease infinite;}
-    /* ── Floating decoration ── */
-    .float-badge{animation:floatY 3s ease-in-out infinite;}
-    /* ── Gold border glow ── */
-    .gold-border-pulse{animation:borderGlow 2.5s ease infinite;}
-    /* ── Mobile ── */
     @media(max-width:768px){
       .sidebar{display:none!important}
       .dash-main{margin-left:0!important;padding:16px 14px 90px!important;max-width:100vw!important}
@@ -796,44 +600,36 @@ const GS = () => (
       .order-panel{grid-template-columns:1fr!important}
       .hide-mob{display:none!important}
       .two-col{grid-template-columns:1fr!important}
-      .hero-title{font-size:clamp(2rem,8vw,3.5rem)!important}
-      .nav-tagline{display:none!important}
     }
-    @media(max-width:480px){
-      .stat-grid{grid-template-columns:1fr!important}
-      .hero-cta-wrap{flex-direction:column!important;align-items:stretch!important}
-      .hero-cta-wrap button{width:100%!important;justify-content:center!important}
-    }
-    /* ── Mobile touch improvements ── */
-    button,a{-webkit-tap-highlight-color:transparent;touch-action:manipulation}
-    input,select,textarea{font-size:16px!important} /* prevent iOS zoom on focus */
-    /* ── Urgency badge ── */
-    .urgency-badge{animation:pulseRing 2s infinite}
-    @keyframes pulseRing{0%{box-shadow:0 0 0 0 rgba(212,160,23,.4)}70%{box-shadow:0 0 0 8px rgba(212,160,23,0)}100%{box-shadow:0 0 0 0 rgba(212,160,23,0)}}
-    /* ── Live notification ── */
-    .live-notif{animation:slideInUp .4s ease}
-    @keyframes slideInUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+    @media(max-width:480px){.stat-grid{grid-template-columns:1fr!important}}
+    /* ── Skeleton loader ── */
+    @keyframes shimmer{0%{background-position:-1000px 0}100%{background-position:1000px 0}}
+    .skeleton{background:linear-gradient(90deg,rgba(255,255,255,.04) 25%,rgba(255,255,255,.09) 50%,rgba(255,255,255,.04) 75%);background-size:1000px 100%;animation:shimmer 1.8s infinite linear;border-radius:8px;}
+    /* ── Notification badge ── */
+    @keyframes popIn{0%{transform:scale(0)}80%{transform:scale(1.15)}100%{transform:scale(1)}}
+    .notif-badge{animation:popIn .3s ease forwards;}
+    /* ── Smooth card hover ── */
+    .svc-card-hover{transition:transform .22s ease,box-shadow .22s ease,border-color .22s ease!important;}
+    .svc-card-hover:hover{transform:translateY(-4px)!important;box-shadow:0 16px 48px rgba(124,58,237,.22)!important;border-color:rgba(124,58,237,.5)!important;}
+    /* ── Counter animation ── */
+    @keyframes countUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+    .count-anim{animation:countUp .6s ease forwards;}
+    /* ── Toast notifications ── */
+    @keyframes toastIn{from{opacity:0;transform:translateX(110%)}to{opacity:1;transform:translateX(0)}}
+    @keyframes toastOut{from{opacity:1;transform:translateX(0)}to{opacity:0;transform:translateX(110%)}}
+    .toast-enter{animation:toastIn .35s ease forwards;}
+    .toast-exit{animation:toastOut .35s ease forwards;}
+    /* ── Tag/badge pill ── */
+    .pill{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;}
+    /* ── Table row hover ── */
+    tbody tr{transition:background .15s;}
+    tbody tr:hover{background:rgba(124,58,237,.06)!important;}
+    /* ── Input focus ring ── */
+    input:focus,textarea:focus,select:focus{border-color:rgba(124,58,237,.7)!important;box-shadow:0 0 0 3px rgba(124,58,237,.15)!important;}
+    /* ── Smooth page transitions ── */
+    .page-enter{animation:fadeUp .35s ease forwards;}
   `}</style>
 );
-
-// ─── Image Modal (responsive, scrollable) ─────────────────────
-const ImageModal = ({ src, onClose }) => {
-  useEffect(()=>{
-    const handler=(e)=>{ if(e.key==="Escape") onClose(); };
-    document.addEventListener("keydown",handler);
-    document.body.style.overflow="hidden";
-    return()=>{ document.removeEventListener("keydown",handler); document.body.style.overflow=""; };
-  },[onClose]);
-  if(!src) return null;
-  return (
-    <div className="img-modal-overlay" onClick={onClose}>
-      <div className="img-modal-inner" onClick={e=>e.stopPropagation()}>
-        <button className="img-modal-close" onClick={onClose}>✕</button>
-        <img src={src} alt="Preview" className="resp-img"/>
-      </div>
-    </div>
-  );
-};
 
 // ─── Base UI ───────────────────────────────────────────────────
 const Card = ({ children, style={}, glow=false, gold=false, onClick }) => (
@@ -914,10 +710,10 @@ const StatCard = ({ icon, label, value, grad, sub }) => (
 
 const Logo = () => (
   <div style={{display:"flex",alignItems:"center",gap:9}}>
-    <div style={{width:34,height:34,borderRadius:10,background:C.gG,display:"flex",alignItems:"center",justifyContent:"center",fontSize:17,boxShadow:"0 0 18px rgba(212,160,23,.5)"}}>✦</div>
+    <div style={{width:34,height:34,borderRadius:10,background:C.gP,display:"flex",alignItems:"center",justifyContent:"center",fontSize:17,boxShadow:"0 0 18px rgba(124,58,237,.5)"}}>✦</div>
     <div>
-      <div style={{fontWeight:900,fontSize:16,fontFamily:"Syne,sans-serif",color:"#f0f0ff",letterSpacing:".01em"}}>OPULENT</div>
-      <div style={{fontSize:9,color:C.goldL,letterSpacing:".1em",marginTop:-2}}>SMM PLATFORM</div>
+      <div style={{fontWeight:900,fontSize:16,fontFamily:"Syne,sans-serif",color:"#f0f0ff",letterSpacing:".01em"}}>NEXUS</div>
+      <div style={{fontSize:9,color:C.muted,letterSpacing:".1em",marginTop:-2}}>SMM PLATFORM</div>
     </div>
   </div>
 );
@@ -957,20 +753,13 @@ const MobileBar = ({ page, setPage, isAdmin, onLogout }) => {
 
   // Admin ALL tabs shown in drawer
   const aAllItems = [
-    {id:"a-overview",   i:"📊", l:"Analytics"},
-    {id:"a-orders",     i:"📦", l:"All Orders"},
-    {id:"a-services",   i:"◇",  l:"Services"},
-    {id:"a-users",      i:"👥", l:"Users"},
-    {id:"a-coupons",    i:"🎟", l:"Coupons"},
-    {id:"a-payments",   i:"💰", l:"Payments"},
-    {id:"a-referrals",  i:"🔗", l:"Referrals"},
-    {id:"a-tickets",    i:"🎫", l:"Tickets"},
-    {id:"a-influencer", i:"🌟", l:"Influencers"},
-            {id:"a-chatbot",    i:"💬", l:"Chat"},
-    {id:"a-refills",    i:"🔄", l:"Refills"},
-    {id:"a-announce",   i:"📣", l:"Announcements"},
-    {id:"a-suppliers",  i:"🔌", l:"Suppliers"},
-    {id:"a-markup",     i:"💹", l:"Pricing"},
+    {id:"a-overview",  i:"📊", l:"Analytics"},
+    {id:"a-orders",    i:"📦", l:"All Orders"},
+    {id:"a-services",  i:"◇",  l:"Services"},
+    {id:"a-users",     i:"👥", l:"Users"},
+    {id:"a-coupons",   i:"🎟", l:"Coupons"},
+    {id:"a-payments",  i:"💰", l:"Payments"},
+    {id:"a-announce",  i:"📣", l:"Announcements"},
   ];
 
   // Admin bottom bar: 4 quick tabs + Menu button
@@ -1094,53 +883,6 @@ const LIVE_ACTIVITIES = [
   {user:"Meera J.", action:"Added ₹1000 to wallet", time:"15 min ago", icon:"💰"},
 ];
 
-// ── Live Purchase Notification (bottom-left popup) ────────────
-const LivePurchaseNotif = () => {
-  const [notif, setNotif] = React.useState(null);
-  const [visible, setVisible] = React.useState(false);
-  const purchases = [
-    {name:"Rahul S.",service:"Instagram Followers",qty:"1,000",loc:"Mumbai"},
-    {name:"Priya M.",service:"YouTube Views",qty:"5,000",loc:"Delhi"},
-    {name:"Arjun K.",service:"Instagram Likes",qty:"500",loc:"Bangalore"},
-    {name:"Sneha R.",service:"TikTok Followers",qty:"2,000",loc:"Hyderabad"},
-    {name:"Vikram P.",service:"Instagram Reel Views",qty:"10,000",loc:"Pune"},
-    {name:"Anita J.",service:"Telegram Members",qty:"1,000",loc:"Chennai"},
-    {name:"Ravi T.",service:"YouTube Subscribers",qty:"500",loc:"Kolkata"},
-    {name:"Meera D.",service:"Instagram Story Views",qty:"5,000",loc:"Ahmedabad"},
-  ];
-  React.useEffect(()=>{
-    const show=()=>{
-      const p=purchases[Math.floor(Math.random()*purchases.length)];
-      setNotif(p); setVisible(true);
-      setTimeout(()=>setVisible(false), 4000);
-    };
-    const iv=setInterval(show, 8000);
-    setTimeout(show, 3000);
-    return ()=>clearInterval(iv);
-  },[]);
-  if(!visible||!notif) return null;
-  return (
-    <div className="live-notif" style={{
-      position:"fixed",bottom:90,left:16,zIndex:9998,
-      background:"rgba(10,10,18,.97)",border:"1px solid rgba(212,160,23,.3)",
-      borderRadius:14,padding:"12px 16px",maxWidth:280,
-      backdropFilter:"blur(20px)",boxShadow:"0 8px 32px rgba(0,0,0,.5)",
-      display:"flex",alignItems:"center",gap:12}}>
-      <div style={{width:38,height:38,borderRadius:"50%",background:"linear-gradient(135deg,#7c3aed,#a855f7)",
-        display:"flex",alignItems:"center",justifyContent:"center",fontSize:16,flexShrink:0}}>🛒</div>
-      <div>
-        <div style={{fontWeight:700,color:"#f0f0ff",fontSize:12,marginBottom:2}}>
-          {notif.name} from {notif.loc}
-        </div>
-        <div style={{fontSize:11,color:"#a0a0c0"}}>
-          Just purchased <span style={{color:"#f5c842",fontWeight:700}}>{notif.qty} {notif.service}</span>
-        </div>
-        <div style={{fontSize:10,color:"#34d399",marginTop:2}}>✅ Verified purchase · just now</div>
-      </div>
-    </div>
-  );
-};
-
 const LiveActivity = () => {
   const [items,setItems]=useState(LIVE_ACTIVITIES.slice(0,4));
   const [entering,setEntering]=useState(null);
@@ -1195,560 +937,342 @@ const LiveActivity = () => {
 // ═══════════════════════════════════════════════════════════════
 //  LANDING PAGE
 // ═══════════════════════════════════════════════════════════════
-const Landing = ({ goLogin, goSignup }) => {
+const Landing = ({ goLogin, goSignup, goAdmin }) => {
+  const [pf,setPf]=useState("All");
   const [wi,setWi]=useState(0);
-  const words=["Brands","Creators","Agencies","Influencers"];
-  useEffect(()=>{const t=setInterval(()=>setWi(i=>(i+1)%4),2200);return()=>clearInterval(t);},[]);
+  const words=["Creators","Brands","Agencies","Influencers"];
+  useEffect(()=>{const t=setInterval(()=>setWi(i=>(i+1)%4),2400);return()=>clearInterval(t);},[]);
+  const filtered=pf==="All"?SERVICES.slice(0,9):SERVICES.filter(s=>s.platform===pf).slice(0,9);
 
   return (
     <div style={{background:C.bg,minHeight:"100vh"}}>
-      {/* Live purchase notification popup */}
-      <LivePurchaseNotif/>
-
-      {/* ── NAV ─────────────────────────────────────────────── */}
+      {/* NAV */}
       <nav style={{position:"fixed",top:0,left:0,right:0,zIndex:300,
-        background:"rgba(6,6,10,.92)",backdropFilter:"blur(28px)",
-        borderBottom:"1px solid rgba(124,58,237,.12)",
-        padding:"0 6%",height:66,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+        background:"rgba(6,6,10,.88)",backdropFilter:"blur(24px)",borderBottom:`1px solid ${C.border}`,
+        padding:"0 5%",height:64,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
         <Logo/>
-        <div style={{display:"flex",gap:10,alignItems:"center"}}>
+        <div style={{display:"flex",gap:8}}>
           <Btn v="ghost" onClick={goLogin} size="sm">Log In</Btn>
-          <Btn v="purple" onClick={goSignup} size="sm">Get Started →</Btn>
+          <Btn onClick={goSignup} size="sm">Get Started →</Btn>
         </div>
       </nav>
 
-      {/* ── HERO ────────────────────────────────────────────── */}
+      {/* HERO */}
       <section style={{minHeight:"100vh",display:"flex",flexDirection:"column",alignItems:"center",
-        justifyContent:"center",padding:"120px 6% 80px",textAlign:"center",position:"relative",overflow:"hidden"}}>
-        {/* Deep glow orbs */}
-        <div style={{position:"absolute",top:"10%",left:"50%",transform:"translateX(-50%)",
-          width:800,height:800,borderRadius:"50%",
-          background:"radial-gradient(ellipse,rgba(124,58,237,.12) 0%,transparent 65%)",pointerEvents:"none",zIndex:0}}/>
-        <div style={{position:"absolute",bottom:"10%",left:"10%",width:500,height:500,borderRadius:"50%",
-          background:"radial-gradient(ellipse,rgba(212,160,23,.06) 0%,transparent 70%)",pointerEvents:"none",zIndex:0}}/>
-        <div style={{position:"absolute",top:"25%",right:"8%",width:350,height:350,borderRadius:"50%",
-          background:"radial-gradient(ellipse,rgba(168,85,247,.07) 0%,transparent 70%)",pointerEvents:"none",zIndex:0}}/>
-
-        <div style={{position:"relative",zIndex:1,maxWidth:740,width:"100%",animation:"fadeUp .9s ease both"}}>
-
-          {/* Trust badge */}
+        justifyContent:"center",padding:"110px 24px 70px",textAlign:"center",position:"relative",overflow:"hidden"}}>
+        <div style={{position:"absolute",top:"20%",left:"50%",transform:"translateX(-50%)",
+          width:800,height:800,borderRadius:"50%",background:"radial-gradient(ellipse,rgba(124,58,237,.11) 0%,transparent 70%)",pointerEvents:"none"}}/>
+        <div style={{position:"absolute",top:"40%",left:"8%",width:360,height:360,borderRadius:"50%",
+          background:"radial-gradient(ellipse,rgba(6,182,212,.07) 0%,transparent 70%)",pointerEvents:"none"}}/>
+        <div style={{position:"relative",zIndex:1,animation:"fadeUp .8s ease both"}}>
           <div style={{display:"inline-flex",alignItems:"center",gap:8,
-            background:"rgba(124,58,237,.12)",border:"1px solid rgba(124,58,237,.3)",
-            borderRadius:50,padding:"6px 18px",marginBottom:32,
-            fontSize:11,fontWeight:700,color:"#c4b5fd",letterSpacing:".08em"}}>
-            <span style={{width:6,height:6,borderRadius:"50%",background:"#34d399",
-              animation:"pulse 1.5s infinite",display:"inline-block"}}/>
-            ✦ TRUSTED WORLDWIDE BY 48,000+ USERS
+            background:"linear-gradient(135deg,rgba(124,58,237,.2),rgba(212,160,23,.15))",
+            border:"1px solid rgba(124,58,237,.3)",borderRadius:50,padding:"6px 18px",
+            fontSize:11,fontWeight:700,letterSpacing:".1em",color:"#c4b5fd",marginBottom:28}}>
+            ✦ TRUSTED BY 1,000+ USERS IN INDIA & WORLDWIDE
           </div>
-
-          {/* Headline */}
-          <h1 style={{fontSize:"clamp(2.6rem,5.8vw,5rem)",fontWeight:900,lineHeight:1.04,
-            letterSpacing:"-.04em",fontFamily:"Syne,sans-serif",marginBottom:22}}>
-            <span style={{color:"#f0f0ff"}}>Premium Growth</span>
-            <br/>
-            <span style={{background:"linear-gradient(135deg,#7c3aed 0%,#a855f7 50%,#d4a017 100%)",
+          <h1 style={{fontSize:"clamp(2.6rem,6vw,5rem)",fontWeight:900,lineHeight:1.05,
+            letterSpacing:"-.04em",fontFamily:"Syne,sans-serif",marginBottom:18}}>
+            <span style={{background:"linear-gradient(135deg,#f0f0ff 0%,#c4b5fd 55%,#f5c842 100%)",
               WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent"}}>
-              for {words[wi]}
+              Premium Growth<br/>for{" "}
+            </span>
+            <span style={{background:C.gP,WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent"}}>
+              {words[wi]}
             </span>
           </h1>
-
-          {/* Subtext — minimal */}
-          <p style={{fontSize:17,color:"#7070a0",maxWidth:460,margin:"0 auto 40px",lineHeight:1.7,fontWeight:400}}>
-            Real followers, likes &amp; views for Instagram, YouTube, TikTok and more. From <strong style={{color:C.goldL}}>₹0.09</strong>.
+          <p style={{fontSize:17,color:C.muted,maxWidth:520,margin:"0 auto 40px",lineHeight:1.7}}>
+            Buy followers, likes, views & more for Instagram, YouTube, TikTok & more.
+            Real delivery. Starting from just <span style={{color:C.goldL,fontWeight:700}}>₹0.09</span>.
           </p>
-
-          {/* CTAs */}
-          <div className="hero-cta-wrap" style={{display:"flex",gap:14,justifyContent:"center",flexWrap:"wrap",marginBottom:48}}>
-            <Btn v="purple" onClick={goSignup} size="lg" style={{minWidth:190,animation:"glowPurple 2.5s ease infinite"}}>
-              Get Started Free
-            </Btn>
-            <Btn v="ghost" onClick={()=>document.getElementById("svc").scrollIntoView({behavior:"smooth"})} size="lg" style={{minWidth:160}}>
-              Browse Services
-            </Btn>
+          <div style={{display:"flex",gap:14,justifyContent:"center",flexWrap:"wrap"}}>
+            <Btn onClick={goSignup} size="lg" style={{animation:"glow 2.5s ease infinite"}}>🚀 Create Free Account</Btn>
+            <Btn v="ghost" size="lg" onClick={()=>document.getElementById("svc").scrollIntoView({behavior:"smooth"})}>Browse Services ↓</Btn>
           </div>
-
-          {/* Urgency strip */}
-          <div style={{display:"flex",gap:12,justifyContent:"center",flexWrap:"wrap",marginBottom:16}}>
-            <div className="urgency-badge" style={{display:"inline-flex",alignItems:"center",gap:6,
-              background:"rgba(239,68,68,.1)",border:"1px solid rgba(239,68,68,.25)",
-              borderRadius:20,padding:"5px 14px",fontSize:11,color:"#f87171",fontWeight:700}}>
-              🔥 High demand — 200+ orders today
-            </div>
-            <div style={{display:"inline-flex",alignItems:"center",gap:6,
-              background:"rgba(52,211,153,.08)",border:"1px solid rgba(52,211,153,.2)",
-              borderRadius:20,padding:"5px 14px",fontSize:11,color:"#34d399",fontWeight:700}}>
-              <span style={{width:6,height:6,borderRadius:"50%",background:"#34d399",animation:"pulse 1.5s infinite",display:"inline-block"}}/>
-              Limited slots available today
-            </div>
-          </div>
-
-          {/* Platform pills */}
-          <div style={{display:"flex",gap:8,justifyContent:"center",flexWrap:"wrap"}}>
+          <div style={{display:"flex",gap:10,marginTop:48,flexWrap:"wrap",justifyContent:"center"}}>
             {["📸 Instagram","▶️ YouTube","🎵 TikTok","🐦 Twitter","✈️ Telegram","👍 Facebook"].map(p=>(
-              <span key={p} style={{background:"rgba(124,58,237,.08)",border:"1px solid rgba(124,58,237,.2)",
-                borderRadius:50,padding:"5px 14px",fontSize:11,fontWeight:600,color:"#6060a0"}}>{p}</span>
+              <span key={p} style={{background:"rgba(255,255,255,.04)",border:`1px solid ${C.border}`,borderRadius:50,padding:"7px 16px",fontSize:12,fontWeight:600,color:C.muted}}>{p}</span>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── QUICK TRUST BAR ── */}
-      <div style={{background:"rgba(255,255,255,.025)",borderTop:"1px solid rgba(255,255,255,.06)",
-        borderBottom:"1px solid rgba(255,255,255,.06)",padding:"14px 6%"}}>
-        <div style={{maxWidth:1000,margin:"0 auto",display:"flex",justifyContent:"center",
-          gap:24,flexWrap:"wrap",alignItems:"center"}}>
-          {[
-            {i:"🔒",t:"100% Secure Payments"},
-            {i:"⚡",t:"Instant Order Processing"},
-            {i:"🔄",t:"30-Day Refill Guarantee"},
-            {i:"👥",t:"Trusted by 10,000+ Users"},
-            {i:"💬",t:"24/7 WhatsApp Support"},
-          ].map(b=>
-            <div key={b.t} style={{display:"flex",alignItems:"center",gap:6,fontSize:12,color:"#8080a0",fontWeight:600}}>
-              <span style={{fontSize:15}}>{b.i}</span>{b.t}
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* ── TRUST STRIP ─────────────────────────────────────── */}
-      <section style={{background:"rgba(124,58,237,.04)",borderTop:"1px solid rgba(124,58,237,.12)",borderBottom:"1px solid rgba(124,58,237,.12)"}}>
-        <div style={{maxWidth:1000,margin:"0 auto",padding:"32px 6%",
-          display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(180px,1fr))",gap:0}}>
-          {[
-            {val:"48,000+",label:"Worldwide Users",icon:"🌍",c:"#c4b5fd"},
-            {val:"100K+",  label:"Orders Completed",icon:"📦",c:C.goldL},
-            {val:"100+",   label:"Premium Services",icon:"💎",c:"#34d399"},
-            {val:"4.9/5",  label:"Customer Rating",icon:"⭐",c:"#fbbf24"},
-            {val:"< 30min",label:"Average Start Time",icon:"⚡",c:"#60a5fa"},
-          ].map((s,i,arr)=>(
-            <div key={s.label} style={{textAlign:"center",padding:"20px 10px",
-              borderRight:i<arr.length-1?"1px solid rgba(124,58,237,.1)":undefined}}>
-              <div style={{fontSize:9,color:C.muted,letterSpacing:".1em",marginBottom:8,fontWeight:700,textTransform:"uppercase"}}>{s.icon} {s.label}</div>
-              <div style={{fontSize:26,fontWeight:900,color:s.c,fontFamily:"Syne,sans-serif"}}>{s.val}</div>
-            </div>
+      {/* STATS */}
+      <section style={{padding:"60px 5%",background:"rgba(255,255,255,.015)",borderTop:`1px solid ${C.border}`}}>
+        <div style={{maxWidth:1100,margin:"0 auto",display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(200px,1fr))",gap:18}}>
+          {[{i:"◉",v:100,suf:"+",l:"Happy Users",g:C.gP},{i:"📦",v:500,suf:"+",l:"Orders Delivered",g:C.gG},{i:"⚡",v:2,pre:"< ",suf:" hrs",l:"Avg Delivery",g:C.gB},{i:"⭐",v:4.9,suf:"/5",l:"Customer Rating",g:C.gGr}].map(s=>(
+            <Card key={s.l} style={{padding:22,textAlign:"center"}}>
+              <div style={{fontSize:22,marginBottom:8}}>{s.i}</div>
+              <div style={{fontSize:30,fontWeight:900,background:s.g,WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",marginBottom:4}}>
+                <AnimCounter target={s.v} prefix={s.pre||""} suffix={s.suf||""}/>
+              </div>
+              <div style={{color:C.muted,fontSize:12}}>{s.l}</div>
+            </Card>
           ))}
         </div>
       </section>
 
-      {/* ── SERVICES PREVIEW ────────────────────────────────── */}
-      <section id="svc" style={{padding:"90px 6%"}}>
+      {/* SERVICES */}
+      <section id="svc" style={{padding:"70px 5%"}}>
         <div style={{maxWidth:1200,margin:"0 auto"}}>
-          <div style={{textAlign:"center",marginBottom:52}}>
-            <div style={{display:"inline-flex",alignItems:"center",gap:6,
-              background:"rgba(212,160,23,.1)",border:"1px solid rgba(212,160,23,.25)",
-              borderRadius:20,padding:"5px 16px",marginBottom:16}}>
-              <span style={{fontSize:10,fontWeight:800,color:C.goldL,letterSpacing:".1em"}}>💎 PREMIUM SERVICES</span>
-            </div>
-            <h2 style={{fontFamily:"Syne,sans-serif",fontSize:36,fontWeight:900,
-              color:"#f0f0ff",marginBottom:10,letterSpacing:"-.02em"}}>
-              100+ Services Available
+          <div style={{textAlign:"center",marginBottom:44}}>
+            <h2 style={{fontFamily:"Syne,sans-serif",fontSize:36,fontWeight:900,letterSpacing:"-.03em",
+              background:"linear-gradient(135deg,#f0f0ff,#c4b5fd)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",marginBottom:8}}>
+              Services Marketplace
             </h2>
-            <p style={{color:C.muted,fontSize:14}}>Fast delivery · Non-drop guarantee · Secure ₹ payments</p>
+            <p style={{color:C.muted,fontSize:15}}>100+ premium services · Fast delivery · Secure ₹ payments</p>
           </div>
-
-          {/* 3 visible premium service cards */}
-          <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(300px,1fr))",gap:18,marginBottom:18}}>
-            {SERVICES.slice(0,3).map(s=><SvcCard key={s.id} svc={s} onOrder={goSignup}/>)}
-          </div>
-
-          {/* Locked blur overlay */}
-          <div style={{position:"relative",borderRadius:20,overflow:"hidden"}}>
-            <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(300px,1fr))",gap:18,
-              filter:"blur(5px)",opacity:.4,pointerEvents:"none",userSelect:"none"}}>
-              {SERVICES.slice(3,9).map(s=>(
-                <div key={s.id} style={{background:"rgba(255,255,255,.04)",border:`1px solid ${C.border}`,
-                  borderRadius:16,padding:22}}>
-                  <div style={{fontSize:10,color:C.purpleL,fontWeight:800,marginBottom:6}}>{s.platform} · {s.cat}</div>
-                  <div style={{fontWeight:700,fontSize:14,color:"#e8e8f2",marginBottom:8}}>{s.name}</div>
-                  <div style={{color:C.muted,fontSize:12,lineHeight:1.5,marginBottom:12}}>{s.desc}</div>
-                  <div style={{height:34,background:"rgba(124,58,237,.15)",borderRadius:8}}/>
-                </div>
-              ))}
-            </div>
-            {/* CTA overlay */}
-            <div style={{position:"absolute",inset:0,display:"flex",flexDirection:"column",
-              alignItems:"center",justifyContent:"flex-end",
-              background:"linear-gradient(to bottom,transparent 0%,rgba(6,6,10,.98) 55%)",
-              borderRadius:20,padding:40}}>
-              <div style={{width:52,height:52,borderRadius:16,background:"rgba(124,58,237,.15)",
-                border:"1px solid rgba(124,58,237,.3)",display:"flex",alignItems:"center",
-                justifyContent:"center",fontSize:24,marginBottom:16}}>🔒</div>
-              <h3 style={{fontFamily:"Syne,sans-serif",fontWeight:900,fontSize:20,color:"#f0f0ff",
-                marginBottom:8,textAlign:"center"}}>100+ Premium Services</h3>
-              <p style={{color:C.muted,fontSize:13,marginBottom:24,textAlign:"center",maxWidth:360,lineHeight:1.6}}>
-                Create a free account to unlock all services, pricing tiers, and exclusive packages.
-              </p>
-              <div style={{display:"flex",gap:12,flexWrap:"wrap",justifyContent:"center",marginBottom:16}}>
-                <Btn v="purple" onClick={goSignup} size="lg" style={{animation:"glowPurple 2.5s ease infinite"}}>
-                  Login to Unlock All Services
-                </Btn>
-                <Btn v="ghost" onClick={goLogin} size="md">Already a member?</Btn>
-              </div>
-              <div style={{display:"flex",gap:18,flexWrap:"wrap",justifyContent:"center"}}>
-                {["✓ Free to join","✓ Instant access","✓ No hidden fees"].map(t=>(
-                  <span key={t} style={{fontSize:12,color:"#34d399",fontWeight:600}}>{t}</span>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── WHY CHOOSE US ───────────────────────────────────── */}
-      <section style={{padding:"90px 6%",background:"rgba(124,58,237,.03)",borderTop:"1px solid rgba(124,58,237,.1)"}}>
-        <div style={{maxWidth:1100,margin:"0 auto"}}>
-          <div style={{textAlign:"center",marginBottom:52}}>
-            <div style={{display:"inline-flex",alignItems:"center",gap:6,
-              background:"rgba(124,58,237,.1)",border:"1px solid rgba(124,58,237,.25)",
-              borderRadius:20,padding:"5px 16px",marginBottom:16}}>
-              <span style={{fontSize:10,fontWeight:800,color:"#c4b5fd",letterSpacing:".1em"}}>✦ WHY CHOOSE US</span>
-            </div>
-            <h2 style={{fontFamily:"Syne,sans-serif",fontSize:34,fontWeight:900,color:"#f0f0ff",marginBottom:8,letterSpacing:"-.02em"}}>
-              The OpulentSMM Standard
-            </h2>
-            <p style={{color:C.muted,fontSize:14,maxWidth:440,margin:"0 auto"}}>Built for results. Not promises.</p>
-          </div>
-          <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(240px,1fr))",gap:18}}>
-            {[
-              {i:"⚡",t:"Instant Delivery",d:"Orders start within 0–30 minutes. Real-time tracking in your dashboard.",c:"#fbbf24",bg:"rgba(251,191,36,.05)",b:"rgba(251,191,36,.15)"},
-              {i:"💎",t:"High Quality",d:"Real, high-retention accounts. Engagement that actually counts.",c:"#a855f7",bg:"rgba(168,85,247,.05)",b:"rgba(168,85,247,.15)"},
-              {i:"🔄",t:"Non-Drop Guarantee",d:"Free 30-day refill on all eligible services. No questions asked.",c:"#34d399",bg:"rgba(52,211,153,.05)",b:"rgba(52,211,153,.15)"},
-              {i:"🔒",t:"Secure Payments",d:"All major UPI methods. No password required. 100% safe.",c:C.goldL,bg:"rgba(212,160,23,.05)",b:"rgba(212,160,23,.15)"},
-              {i:"🇮🇳",t:"India Specialists",d:"Optimised for Indian creators and brands. Indian audience focus.",c:"#f87171",bg:"rgba(239,68,68,.05)",b:"rgba(239,68,68,.15)"},
-              {i:"💬",t:"24/7 Support",d:"Real humans on WhatsApp and ticket support. Always available.",c:"#60a5fa",bg:"rgba(96,165,250,.05)",b:"rgba(96,165,250,.15)"},
-            ].map(f=>(
-              <div key={f.t} className="svc-card-hover"
-                style={{background:`linear-gradient(145deg,${f.bg},rgba(255,255,255,.01))`,
-                  border:`1px solid ${f.b}`,borderRadius:16,padding:28,transition:"all .25s"}}>
-                <div style={{width:48,height:48,borderRadius:13,background:f.bg,border:`1px solid ${f.b}`,
-                  display:"flex",alignItems:"center",justifyContent:"center",fontSize:22,marginBottom:16}}>
-                  {f.i}
-                </div>
-                <div style={{fontWeight:800,color:"#f0f0ff",fontSize:15,marginBottom:7,fontFamily:"Syne,sans-serif"}}>{f.t}</div>
-                <div style={{color:"#60607a",fontSize:13,lineHeight:1.6}}>{f.d}</div>
-              </div>
+          <div style={{display:"flex",gap:8,flexWrap:"wrap",justifyContent:"center",marginBottom:36}}>
+            {PLATFORMS.map(p=>(
+              <button key={p} onClick={()=>setPf(p)} style={{background:pf===p?C.gP:"rgba(255,255,255,.04)",
+                border:`1px solid ${pf===p?"transparent":C.border}`,borderRadius:50,padding:"8px 18px",
+                color:pf===p?"#fff":C.muted,fontSize:12,fontWeight:600,cursor:"pointer",transition:"all .2s"}}>{p}</button>
             ))}
           </div>
+          <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(300px,1fr))",gap:16}}>
+            {filtered.map(s=><SvcCard key={s.id} svc={s} onOrder={goSignup}/>)}
+          </div>
+          <div style={{textAlign:"center",marginTop:36}}>
+            <Btn onClick={goSignup} size="lg">Sign Up to Order All Services →</Btn>
+          </div>
         </div>
       </section>
 
-      {/* ── HOW IT WORKS ────────────────────────────────────── */}
-      <section style={{padding:"90px 6%",borderTop:"1px solid rgba(255,255,255,.05)"}}>
+      {/* HOW IT WORKS */}
+      <section style={{padding:"70px 5%",background:"rgba(255,255,255,.015)",borderTop:`1px solid ${C.border}`}}>
         <div style={{maxWidth:900,margin:"0 auto",textAlign:"center"}}>
-          <h2 style={{fontFamily:"Syne,sans-serif",fontSize:32,fontWeight:900,color:"#f0f0ff",marginBottom:8,letterSpacing:"-.02em"}}>
-            Start in 4 Steps
+          <h2 style={{fontFamily:"Syne,sans-serif",fontSize:34,fontWeight:900,marginBottom:10,
+            background:"linear-gradient(135deg,#f0f0ff,#c4b5fd)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent"}}>
+            How It Works
           </h2>
-          <p style={{color:C.muted,marginBottom:52,fontSize:14}}>No technical knowledge needed.</p>
-          <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(180px,1fr))",gap:16}}>
-            {[
-              {n:"01",i:"👤",t:"Create Account",d:"Sign up free in under 60 seconds.",c:"#c4b5fd"},
-              {n:"02",i:"💰",t:"Add Funds",d:"Top up via UPI — GPay, PhonePe, Paytm.",c:C.goldL},
-              {n:"03",i:"🛒",t:"Place Order",d:"Choose service, paste link, confirm.",c:"#34d399"},
-              {n:"04",i:"📈",t:"Watch it Grow",d:"Live delivery tracking in your dashboard.",c:"#60a5fa"},
+          <p style={{color:C.muted,marginBottom:48,fontSize:14}}>4 simple steps to grow your social media</p>
+          <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(180px,1fr))",gap:18}}>
+            {[{n:"01",i:"👤",t:"Create Account",d:"Sign up free with email or phone"},
+              {n:"02",i:"💰",t:"Add Funds",d:"Top up wallet — min ₹100"},
+              {n:"03",i:"🛒",t:"Place Order",d:"Choose service, paste link, confirm"},
+              {n:"04",i:"📈",t:"Get Results",d:"Delivery starts within minutes"},
             ].map((s,i)=>(
-              <Card key={i} style={{padding:26,textAlign:"center",position:"relative",overflow:"hidden"}}>
-                <div style={{position:"absolute",top:10,right:14,fontSize:28,fontWeight:900,
-                  color:s.c,opacity:.08,fontFamily:"Syne,sans-serif",lineHeight:1}}>{s.n}</div>
-                <div style={{width:52,height:52,borderRadius:15,background:`${s.c}12`,
-                  border:`1px solid ${s.c}25`,display:"flex",alignItems:"center",
-                  justifyContent:"center",fontSize:24,margin:"0 auto 16px"}}>
-                  {s.i}
-                </div>
-                <div style={{fontWeight:800,fontSize:14,color:"#e8e8f2",marginBottom:6,fontFamily:"Syne,sans-serif"}}>{s.t}</div>
+              <Card key={i} style={{padding:26,textAlign:"center"}}>
+                <div style={{fontSize:10,fontWeight:800,color:C.purpleL,letterSpacing:".12em",marginBottom:10}}>STEP {s.n}</div>
+                <div style={{fontSize:34,marginBottom:12}}>{s.i}</div>
+                <div style={{fontWeight:800,fontSize:15,color:"#e8e8f2",marginBottom:6,fontFamily:"Syne,sans-serif"}}>{s.t}</div>
                 <div style={{color:C.muted,fontSize:12,lineHeight:1.6}}>{s.d}</div>
               </Card>
             ))}
           </div>
-          <div style={{marginTop:42}}>
-            <Btn v="purple" onClick={goSignup} size="lg" style={{animation:"glowPurple 2.5s ease infinite"}}>
-              Get Started Free →
-            </Btn>
-          </div>
         </div>
       </section>
 
-      {/* ── ABOUT US ────────────────────────────────────────── */}
-      <section style={{padding:"90px 6%",background:"rgba(124,58,237,.03)",borderTop:"1px solid rgba(124,58,237,.1)"}}>
-        <div style={{maxWidth:900,margin:"0 auto"}}>
-          <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(340px,1fr))",gap:48,alignItems:"center"}}>
-            <div>
-              <div style={{display:"inline-flex",alignItems:"center",gap:6,
-                background:"rgba(212,160,23,.1)",border:"1px solid rgba(212,160,23,.25)",
-                borderRadius:20,padding:"5px 16px",marginBottom:20}}>
-                <span style={{fontSize:10,fontWeight:800,color:C.goldL,letterSpacing:".1em"}}>✦ ABOUT OPULENTSMM</span>
-              </div>
-              <h2 style={{fontFamily:"Syne,sans-serif",fontSize:32,fontWeight:900,color:"#f0f0ff",
-                marginBottom:18,letterSpacing:"-.02em",lineHeight:1.15}}>
-                Built for<br/>
-                <span style={{background:"linear-gradient(135deg,#7c3aed,#d4a017)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent"}}>
-                  Digital Growth
-                </span>
-              </h2>
-              <p style={{color:"#7070a0",fontSize:14,lineHeight:1.85,marginBottom:24}}>
-                OpulentSMM is a premium social media growth platform built for creators, influencers, and brands who want to scale faster in the digital world.
-              </p>
-              <p style={{color:"#7070a0",fontSize:14,lineHeight:1.85,marginBottom:24}}>
-                We focus on delivering high-quality, reliable, and secure growth services across platforms like Instagram, YouTube, and TikTok. Our mission is simple — help creators grow faster, build authority, and unlock new opportunities online.
-              </p>
-              <p style={{color:"#7070a0",fontSize:14,lineHeight:1.85}}>
-                With thousands of successful orders and a rapidly growing community, OpulentSMM is trusted by users across India and worldwide. We don't just provide services — we help build digital presence.
-              </p>
-            </div>
-            <div style={{display:"flex",flexDirection:"column",gap:16}}>
-              {[
-                {i:"🏆",t:"Market Leaders",d:"Ranked among the top SMM panels in India for quality and reliability.",c:"#fbbf24"},
-                {i:"🔐",t:"Privacy First",d:"We never ask for passwords. Your account security is our priority.",c:"#34d399"},
-                {i:"🌏",t:"Global Reach",d:"Serving creators and brands across India and worldwide.",c:"#60a5fa"},
-                {i:"📈",t:"Proven Results",d:"100,000+ orders fulfilled. Real growth, real results.",c:C.goldL},
-              ].map(a=>(
-                <div key={a.t} style={{display:"flex",gap:14,padding:"16px 18px",
-                  background:"rgba(255,255,255,.03)",border:"1px solid rgba(255,255,255,.06)",
-                  borderRadius:14,transition:"all .2s"}}
-                  className="svc-card-hover">
-                  <div style={{width:40,height:40,borderRadius:11,background:`${a.c}12`,
-                    border:`1px solid ${a.c}25`,display:"flex",alignItems:"center",
-                    justifyContent:"center",fontSize:19,flexShrink:0}}>
-                    {a.i}
-                  </div>
-                  <div>
-                    <div style={{fontWeight:700,color:"#e8e8f2",fontSize:14,marginBottom:3}}>{a.t}</div>
-                    <div style={{color:C.muted,fontSize:12,lineHeight:1.55}}>{a.d}</div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── LIVE ACTIVITY ───────────────────────────────────── */}
-      <section style={{padding:"80px 6%",borderTop:"1px solid rgba(255,255,255,.05)"}}>
+      {/* LIVE ORDER ACTIVITY */}
+      <section style={{padding:"60px 5%",borderTop:`1px solid ${C.border}`}}>
         <div style={{maxWidth:1100,margin:"0 auto"}}>
-          <div style={{textAlign:"center",marginBottom:40}}>
-            <div style={{display:"inline-flex",alignItems:"center",gap:8,background:"rgba(52,211,153,.08)",
-              border:"1px solid rgba(52,211,153,.2)",borderRadius:20,padding:"6px 16px",marginBottom:14}}>
-              <span style={{width:7,height:7,borderRadius:"50%",background:"#34d399",
-                animation:"pulse 1.5s infinite",display:"inline-block"}}/>
-              <span style={{fontSize:11,fontWeight:700,color:"#34d399",letterSpacing:".06em"}}>LIVE ACTIVITY</span>
+          <div style={{textAlign:"center",marginBottom:36}}>
+            <div style={{display:"inline-flex",alignItems:"center",gap:8,background:"rgba(52,211,153,.1)",border:"1px solid rgba(52,211,153,.25)",borderRadius:20,padding:"6px 16px",marginBottom:14}}>
+              <span style={{width:8,height:8,borderRadius:"50%",background:"#34d399",animation:"pulse 1.5s infinite",display:"inline-block"}}/>
+              <span style={{fontSize:12,fontWeight:700,color:"#34d399"}}>LIVE ORDER ACTIVITY</span>
             </div>
-            <h2 style={{fontFamily:"Syne,sans-serif",fontSize:28,fontWeight:900,color:"#f0f0ff",marginBottom:4}}>
-              Orders Happening Right Now
-            </h2>
-            <p style={{color:C.muted,fontSize:13}}>Join thousands of creators growing with OpulentSMM</p>
+            <h2 style={{fontFamily:"Syne,sans-serif",fontSize:30,fontWeight:900,color:"#f0f0ff",marginBottom:6}}>Orders Happening Right Now</h2>
+            <p style={{color:C.muted,fontSize:13}}>Join thousands of creators already growing with Nexus SMM</p>
           </div>
           <LiveActivity/>
         </div>
       </section>
 
-      {/* ── TESTIMONIALS ────────────────────────────────────── */}
-      <section style={{padding:"90px 6%",background:"rgba(124,58,237,.03)",borderTop:"1px solid rgba(124,58,237,.1)"}}>
+      {/* TRENDING SERVICES */}
+      <section style={{padding:"60px 5%",background:"rgba(255,255,255,.012)",borderTop:`1px solid ${C.border}`}}>
         <div style={{maxWidth:1100,margin:"0 auto"}}>
-          <div style={{textAlign:"center",marginBottom:52}}>
-            <div style={{display:"inline-flex",alignItems:"center",gap:6,
-              background:"rgba(212,160,23,.1)",border:"1px solid rgba(212,160,23,.25)",
-              borderRadius:20,padding:"5px 16px",marginBottom:16}}>
-              <span style={{fontSize:10,fontWeight:800,color:C.goldL,letterSpacing:".1em"}}>⭐ CUSTOMER REVIEWS</span>
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:32}}>
+            <div>
+              <h2 style={{fontFamily:"Syne,sans-serif",fontSize:30,fontWeight:900,background:"linear-gradient(135deg,#f5c842,#d4a017)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",marginBottom:6}}>🔥 Trending Services</h2>
+              <p style={{color:C.muted,fontSize:13}}>Most popular services this week</p>
             </div>
-            <h2 style={{fontFamily:"Syne,sans-serif",fontSize:32,fontWeight:900,color:"#f0f0ff",letterSpacing:"-.02em"}}>
-              Trusted by Creators
-            </h2>
+            <Btn onClick={goSignup} v="ghost" size="sm">View All →</Btn>
           </div>
-          <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(290px,1fr))",gap:18}}>
-            {[
-              {n:"Rahul S.",r:"Instagram Creator · Mumbai",t:"Got 5K followers in under 4 hours. Quality is amazing — they look completely organic. Already placed 3 more orders.",stars:5},
-              {n:"Priya M.",r:"YouTube Channel · Ahmedabad",t:"Used OpulentSMM for YouTube views and my video went trending. Indian views, real watch time. Best panel I've tried.",stars:5},
-              {n:"Arjun K.",r:"Digital Agency · Delhi",t:"Managing 20+ client accounts here. Fast delivery, great prices, and the dashboard makes bulk orders easy. Highly recommended.",stars:5},
-              {n:"Sneha R.",r:"TikTok Creator · Hyderabad",t:"Ordered Reel views and likes — content hit 200K impressions in 2 days. Incredible ROI for the price.",stars:5},
-              {n:"Vikram P.",r:"Brand Manager · Pune",t:"Instagram package helped us grow from 2K to 22K followers in one month. Support team is responsive and professional.",stars:5},
-            ].map((t,i)=>(
-              <Card key={i} style={{padding:24}} className="svc-card-hover">
-                <div style={{display:"flex",gap:2,marginBottom:14}}>
-                  {[1,2,3,4,5].map(s=>(
-                    <span key={s} style={{color:s<=t.stars?"#fbbf24":"rgba(255,255,255,.1)",fontSize:14}}>★</span>
-                  ))}
-                </div>
-                <p style={{color:"#a0a0c0",fontSize:13,lineHeight:1.75,marginBottom:18,fontStyle:"italic"}}>"{t.t}"</p>
-                <div style={{display:"flex",alignItems:"center",gap:10}}>
-                  <div style={{width:36,height:36,borderRadius:"50%",background:C.gP,flexShrink:0,
-                    display:"flex",alignItems:"center",justifyContent:"center",fontWeight:800,fontSize:14,color:"#fff"}}>
-                    {t.n[0]}
-                  </div>
-                  <div>
-                    <div style={{fontWeight:700,color:"#e8e8f2",fontSize:13}}>{t.n}</div>
-                    <div style={{fontSize:11,color:C.muted}}>{t.r}</div>
-                  </div>
-                </div>
-              </Card>
-            ))}
+          <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(280px,1fr))",gap:16}}>
+            {SERVICES.filter(s=>s.badge).slice(0,6).map(s=><SvcCard key={s.id} svc={s} onOrder={goSignup}/>)}
           </div>
         </div>
       </section>
 
-      {/* ── NEW USER REWARDS ─────────────────────────────────── */}
-      <section style={{padding:"80px 6%",borderTop:"1px solid rgba(255,255,255,.05)"}}>
+      {/* DAILY DEALS */}
+      <section style={{padding:"60px 5%",borderTop:`1px solid ${C.border}`}}>
         <div style={{maxWidth:1100,margin:"0 auto"}}>
-          <div style={{textAlign:"center",marginBottom:44}}>
-            <div style={{display:"inline-flex",alignItems:"center",gap:8,background:"rgba(212,160,23,.1)",
-              border:"1px solid rgba(212,160,23,.25)",borderRadius:20,padding:"5px 16px",marginBottom:14}}>
-              <span style={{fontSize:10,fontWeight:800,color:C.goldL,letterSpacing:".1em"}}>🎁 NEW USER REWARDS</span>
-            </div>
-            <h2 style={{fontFamily:"Syne,sans-serif",fontSize:30,fontWeight:900,color:"#f0f0ff",marginBottom:8,letterSpacing:"-.02em"}}>Rewards After Your First Order</h2>
-            <p style={{color:C.muted,fontSize:13}}>Real bonuses automatically granted on completion</p>
+          <div style={{textAlign:"center",marginBottom:36}}>
+            <h2 style={{fontFamily:"Syne,sans-serif",fontSize:30,fontWeight:900,background:C.gP,WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",marginBottom:6}}>⚡ Today's Special Deals</h2>
+            <p style={{color:C.muted,fontSize:13}}>Limited time offers — grab before they expire!</p>
           </div>
-          <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(270px,1fr))",gap:16}}>
+          <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(280px,1fr))",gap:16}}>
             {[
-              {icon:"❤️",spend:"₹1,000",reward:"100 Free Likes or Saves",type:"Post only",color:"#34d399"},
-              {icon:"🎬",spend:"₹2,000",reward:"1,000 Free Views or Likes",type:"Reels only",color:"#60a5fa"},
-              {icon:"👥",spend:"₹3,000",reward:"1,000 Free Followers",type:"Indian followers only",color:C.goldL},
+              {icon:"📸",title:"Instagram Starter Pack",desc:"1K Followers + 5K Likes + 10K Views",price:"₹249",original:"₹499",discount:"50%",badge:"🔥 HOT"},
+              {icon:"▶️",title:"YouTube Growth Bundle",desc:"5K Views + 500 Likes + 100 Subscribers",price:"₹399",original:"₹699",discount:"43%",badge:"⚡ Fast"},
+              {icon:"✈️",title:"Telegram Boost Pack",desc:"2K Members + 10K Post Views",price:"₹349",original:"₹599",discount:"42%",badge:"💎 Value"},
             ].map((d,i)=>(
-              <Card key={i} gold style={{padding:26,position:"relative",overflow:"hidden"}}>
-                <div style={{position:"absolute",top:0,right:0,background:`${d.color}15`,
-                  borderRadius:"0 16px 0 10px",padding:"4px 14px",fontSize:10,fontWeight:800,color:d.color}}>
-                  {d.type}
+              <Card key={i} gold style={{padding:22,position:"relative",overflow:"hidden"}}>
+                <div style={{position:"absolute",top:12,right:12,background:"#ef4444",color:"#fff",borderRadius:20,padding:"3px 10px",fontSize:10,fontWeight:800}}>{d.discount} OFF</div>
+                <div style={{fontSize:32,marginBottom:12}}>{d.icon}</div>
+                <div style={{fontWeight:800,color:"#f0f0ff",fontSize:15,marginBottom:6}}>{d.title} <span style={{fontSize:10,background:"rgba(245,200,66,.15)",color:C.goldL,borderRadius:20,padding:"2px 8px",fontWeight:700}}>{d.badge}</span></div>
+                <div style={{color:C.muted,fontSize:12,marginBottom:14,lineHeight:1.5}}>{d.desc}</div>
+                <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:16}}>
+                  <span style={{fontSize:22,fontWeight:900,color:C.goldL}}>{d.price}</span>
+                  <span style={{fontSize:14,color:C.muted,textDecoration:"line-through"}}>{d.original}</span>
                 </div>
-                <div style={{fontSize:32,marginBottom:14}}>{d.icon}</div>
-                <div style={{fontSize:11,color:C.muted,marginBottom:5}}>Spend {d.spend} → get free:</div>
-                <div style={{fontWeight:900,color:"#f0f0ff",fontSize:16,marginBottom:12,fontFamily:"Syne,sans-serif"}}>{d.reward}</div>
-                <div style={{fontSize:11,color:C.muted,lineHeight:1.5}}>Auto-credited after order completion.</div>
+                <Btn v="gold" onClick={goSignup} style={{width:"100%",justifyContent:"center"}} size="sm">Grab Deal →</Btn>
               </Card>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── FIRST DEPOSIT BONUS ──────────────────────────────── */}
-      <section style={{padding:"80px 6%",background:"linear-gradient(135deg,rgba(212,160,23,.05),rgba(212,160,23,.02))",borderTop:"1px solid rgba(212,160,23,.12)",borderBottom:"1px solid rgba(212,160,23,.12)"}}>
-        <div style={{maxWidth:740,margin:"0 auto",textAlign:"center"}}>
-          <div style={{display:"inline-flex",alignItems:"center",gap:8,background:"rgba(212,160,23,.12)",
-            border:"1px solid rgba(212,160,23,.35)",borderRadius:50,padding:"7px 20px",marginBottom:20,
-            boxShadow:"0 0 20px rgba(212,160,23,.1)"}}>
-            <span>🎁</span>
-            <span style={{fontSize:11,fontWeight:800,color:C.goldL,letterSpacing:".1em"}}>FIRST DEPOSIT BONUS</span>
-          </div>
-          <h2 style={{fontFamily:"Syne,sans-serif",fontSize:34,fontWeight:900,color:"#f0f0ff",marginBottom:12,letterSpacing:"-.02em"}}>
-            Get <span style={{background:C.gG,WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent"}}>Rs.10 Bonus</span> Free
+      {/* FIRST DEPOSIT BONUS BANNER */}
+      <section style={{padding:"50px 5%",background:"linear-gradient(135deg,rgba(124,58,237,.08),rgba(168,85,247,.05))",borderTop:`1px solid rgba(124,58,237,.2)`}}>
+        <div style={{maxWidth:760,margin:"0 auto",textAlign:"center"}}>
+          <div style={{fontSize:48,marginBottom:14}}>🎁</div>
+          <h2 style={{fontFamily:"Syne,sans-serif",fontSize:34,fontWeight:900,color:"#f0f0ff",marginBottom:10}}>
+            {FIRST_DEPOSIT_BONUS_PCT}% Bonus on Your First Deposit!
           </h2>
-          <p style={{color:C.muted,fontSize:14,marginBottom:32,lineHeight:1.7}}>
-            New users automatically receive <strong style={{color:C.goldL}}>Rs.10 free bonus</strong> on their first deposit of Rs.100 or more.
+          <p style={{color:C.muted,fontSize:15,marginBottom:28,lineHeight:1.7}}>
+            New users get <strong style={{color:C.purpleL}}>{FIRST_DEPOSIT_BONUS_PCT}% extra balance</strong> on their first deposit.<br/>
+            Deposit ₹500 and get ₹{500+Math.round(500*FIRST_DEPOSIT_BONUS_PCT/100)} in your wallet — free ₹{Math.round(500*FIRST_DEPOSIT_BONUS_PCT/100)} bonus!
           </p>
-          <div style={{display:"flex",gap:14,justifyContent:"center",flexWrap:"wrap",marginBottom:32}}>
-            {[["₹500","₹"+( 500+Math.round(500*FIRST_DEPOSIT_BONUS_PCT/100))],["₹1,000","₹"+(1000+Math.round(1000*FIRST_DEPOSIT_BONUS_PCT/100))],["₹2,000","₹"+(2000+Math.round(2000*FIRST_DEPOSIT_BONUS_PCT/100))]].map(([dep,get])=>(
-              <div key={dep} style={{background:"rgba(212,160,23,.08)",border:"1px solid rgba(212,160,23,.25)",borderRadius:12,padding:"14px 22px",textAlign:"center",minWidth:140}}>
-                <div style={{fontSize:11,color:C.muted,marginBottom:4}}>Deposit {dep}</div>
-                <div style={{fontSize:18,fontWeight:900,color:C.goldL}}>Get {get}</div>
+          <div style={{display:"flex",gap:12,justifyContent:"center",flexWrap:"wrap",marginBottom:20}}>
+            {[{l:"₹100 deposit",v:`Get ₹${100+Math.round(100*FIRST_DEPOSIT_BONUS_PCT/100)}`},{l:"₹500 deposit",v:`Get ₹${500+Math.round(500*FIRST_DEPOSIT_BONUS_PCT/100)}`},{l:"₹1000 deposit",v:`Get ₹${1000+Math.round(1000*FIRST_DEPOSIT_BONUS_PCT/100)}`}].map(x=>(
+              <div key={x.l} style={{background:"rgba(124,58,237,.12)",border:"1px solid rgba(124,58,237,.3)",borderRadius:12,padding:"12px 20px",textAlign:"center"}}>
+                <div style={{fontSize:12,color:C.muted,marginBottom:3}}>{x.l}</div>
+                <div style={{fontSize:18,fontWeight:900,color:"#c4b5fd"}}>{x.v}</div>
               </div>
             ))}
           </div>
-          <Btn v="gold" onClick={goSignup} size="lg" style={{animation:"glow 2.5s ease infinite"}}>Claim Bonus Now →</Btn>
-          <p style={{fontSize:11,color:C.muted,marginTop:10}}>*First deposit only · Minimum ₹100</p>
+          <Btn onClick={goSignup} size="lg" style={{animation:"glow 2.5s ease infinite"}}>Claim Bonus Now →</Btn>
+          <p style={{fontSize:11,color:C.muted,marginTop:10}}>*First deposit only. Minimum ₹100.</p>
         </div>
       </section>
 
-      {/* ── FINAL CTA ────────────────────────────────────────── */}
-      <section style={{padding:"100px 6%",textAlign:"center"}}>
-        <div style={{maxWidth:640,margin:"0 auto"}}>
-          <Card glow style={{padding:"64px 40px",position:"relative",overflow:"hidden"}}>
-            <div style={{position:"absolute",top:"50%",left:"50%",transform:"translate(-50%,-50%)",
-              width:500,height:500,borderRadius:"50%",
-              background:"radial-gradient(ellipse,rgba(124,58,237,.1) 0%,transparent 70%)",pointerEvents:"none"}}/>
-            <div style={{position:"relative",zIndex:1}}>
-              <div style={{fontSize:48,marginBottom:16,animation:"floatY 3s ease-in-out infinite"}}>🚀</div>
-              <h2 style={{fontFamily:"Syne,sans-serif",fontSize:34,fontWeight:900,marginBottom:12,
-                background:"linear-gradient(135deg,#c4b5fd,#f5c842)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",letterSpacing:"-.02em"}}>
-                Start Growing Today
-              </h2>
-              <p style={{color:C.muted,fontSize:14,marginBottom:32,maxWidth:380,margin:"0 auto 32px",lineHeight:1.7}}>
-                Join 48,000+ users already growing with OpulentSMM. Setup takes under 2 minutes.
-              </p>
-              <div style={{display:"flex",gap:12,justifyContent:"center",flexWrap:"wrap",marginBottom:20}}>
-                <Btn v="purple" onClick={goSignup} size="lg" style={{animation:"glowPurple 2.5s ease infinite",minWidth:190}}>
-                  Join Now — It's Free
-                </Btn>
-                <Btn v="ghost" onClick={goLogin} size="lg">Log In</Btn>
-              </div>
-              <div style={{display:"flex",gap:16,justifyContent:"center",flexWrap:"wrap"}}>
-                {["🔒 No credit card","⚡ Instant access","✓ Cancel anytime"].map(t=>(
-                  <span key={t} style={{fontSize:11,color:"#34d399",fontWeight:700}}>{t}</span>
-                ))}
-              </div>
-            </div>
-          </Card>
-        </div>
+      {/* CTA */}
+      <section style={{padding:"70px 5%",textAlign:"center"}}>
+        <Card glow style={{maxWidth:640,margin:"0 auto",padding:"56px 40px"}}>
+          <div style={{fontSize:42,marginBottom:14}}>🚀</div>
+          <h2 style={{fontFamily:"Syne,sans-serif",fontSize:36,fontWeight:900,marginBottom:12,
+            background:C.gG,WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent"}}>Ready to Go Viral?</h2>
+          <p style={{color:C.muted,fontSize:15,marginBottom:32,maxWidth:400,margin:"0 auto 32px"}}>Join 1,000+ creators growing with Nexus SMM today.</p>
+          <Btn onClick={goSignup} size="lg" style={{animation:"glow 2.5s ease infinite"}}>Create Free Account →</Btn>
+        </Card>
       </section>
 
-      {/* ── TRUST BADGES ─────────────────────────────────────── */}
-      <section style={{padding:"48px 6%",background:"rgba(255,255,255,.012)",borderTop:`1px solid ${C.border}`}}>
+      {/* TRUST BADGES + PAYMENT METHODS */}
+      <section style={{padding:"50px 5%",background:"rgba(255,255,255,.012)",borderTop:`1px solid ${C.border}`}}>
         <div style={{maxWidth:1100,margin:"0 auto"}}>
-          <div style={{display:"flex",justifyContent:"center",gap:10,flexWrap:"wrap",marginBottom:28}}>
-            {[{i:"🔒",t:"SSL Secured",s:"256-bit"},{i:"⚡",t:"Instant Delivery",s:"0–30 min"},{i:"🔄",t:"30-Day Refill",s:"Free refill"},{i:"🇮🇳",t:"Indian UPI",s:"GPay · PhonePe"},{i:"📞",t:"24/7 Support",s:"WhatsApp"},{i:"✅",t:"Verified Panel",s:"Trusted"}].map(b=>(
-              <div key={b.t} style={{display:"flex",alignItems:"center",gap:9,padding:"10px 16px",
-                background:"rgba(255,255,255,.025)",border:`1px solid ${C.border}`,borderRadius:10}}>
-                <span style={{fontSize:18}}>{b.i}</span>
+          <div style={{display:"flex",justifyContent:"center",gap:12,flexWrap:"wrap",marginBottom:36}}>
+            {[{i:"🔒",t:"SSL Secured",s:"256-bit encryption"},{i:"⚡",t:"Instant Delivery",s:"Orders start in mins"},{i:"🔄",t:"Refund Policy",s:"7-day guarantee"},{i:"🇮🇳",t:"Indian UPI",s:"GPay, PhonePe, Paytm"},{i:"📞",t:"24/7 Support",s:"WhatsApp & Email"}].map(b=>(
+              <div key={b.t} style={{display:"flex",alignItems:"center",gap:10,padding:"12px 20px",
+                background:"rgba(255,255,255,.04)",border:`1px solid ${C.border}`,borderRadius:12,minWidth:180}}>
+                <span style={{fontSize:22}}>{b.i}</span>
                 <div>
-                  <div style={{fontWeight:700,color:"#e8e8f2",fontSize:12}}>{b.t}</div>
-                  <div style={{fontSize:10,color:C.muted}}>{b.s}</div>
+                  <div style={{fontWeight:700,color:"#e8e8f2",fontSize:13}}>{b.t}</div>
+                  <div style={{fontSize:11,color:C.muted}}>{b.s}</div>
                 </div>
               </div>
             ))}
           </div>
-          <div style={{textAlign:"center"}}>
-            <div style={{fontSize:10,color:C.muted,letterSpacing:".08em",marginBottom:10,fontWeight:700}}>ACCEPTED PAYMENTS</div>
-            <div style={{display:"flex",justifyContent:"center",gap:8,flexWrap:"wrap"}}>
+          <div style={{textAlign:"center",marginBottom:12}}>
+            <div style={{fontSize:11,color:C.muted,letterSpacing:".08em",marginBottom:12,fontWeight:700}}>ACCEPTED PAYMENT METHODS</div>
+            <div style={{display:"flex",justifyContent:"center",gap:10,flexWrap:"wrap"}}>
               {["📱 Google Pay","📱 PhonePe","📱 Paytm","🏦 UPI Transfer","💳 NEFT / IMPS"].map(p=>(
-                <span key={p} style={{background:"rgba(255,255,255,.04)",border:"1px solid rgba(212,160,23,.12)",borderRadius:8,padding:"6px 14px",fontSize:11,fontWeight:600,color:C.muted}}>{p}</span>
+                <span key={p} style={{background:"rgba(255,255,255,.06)",border:`1px solid ${C.border}`,borderRadius:8,padding:"7px 14px",fontSize:12,fontWeight:600,color:C.muted}}>{p}</span>
               ))}
             </div>
           </div>
         </div>
       </section>
 
-      {/* ── FAQ ──────────────────────────────────────────────── */}
-      <section style={{padding:"80px 6%",borderTop:`1px solid ${C.border}`}}>
-        <div style={{maxWidth:700,margin:"0 auto"}}>
-          <h2 style={{fontFamily:"Syne,sans-serif",fontSize:30,fontWeight:900,color:"#f0f0ff",marginBottom:36,textAlign:"center",letterSpacing:"-.02em"}}>
-            Frequently Asked Questions
-          </h2>
+      {/* TESTIMONIALS */}
+      <section style={{padding:"70px 5%"}}>
+        <div style={{maxWidth:1100,margin:"0 auto"}}>
+          <div style={{textAlign:"center",marginBottom:44}}>
+            <h2 style={{fontFamily:"Syne,sans-serif",fontSize:34,fontWeight:900,
+              background:"linear-gradient(135deg,#f0f0ff,#c4b5fd)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",marginBottom:8}}>
+              What Our Customers Say
+            </h2>
+            <p style={{color:C.muted,fontSize:14}}>Trusted by creators, brands and agencies across India</p>
+          </div>
+          <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(300px,1fr))",gap:20}}>
+            {[
+              {n:"Rahul Sharma",r:"Instagram Creator",t:"Got 5k followers in under 4 hours! Quality is amazing, they look 100% real. Will order again definitely.",stars:5,loc:"Mumbai"},
+              {n:"Priya Patel",r:"YouTube Channel",t:"Used Nexus for YouTube views and my video went viral! Their Indian views are genuine. Best SMM panel in India.",stars:5,loc:"Ahmedabad"},
+              {n:"Arjun Singh",r:"Digital Agency",t:"Managing 15+ client accounts with Nexus. Fast delivery, great prices, and the admin panel is super easy to use.",stars:5,loc:"Delhi"},
+              {n:"Sneha Reddy",r:"TikTok Creator",t:"Ordered TikTok views and likes. My content reached 200k people in 2 days. Incredible ROI for just ₹500!",stars:5,loc:"Hyderabad"},
+              {n:"Vikram Mehta",r:"Brand Manager",t:"Their Instagram package helped us grow from 2k to 20k followers in one month. Support team is very responsive.",stars:5,loc:"Pune"},
+              {n:"Ananya Gupta",r:"Lifestyle Blogger",t:"Cheapest prices I've found anywhere. Payments via UPI are instant and secure. Highly recommend to all creators!",stars:5,loc:"Bangalore"},
+            ].map((t,i)=>(
+              <Card key={i} style={{padding:24}} className="svc-card-hover">
+                <div style={{display:"flex",gap:3,marginBottom:12}}>
+                  {[1,2,3,4,5].map(s=><span key={s} style={{color:s<=t.stars?"#fbbf24":"rgba(255,255,255,.1)",fontSize:16}}>★</span>)}
+                </div>
+                <p style={{color:"#d4d4e8",fontSize:13,lineHeight:1.7,marginBottom:16,fontStyle:"italic"}}>"{t.t}"</p>
+                <div style={{display:"flex",alignItems:"center",gap:10}}>
+                  <div style={{width:38,height:38,borderRadius:"50%",background:C.gP,display:"flex",alignItems:"center",justifyContent:"center",fontWeight:800,fontSize:14,color:"#fff",flexShrink:0}}>
+                    {t.n[0]}
+                  </div>
+                  <div>
+                    <div style={{fontWeight:700,color:"#e8e8f2",fontSize:13}}>{t.n}</div>
+                    <div style={{fontSize:11,color:C.muted}}>{t.r} · {t.loc}</div>
+                  </div>
+                </div>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section style={{padding:"70px 5%",background:"rgba(255,255,255,.012)",borderTop:`1px solid ${C.border}`}}>
+        <div style={{maxWidth:760,margin:"0 auto"}}>
+          <div style={{textAlign:"center",marginBottom:44}}>
+            <h2 style={{fontFamily:"Syne,sans-serif",fontSize:34,fontWeight:900,
+              background:"linear-gradient(135deg,#f0f0ff,#c4b5fd)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",marginBottom:8}}>
+              Frequently Asked Questions
+            </h2>
+          </div>
           {[
-            {q:"Is it safe for my account?",a:"Yes. We use delivery methods that comply with platform guidelines. We never ask for your password."},
-            {q:"How fast is delivery?",a:"Most orders start within 0–30 minutes. Full delivery completes in 1–24 hours depending on quantity."},
-            {q:"What payment methods do you accept?",a:"All UPI apps — Google Pay, PhonePe, Paytm, BHIM, and direct bank transfer. No credit card needed."},
-            {q:"Will followers/likes drop?",a:"We offer a 30-day refill guarantee. If numbers drop, contact support and we'll restore them free."},
-            {q:"How do I add balance?",a:"Go to Add Funds, pay via UPI QR code, enter your UTR number. Admin credits wallet within 30 minutes."},
-            {q:"Can I get a refund?",a:"If an order fails to deliver, your wallet is refunded immediately. Cash refunds take 3–5 business days."},
+            {q:"Is it safe for my Instagram/YouTube account?",a:"Yes, all our services use safe methods that comply with platform guidelines. We never ask for your password. All delivery is done via public engagement methods."},
+            {q:"How fast is delivery?",a:"Most services start within 0-30 minutes of placing an order. Full delivery depends on quantity but typically completes within 1-24 hours."},
+            {q:"What payment methods do you accept?",a:"We accept all UPI methods including Google Pay, PhonePe, Paytm, BHIM, and direct bank transfer (NEFT/IMPS). No credit card required."},
+            {q:"Will followers/likes drop after delivery?",a:"We offer a no-drop guarantee on most services. If you experience drops within 30 days, contact support and we'll refill for free."},
+            {q:"How do I add balance to my wallet?",a:"Go to Add Funds in your dashboard, select an amount, pay via UPI QR code, and enter your UTR/transaction ID. Admin will credit your wallet within 30 minutes."},
+            {q:"Can I get a refund?",a:"Yes, if an order fails to deliver we will refund the full amount to your wallet immediately. Cash refunds are processed within 3-5 business days on request."},
+            {q:"Do you have an API for resellers?",a:"Yes! We offer reseller accounts with API access. Contact support on WhatsApp to get API credentials and special reseller pricing."},
           ].map((f,i)=>{
             const [open,setOpen]=React.useState(false);
             return (
-              <div key={i} style={{borderBottom:`1px solid rgba(255,255,255,.06)`,marginBottom:0}}>
-                <button onClick={()=>setOpen(o=>!o)} style={{width:"100%",background:"none",border:"none",
-                  padding:"18px 0",display:"flex",justifyContent:"space-between",alignItems:"center",
-                  cursor:"pointer",textAlign:"left",gap:16}}>
+              <div key={i} style={{borderBottom:`1px solid ${C.border}`,marginBottom:0}}>
+                <button onClick={()=>setOpen(o=>!o)} style={{width:"100%",background:"none",border:"none",padding:"18px 0",display:"flex",justifyContent:"space-between",alignItems:"center",cursor:"pointer",textAlign:"left",gap:16}}>
                   <span style={{fontWeight:700,color:"#e8e8f2",fontSize:14,lineHeight:1.4}}>{f.q}</span>
-                  <span style={{fontSize:18,color:C.purpleL,flexShrink:0,transition:"transform .22s",
-                    transform:open?"rotate(45deg)":"none",display:"inline-block"}}>+</span>
+                  <span style={{fontSize:20,color:C.purpleL,flexShrink:0,transition:"transform .25s",transform:open?"rotate(45deg)":"none",display:"inline-block"}}>+</span>
                 </button>
-                {open&&<div style={{paddingBottom:18,color:C.muted,fontSize:13,lineHeight:1.75,
-                  animation:"slideDown .2s ease"}}>{f.a}</div>}
+                {open&&<div style={{paddingBottom:18,color:C.muted,fontSize:13,lineHeight:1.7,animation:"slideDown .2s ease"}}>{f.a}</div>}
               </div>
             );
           })}
         </div>
       </section>
 
-      {/* ── FOOTER ───────────────────────────────────────────── */}
-      <footer style={{borderTop:"1px solid rgba(124,58,237,.1)",padding:"28px 6%",
-        display:"flex",justifyContent:"space-between",alignItems:"center",flexWrap:"wrap",gap:14}}>
+      {/* FOOTER */}
+      <footer style={{borderTop:`1px solid ${C.border}`,padding:"24px 5%",display:"flex",justifyContent:"space-between",alignItems:"center",flexWrap:"wrap",gap:12}}>
         <Logo/>
-        <div style={{color:C.muted,fontSize:12,display:"flex",gap:18,flexWrap:"wrap"}}>
+        <div style={{color:C.muted,fontSize:12,display:"flex",gap:20}}>
           {["Terms","Privacy","Refunds","Support"].map(l=>(
-            <span key={l} style={{cursor:"pointer",transition:"color .15s"}}
-              onMouseEnter={e=>e.target.style.color=C.goldL}
-              onMouseLeave={e=>e.target.style.color=C.muted}>{l}</span>
+            <span key={l} style={{cursor:"pointer"}} onMouseEnter={e=>e.target.style.color=C.purpleL} onMouseLeave={e=>e.target.style.color=C.muted}>{l}</span>
           ))}
         </div>
-        <span style={{color:"#3a3a50",fontSize:11}}>© 2026 OpulentSMM India · All rights reserved</span>
+        <div style={{display:"flex",alignItems:"center",gap:12}}>
+          <span style={{color:C.muted,fontSize:11}}>© 2026 Nexus SMM India</span>
+          <span onClick={goAdmin} style={{color:"rgba(212,160,23,.4)",fontSize:10,cursor:"pointer",fontWeight:600,letterSpacing:".04em",
+            border:"1px solid rgba(212,160,23,.15)",borderRadius:20,padding:"2px 10px"}}
+            onMouseEnter={e=>e.target.style.color="rgba(212,160,23,.8)"}
+            onMouseLeave={e=>e.target.style.color="rgba(212,160,23,.4)"}>
+            🔐 Admin
+          </span>
+        </div>
       </footer>
-
     </div>
   );
 };
@@ -1837,8 +1361,7 @@ const Signup = ({ goLogin, onSuccess }) => {
       if(auth){
         const cred = await auth.createUserWithEmailAndPassword(form.email, form.password);
         await cred.user.sendEmailVerification();
-        const referralCode = getReferral();
-        // Save user to DB with referral
+        // Save user to DB
         DB.addUser({
           id:"USR-"+Date.now(),
           name:form.name,
@@ -1847,10 +1370,7 @@ const Signup = ({ goLogin, onSuccess }) => {
           orders:0,
           joined:today(),
           status:"Active",
-          referral: referralCode,
-          referredBy: referralCode,
         });
-        if(referralCode) clearReferral(); // clear after successful use
         setLoading(false);
         setDone(true);
       }
@@ -1952,7 +1472,7 @@ const Login = ({ goSignup, onUserLogin, onAdminLogin }) => {
       <Logo/>
       <div style={{margin:"28px 0 24px"}}>
         <h2 style={{fontFamily:"Syne,sans-serif",fontSize:26,fontWeight:900,color:"#f0f0ff",marginBottom:5}}>Welcome Back</h2>
-        <p style={{color:C.muted,fontSize:13}}>Log in to your OpulentSMM account</p>
+        <p style={{color:C.muted,fontSize:13}}>Log in to your Nexus account</p>
       </div>
       {err&&<div style={{background:"rgba(239,68,68,.1)",border:"1px solid rgba(239,68,68,.3)",borderRadius:11,padding:"12px 16px",marginBottom:18,color:"#f87171",fontSize:13}}>⚠ {err}</div>}
       {resetSent&&<div style={{background:"rgba(52,211,153,.1)",border:"1px solid rgba(52,211,153,.3)",borderRadius:11,padding:"12px 16px",marginBottom:18,color:"#34d399",fontSize:13}}>✅ Password reset email sent! Check your inbox.</div>}
@@ -2331,14 +1851,6 @@ const UserOverview = ({ orders, balance, setPage, userName, announcements, userE
         </div>
       </div>
 
-      {/* Coming Soon Notice */}
-      <div style={{border:"1px solid rgba(212,160,23,0.3)",padding:14,marginBottom:18,borderRadius:10,background:"rgba(212,160,23,0.04)"}}>
-        <h3 style={{color:"#f5c842",fontSize:14,fontWeight:800,marginBottom:6}}>Coming Soon</h3>
-        <p style={{color:"rgba(255,255,255,0.6)",fontSize:12,marginBottom:4}}>New Growth Packs and Influencer Packages are launching soon.</p>
-        <p style={{color:"rgba(255,255,255,0.5)",fontSize:12,marginBottom:4}}>TikTok, Telegram and Twitter premium services coming soon.</p>
-        <p style={{color:"#fb923c",fontSize:12,fontWeight:600}}>Stay ready for powerful growth tools.</p>
-      </div>
-
       {/* FREE TRIAL BANNER for new users with low balance */}
       {balance<=FREE_TRIAL_AMOUNT&&balance>0&&(
         <Card style={{padding:"14px 20px",marginBottom:18,background:"linear-gradient(135deg,rgba(52,211,153,.08),rgba(16,185,129,.04))",border:"1px solid rgba(52,211,153,.25)",display:"flex",alignItems:"center",gap:14,flexWrap:"wrap"}}>
@@ -2523,7 +2035,7 @@ const UserNewOrder = ({ orders, addOrderSync, balance, setBalance, setPage }) =>
   const [linkErr,setLinkErr]=useState("");
   const [loading,setLoading]=useState(false);
 
-  const filtered=(pf==="All"?SERVICES:SERVICES.filter(s=>s.platform===pf)).filter(s=>!s.hidden);
+  const filtered=pf==="All"?SERVICES:SERVICES.filter(s=>s.platform===pf);
   // Price calc: use tiers if available, else price per unit
   const calcTierPrice = (svc, qty) => {
     if (!svc) return 0;
@@ -2803,41 +2315,6 @@ const UserOrders = ({ orders, setOrders, userEmail="" }) => {
   const pctMap={"Pending":5,"Processing":60,"Completed":100,"Cancelled":0,"Refunded":0};
   const colMap={"Pending":"#f59e0b","Processing":"#3b82f6","Completed":"#10b981","Cancelled":"#ef4444","Refunded":"#a855f7"};
 
-  const doRefill=function(o){
-    // 15-day check
-    var orderDate = o.date ? new Date(o.date) : null;
-    if(orderDate){
-      var daysDiff = Math.floor((Date.now() - orderDate.getTime()) / (1000*60*60*24));
-      if(daysDiff < 15){
-        var daysLeft = 15 - daysDiff;
-        Toast.info("Refill available after "+daysLeft+" more day"+(daysLeft===1?"":"s")+" (15 days from order date)");
-        return;
-      }
-    }
-    var reason=prompt("Refill reason? (e.g. followers dropped)");
-    if(!reason||!reason.trim()){return;}
-    getFS().then(function(fs){
-      if(!fs){Toast.error("Connection error");return;}
-      fs.collection("refillRequests").add({
-        orderId:o.id||"",
-        service:o.service||"",
-        userEmail:userEmail||"",
-        qty:o.qty||0,
-        date:today(),
-        ts:Date.now(),
-        status:"pending",
-        reason:reason.trim()
-      }).then(function(){
-        Toast.success("Refill submitted! Admin will process within 24hrs.");
-      }).catch(function(err){
-        console.error("Refill error:",err);
-        Toast.error("Failed: "+err.message);
-      });
-    }).catch(function(){
-      Toast.error("Connection error. Try again.");
-    });
-  };
-
   return (
     <div className="page-enter" style={{animation:"fadeIn .4s ease"}}>
       <PgH title="My Orders" sub={`${orders.length} total`}
@@ -2930,10 +2407,12 @@ const UserOrders = ({ orders, setOrders, userEmail="" }) => {
               <div style={{display:"flex",gap:7}}>
                 {o.status==="Pending"&&<button onClick={()=>cancel(o.id)} style={{background:"rgba(239,68,68,.12)",border:"1px solid rgba(239,68,68,.3)",borderRadius:7,padding:"5px 11px",color:"#f87171",fontSize:11,fontWeight:700,cursor:"pointer"}}>✕ Cancel</button>}
                 {o.status==="Completed"&&<button onClick={()=>setPage("neworder")} style={{background:"rgba(16,185,129,.08)",border:"1px solid rgba(16,185,129,.25)",borderRadius:7,padding:"5px 11px",color:"#34d399",fontSize:11,fontWeight:700,cursor:"pointer"}}>🔁 Reorder</button>}
-                {o.status==="Completed"&&<div>
-                  <button onClick={()=>doRefill(o)} style={{background:"rgba(96,165,250,.08)",border:"1px solid rgba(96,165,250,.25)",borderRadius:7,padding:"5px 11px",color:"#60a5fa",fontSize:11,fontWeight:700,cursor:"pointer"}}>Refill</button>
-                  <div style={{fontSize:9,color:"rgba(255,255,255,0.35)",marginTop:3,textAlign:"center"}}>Available after 15 days</div>
-                </div>}
+                {o.status==="Completed"&&<button onClick={async()=>{
+                  if(!window.confirm(`Request refill for order ${o.id}?`)) return;
+                  const fs=await getFS(); if(!fs){Toast.error("No connection");return;}
+                  await fs.collection("refills").add({orderId:o.id,service:o.service,userEmail,qty:o.qty,date:today(),status:"pending"});
+                  Toast.success("Refill request sent! Admin will process within 24hrs.");
+                }} style={{background:"rgba(96,165,250,.08)",border:"1px solid rgba(96,165,250,.25)",borderRadius:7,padding:"5px 11px",color:"#60a5fa",fontSize:11,fontWeight:700,cursor:"pointer"}}>🔄 Refill</button>}
                 <button onClick={()=>window.open(`https://wa.me/${WHATSAPP_NUM}?text=Hi, I need help with order ${o.id} - ${o.service}`,"_blank")} style={{background:"rgba(124,58,237,.08)",border:"1px solid rgba(124,58,237,.25)",borderRadius:7,padding:"5px 11px",color:"#c4b5fd",fontSize:11,fontWeight:700,cursor:"pointer"}}>💬 Help</button>
               </div>
             </div>
@@ -3093,7 +2572,7 @@ const openRazorpay = ({ amount, userName, userEmail, onSuccess, onFail }) => {
   const load = () => {
     const options = {
       key: RAZORPAY_KEY, amount: amount*100, currency:"INR",
-      name:"OpulentSMM", description:"Wallet Top-up",
+      name:"Nexus SMM", description:"Wallet Top-up",
       handler: onSuccess,
       prefill:{ name:userName, email:userEmail },
       theme:{ color:"#7c3aed" },
@@ -3119,7 +2598,7 @@ const QRDisplay = ({ upiId, upiName, amount }) => {
   React.useEffect(()=>{
     if(!ref.current) return;
     ref.current.innerHTML = "";
-    const upiLink = `upi://pay?pa=${upiId}&pn=${encodeURIComponent(upiName)}&am=${amount}&cu=INR&tn=OpulentSMM`;
+    const upiLink = `upi://pay?pa=${upiId}&pn=${encodeURIComponent(upiName)}&am=${amount}&cu=INR&tn=NexusSMM`;
     try {
       new QRCode(ref.current, {
         text: upiLink,
@@ -3366,7 +2845,7 @@ const PaymentUTRScreen = ({ amount, method, qrUrl, userName, userEmail, onBack, 
           borderRadius:10,padding:"10px 14px"}}>
           <p style={{color:C.goldL,fontSize:11,margin:0,lineHeight:1.6}}>
             ⚡ <strong>How it works:</strong> Pay → Copy UTR from your app → Paste here → Submit.<br/>
-            Admin verifies &amp; credits your wallet within <strong>30 minutes</strong>.
+            Admin verifies & credits your wallet within <strong>30 minutes</strong>.
           </p>
         </div>
       </Card>
@@ -3448,7 +2927,7 @@ const UserAddFunds = ({ balance, setBalance, setPage, setTxns, userName="User", 
 
   return (
     <div className="page-enter" style={{animation:"fadeIn .4s ease"}}>
-      <PgH title="Add Funds" sub="Top up your OpulentSMM wallet instantly"/>
+      <PgH title="Add Funds" sub="Top up your Nexus wallet instantly"/>
 
 
 
@@ -3805,7 +3284,7 @@ const ServiceCompare = ({ services, onOrder }) => {
 const UserServices = ({ setPage }) => {
   const [view,setView]=useState("grid"); // "grid" | "compare"
   const [pf,setPf]=useState("All");
-  const filtered=(pf==="All"?SERVICES:SERVICES.filter(s=>s.platform===pf)).filter(s=>!s.hidden);
+  const filtered=pf==="All"?SERVICES:SERVICES.filter(s=>s.platform===pf);
 
   return (
     <div className="page-enter" style={{animation:"fadeIn .4s ease"}}>
@@ -4054,7 +3533,7 @@ const UserSupport = ({ userEmail="", userName="" }) => {
             </div>
             <div style={{display:"flex",gap:10}}>
               <Btn onClick={submit} loading={submitting} style={{flex:1,justifyContent:"center"}} size="lg">Submit Ticket 🎫</Btn>
-              <Btn v="ghost" onClick={()=>window.open(`https://wa.me/${WHATSAPP_NUM}?text=Hi+OpulentSMM+I+need+help`,"_blank")}>WhatsApp</Btn>
+              <Btn v="ghost" onClick={()=>window.open(`https://wa.me/${WHATSAPP_NUM}?text=Hi+Nexus+SMM+I+need+help`,"_blank")}>WhatsApp</Btn>
             </div>
           </Card>
         </div>
@@ -4064,8 +3543,8 @@ const UserSupport = ({ userEmail="", userName="" }) => {
       {tab==="contact"&&(
         <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(240px,1fr))",gap:16,maxWidth:700}}>
           {[
-            {i:"📱",t:"WhatsApp Support",s:"Fastest response — usually under 5 mins",btn:"Open WhatsApp →",action:()=>window.open(`https://wa.me/${WHATSAPP_NUM}?text=Hi OpulentSMM, I need help!`,"_blank"),grad:C.gGr},
-            {i:"📧",t:"Email Support",s:SUPPORT_EMAIL,btn:"Send Email →",action:()=>window.open(`mailto:${SUPPORT_EMAIL}?subject=Support - OpulentSMM`,"_blank"),grad:C.gB},
+            {i:"📱",t:"WhatsApp Support",s:"Fastest response — usually under 5 mins",btn:"Open WhatsApp →",action:()=>window.open(`https://wa.me/${WHATSAPP_NUM}?text=Hi Nexus SMM, I need help!`,"_blank"),grad:C.gGr},
+            {i:"📧",t:"Email Support",s:SUPPORT_EMAIL,btn:"Send Email →",action:()=>window.open(`mailto:${SUPPORT_EMAIL}?subject=Support - Nexus SMM`,"_blank"),grad:C.gB},
             {i:"🎫",t:"Open Ticket",s:"For detailed issues — reply within 1 hour",btn:"Create Ticket →",action:()=>setTab("new"),grad:C.gP},
           ].map(c=>(
             <Card key={c.t} style={{padding:26,cursor:"pointer"}} onClick={c.action}>
@@ -4119,13 +3598,8 @@ const UserInfluencer = ({ userEmail="", userName="" }) => {
   const [proofImg,setProofImg]=useState(null);
   const [proofName,setProofName]=useState("");
   const [submitting,setSubmitting]=useState(false);
-  const [refStats,setRefStats]=useState({total:0,active:0,totalDeposit:0});
   const fileRef=useRef(null);
   const F=(k,v)=>setForm(f=>({...f,[k]:v}));
-
-  // Referral code for this user
-  const refCode=React.useMemo(()=>`OPULENT-${((userName||"USER").slice(0,4)).toUpperCase()}${(userEmail.charCodeAt(0)*37+userEmail.length*13+1000)%9000+1000}`,[userEmail,userName]);
-  const refURL='https://opulentsmm.in?ref='+refCode.toLowerCase();
 
   const handleProofImg=(e)=>{
     const file=e.target.files[0]; if(!file) return;
@@ -4140,20 +3614,10 @@ const UserInfluencer = ({ userEmail="", userName="" }) => {
     setLoading(true);
     try{
       const fs=await getFS(); if(!fs){setLoading(false);return;}
-      // Load submissions
       const snap=await fs.collection("influencers")
         .where("userEmail","==",userEmail.toLowerCase().trim()).get();
       setSubmissions(snap.docs.map(d=>({id:d.id,...d.data()}))
         .sort((a,b)=>(b.createdAt||0)-(a.createdAt||0)));
-      // Load referral stats
-      const rSnap=await fs.collection("referrals")
-        .where("referralCode","==",refCode.toLowerCase()).get().catch(()=>({docs:[]}));
-      const allRefs=rSnap.docs.map(d=>d.data());
-      setRefStats({
-        total:allRefs.length,
-        active:allRefs.filter(r=>r.isActive===true).length,
-        totalDeposit:allRefs.reduce((s,r)=>s+(r.totalDeposit||0),0),
-      });
     }catch(e){console.error(e);}
     setLoading(false);
   };
@@ -4163,32 +3627,18 @@ const UserInfluencer = ({ userEmail="", userName="" }) => {
   const submit=async()=>{
     if(!form.link.trim()){Toast.error("Please enter your proof link");return;}
     if(!form.followers||isNaN(form.followers)){Toast.error("Enter your follower count");return;}
-    if(!proofImg){Toast.error("Please upload a screenshot proof");return;}
     setSubmitting(true);
     try{
       const fs=await getFS(); if(!fs) throw new Error("No connection");
-      // Anti-duplicate: check no pending/approved submission exists
-      const existing=await fs.collection("influencers")
-        .where("userEmail","==",userEmail.toLowerCase().trim())
-        .where("status","in",["Pending","Approved"]).get();
-      if(!existing.empty){
-        Toast.error("You already have a pending or approved submission.");
-        setSubmitting(false); return;
-      }
       const id="INF-"+Date.now();
       const followers=parseInt(form.followers)||0;
-      const qualifiedLevel=getInfluencerLevel(followers, refStats.active);
+      const levelInfo=INFLUENCER_LEVELS.slice().reverse().find(l=>followers>=l.minFollowers)||INFLUENCER_LEVELS[0];
       await fs.collection("influencers").doc(id).set({
         id, userEmail:userEmail.toLowerCase().trim(), userName,
         type:form.type, link:sanitize(form.link),
         followers, notes:sanitize(form.notes),
         proofScreenshot: proofImg||null,
-        referralCode: refCode.toLowerCase(),
-        activeUsers:  refStats.active,
-        totalReferrals: refStats.total,
-        level:       qualifiedLevel ? qualifiedLevel.level  : "Unqualified",
-        reward:      qualifiedLevel ? qualifiedLevel.reward : "No reward yet",
-        rewardQty:   qualifiedLevel ? qualifiedLevel.rewardQty : 0,
+        level:levelInfo.level, reward:levelInfo.reward, rewardQty:levelInfo.rewardQty,
         status:"Pending", createdAt:Date.now(), date:today()
       });
       setForm({type:"Instagram Story",link:"",followers:"",notes:""});
@@ -4203,92 +3653,9 @@ const UserInfluencer = ({ userEmail="", userName="" }) => {
   const levelInfo=myLevel?INFLUENCER_LEVELS.find(l=>l.level===myLevel.level)||INFLUENCER_LEVELS[0]:null;
   const statCol={Pending:"#fbbf24",Approved:"#34d399",Rejected:"#f87171"};
 
-  // Progress to next level
-  const currentFollowers=myLevel?parseInt(myLevel.followers||0):0;
-  const nextLevel=getNextInfluencerLevel(currentFollowers, refStats.active);
-  const progFollowers=nextLevel?Math.min(100,Math.round((currentFollowers/nextLevel.minFollowers)*100)):100;
-  const progActive=nextLevel?Math.min(100,Math.round((refStats.active/nextLevel.minActiveUsers)*100)):100;
-
   return (
     <div className="page-enter" style={{animation:"fadeIn .4s ease"}}>
-      <PgH title="Influencer Program" sub="Promote OpulentSMM and earn free services!"/>
-
-      {/* ── REFERRAL STATS + SMART LEVEL SECTION ── */}
-      <Card style={{padding:22,marginBottom:16,border:"1px solid rgba(124,58,237,.25)",background:"rgba(124,58,237,.04)"}}>
-        {/* Referral Link */}
-        <div style={{marginBottom:16}}>
-          <div style={{fontSize:11,fontWeight:700,color:C.muted,letterSpacing:".07em",marginBottom:8,textTransform:"uppercase"}}>🔗 Your Referral URL</div>
-          <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
-            <input readOnly value={refURL}
-              style={{flex:1,minWidth:180,background:"rgba(255,255,255,.04)",border:"1px solid rgba(212,160,23,.3)",
-                borderRadius:9,padding:"9px 12px",color:"#c4b5fd",fontSize:11,fontFamily:"monospace",
-                overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}/>
-            <button onClick={function(){ navigator.clipboard&&navigator.clipboard.writeText(refURL); Toast.success("Referral URL copied!"); }}
-              style={{padding:"9px 16px",background:"rgba(212,160,23,.15)",border:"1px solid rgba(212,160,23,.3)",
-                borderRadius:9,color:"#f5c842",fontSize:12,fontWeight:700,cursor:"pointer",whiteSpace:"nowrap"}}>
-              📋 Copy
-            </button>
-          </div>
-          <div style={{fontSize:11,color:C.muted,marginTop:6}}>
-            Share this link. Only users who deposit ₹{ACTIVE_USER_MIN_DEPOSIT}+ or place ≥1 order count as <strong style={{color:"#34d399"}}>active</strong>.
-          </div>
-        </div>
-
-        {/* Stats row */}
-        <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(110px,1fr))",gap:10,marginBottom:16}}>
-          {[
-            {l:"Total Referred", v:refStats.total,                        c:"#c4b5fd", icon:"👥"},
-            {l:"Active Users",   v:refStats.active,                       c:"#34d399", icon:"✅", hi:true},
-            {l:"Deposits ₹",    v:refStats.totalDeposit.toFixed(0),      c:"#f5c842", icon:"💰"},
-          ].map(s=>(
-            <div key={s.l} style={{background:s.hi?"rgba(52,211,153,.08)":"rgba(255,255,255,.04)",
-              border:`1px solid ${s.hi?"rgba(52,211,153,.25)":"rgba(255,255,255,.07)"}`,
-              borderRadius:11,padding:"12px 10px",textAlign:"center"}}>
-              <div style={{fontSize:9,color:C.muted,letterSpacing:".06em",marginBottom:5,textTransform:"uppercase"}}>{s.icon} {s.l}</div>
-              <div style={{fontSize:22,fontWeight:900,color:s.c,fontFamily:"Syne,sans-serif"}}>{s.v}</div>
-            </div>
-          ))}
-        </div>
-
-        {/* Progress to next level */}
-        {nextLevel&&(
-          <div>
-            <div style={{fontSize:11,color:C.muted,marginBottom:8}}>
-              Progress to <strong style={{color:nextLevel.color}}>{nextLevel.icon} {nextLevel.level}</strong>
-              &nbsp;— need both:
-            </div>
-            <div style={{marginBottom:6}}>
-              <div style={{display:"flex",justifyContent:"space-between",fontSize:10,color:C.muted,marginBottom:3}}>
-                <span>👥 Followers</span>
-                <span style={{color:"#c4b5fd"}}>{currentFollowers.toLocaleString()} / {nextLevel.minFollowers.toLocaleString()}</span>
-              </div>
-              <div style={{height:5,background:"rgba(255,255,255,.08)",borderRadius:10,overflow:"hidden"}}>
-                <div style={{height:"100%",width:progFollowers+"%",borderRadius:10,transition:"width 1s ease",
-                  background:`linear-gradient(90deg,${nextLevel.color},${nextLevel.color}bb)`,
-                  boxShadow:`0 0 6px ${nextLevel.color}55`}}/>
-              </div>
-            </div>
-            <div>
-              <div style={{display:"flex",justifyContent:"space-between",fontSize:10,color:C.muted,marginBottom:3}}>
-                <span>✅ Active Users</span>
-                <span style={{color:"#34d399"}}>{refStats.active} / {nextLevel.minActiveUsers}</span>
-              </div>
-              <div style={{height:5,background:"rgba(255,255,255,.08)",borderRadius:10,overflow:"hidden"}}>
-                <div style={{height:"100%",width:progActive+"%",borderRadius:10,transition:"width 1s ease",
-                  background:"linear-gradient(90deg,#34d399,#059669)",boxShadow:"0 0 6px rgba(52,211,153,.4)"}}/>
-              </div>
-            </div>
-            <div style={{marginTop:8,fontSize:11,color:"#34d399",fontWeight:700}}>
-              🔒 Reward unlocks when BOTH targets are met
-            </div>
-          </div>
-        )}
-        {!nextLevel&&levelInfo&&(
-          <div style={{fontSize:12,color:"#34d399",fontWeight:700,textAlign:"center",padding:"8px 0"}}>
-            🏆 Max Level Reached — {levelInfo.reward} Earned!
-          </div>
-        )}
-      </Card>
+      <PgH title="Influencer Program" sub="Promote Nexus SMM and earn free services!"/>
 
       {/* Level showcase */}
       <Card gold style={{padding:22,marginBottom:24}}>
@@ -4349,25 +3716,11 @@ const UserInfluencer = ({ userEmail="", userName="" }) => {
                 style={{width:"100%",background:"rgba(255,255,255,.04)",border:`1px solid ${C.border}`,borderRadius:11,padding:"11px 14px",color:C.text,fontSize:13,resize:"vertical",fontFamily:"inherit",boxSizing:"border-box"}}/>
             </div>
             {form.followers&&!isNaN(form.followers)&&(()=>{
-              const f=parseInt(form.followers)||0;
-              const lvl=getInfluencerLevel(f, refStats.active);
-              const nextLvl=getNextInfluencerLevel(f, refStats.active);
-              if(lvl) return (
-                <div style={{background:lvl.bg,border:`1px solid ${lvl.border||lvl.color+"40"}`,borderRadius:10,padding:"12px 16px",marginBottom:16}}>
-                  <div style={{fontSize:11,color:lvl.color,fontWeight:700,marginBottom:3}}>✅ You qualify for:</div>
-                  <div style={{fontWeight:800,fontSize:15,color:lvl.color}}>{lvl.icon} {lvl.level} — {lvl.reward}</div>
-                </div>
-              );
-              if(nextLvl) return (
-                <div style={{background:"rgba(239,68,68,.07)",border:"1px solid rgba(239,68,68,.2)",borderRadius:10,padding:"12px 16px",marginBottom:16}}>
-                  <div style={{fontSize:11,color:"#f87171",fontWeight:700,marginBottom:3}}>⚠ Not qualified yet — need:</div>
-                  <div style={{fontSize:12,color:C.muted}}>
-                    {f<nextLvl.minFollowers&&<div>• {(nextLvl.minFollowers-f).toLocaleString()} more followers</div>}
-                    {refStats.active<nextLvl.minActiveUsers&&<div>• {nextLvl.minActiveUsers-refStats.active} more active referred users (have {refStats.active})</div>}
-                  </div>
-                </div>
-              );
-              return null;
+              const lvl=INFLUENCER_LEVELS.slice().reverse().find(l=>parseInt(form.followers)>=l.minFollowers)||INFLUENCER_LEVELS[0];
+              return <div style={{background:lvl.bg,border:`1px solid ${lvl.color}40`,borderRadius:10,padding:"12px 16px",marginBottom:16}}>
+                <div style={{fontSize:11,color:lvl.color,fontWeight:700,marginBottom:3}}>You qualify for:</div>
+                <div style={{fontWeight:800,fontSize:15,color:lvl.color}}>{lvl.icon} {lvl.level} — {lvl.reward}</div>
+              </div>;
             })()}
             {/* Screenshot upload */}
             <div style={{marginBottom:16}}>
@@ -4442,13 +3795,12 @@ const UserInfluencer = ({ userEmail="", userName="" }) => {
         <div>
           <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(260px,1fr))",gap:14}}>
             {INFLUENCER_LEVELS.map(l=>(
-              <Card key={l.level} style={{padding:22,border:`1px solid ${l.border||l.color+"30"}`,background:`${l.bg}`}}>
+              <Card key={l.level} style={{padding:22,border:`1px solid ${l.color}30`,background:`${l.bg}`}}>
                 <div style={{display:"flex",alignItems:"center",gap:12,marginBottom:14}}>
                   <span style={{fontSize:32}}>{l.icon}</span>
                   <div>
                     <div style={{fontWeight:900,color:l.color,fontSize:18}}>{l.level}</div>
-                    <div style={{fontSize:11,color:C.muted}}>{l.minFollowers.toLocaleString()}+ followers</div>
-                    <div style={{fontSize:11,color:"#34d399",fontWeight:700,marginTop:2}}>{l.minActiveUsers}+ active referred users</div>
+                    <div style={{fontSize:11,color:C.muted}}>{l.minFollowers.toLocaleString()}+ followers required</div>
                   </div>
                 </div>
                 <div style={{background:"rgba(255,255,255,.06)",borderRadius:10,padding:"12px 14px"}}>
@@ -4461,8 +3813,8 @@ const UserInfluencer = ({ userEmail="", userName="" }) => {
           <Card style={{padding:20,marginTop:16}}>
             <h4 style={{fontWeight:800,color:"#e8e8f2",marginBottom:12}}>📋 How to Qualify</h4>
             {[
-              "Create content mentioning OpulentSMM (story, reel, video or post)",
-              "Include our website link in your bio or post",
+              "Create content mentioning Nexus SMM (story, reel, video or post)",
+              "Include our website link nexus-smm.vercel.app in your bio or post",
               "Submit the proof link and your follower count above",
               "Admin reviews within 24 hours and sends your reward",
               "Rewards are added to your wallet as free service credits",
@@ -4489,7 +3841,7 @@ const UserProfile = ({ userName, userEmail, balance, orders, onLogout }) => {
   const [affiliate,setAffiliate]=useState(true);
   const [saved,setSaved]=useState(false);
   const [copied,setCopied]=useState(false);
-  const refCode=React.useMemo(()=>`OPULENT-${((userName||"USER").slice(0,4)).toUpperCase()}${(userEmail.charCodeAt(0)*37+userEmail.length*13+1000)%9000+1000}`,[userEmail,userName]);
+  const refCode=React.useMemo(()=>`NEXUS-${((userName||"USER").slice(0,4)).toUpperCase()}${(userEmail.charCodeAt(0)*37+userEmail.length*13+1000)%9000+1000}`,[userEmail,userName]);
 
   const comp=orders.filter(o=>o.status==="Completed").length;
   const spent=orders.reduce((s,o)=>s+o.price,0);
@@ -4579,34 +3931,22 @@ const UserProfile = ({ userName, userEmail, balance, orders, onLogout }) => {
 
         {tab==="referral"&&(
           <Card gold style={{padding:26}}>
-            <div style={{fontSize:36,marginBottom:14}}>🔗</div>
-            <h3 style={{fontWeight:900,color:C.goldL,fontSize:18,marginBottom:8}}>Your Referral Link</h3>
+            <div style={{fontSize:36,marginBottom:14}}>🤝</div>
+            <h3 style={{fontWeight:900,color:C.goldL,fontSize:18,marginBottom:8}}>Earn with Referrals</h3>
             <p style={{color:C.muted,fontSize:13,lineHeight:1.6,marginBottom:20}}>
-              Share your unique link. Earn <strong style={{color:C.goldL}}>{REFERRAL_COMMISSION_PCT}% commission</strong> on every order your friends place. They also get <strong style={{color:"#34d399"}}>₹{FREE_TRIAL_AMOUNT} free credit</strong> on signup!
+              Share your unique code. Earn <strong style={{color:C.goldL}}>{REFERRAL_COMMISSION_PCT}% commission</strong> on every order your friends place — automatically added to your wallet. Plus they get <strong style={{color:"#34d399"}}>₹{FREE_TRIAL_AMOUNT} free credit</strong> on signup!
             </p>
-            <label style={{display:"block",fontSize:11,fontWeight:700,color:C.muted,letterSpacing:".07em",marginBottom:7,textTransform:"uppercase"}}>Your Unique Referral Code</label>
-            <div style={{display:"flex",gap:10,marginBottom:12}}>
+            <label style={{display:"block",fontSize:11,fontWeight:700,color:C.muted,letterSpacing:".07em",marginBottom:7,textTransform:"uppercase"}}>Your Referral Code</label>
+            <div style={{display:"flex",gap:10,marginBottom:16}}>
               <input readOnly value={refCode} style={{flex:1,background:"rgba(255,255,255,.04)",
                 border:"1px solid rgba(212,160,23,.3)",borderRadius:10,padding:"11px 14px",
                 color:C.goldL,fontWeight:800,fontSize:14,fontFamily:"monospace"}}/>
-              <Btn v="gold" size="sm" onClick={function(){ navigator.clipboard&&navigator.clipboard.writeText(refCode); Toast.success("Code copied!"); }}>Copy Code</Btn>
-            </div>
-            <label style={{display:"block",fontSize:11,fontWeight:700,color:C.muted,letterSpacing:".07em",marginBottom:7,textTransform:"uppercase"}}>Your Shareable Referral URL</label>
-            <div style={{display:"flex",gap:10,marginBottom:20}}>
-              <input readOnly value={`${window.location.origin}?ref=${refCode.toLowerCase()}`}
-                style={{flex:1,background:"rgba(255,255,255,.04)",border:"1px solid rgba(212,160,23,.3)",
-                  borderRadius:10,padding:"11px 14px",color:"#c4b5fd",fontWeight:600,fontSize:12,fontFamily:"monospace",
-                  overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}/>
-              <Btn v="gold" size="sm" onClick={()=>{ navigator.clipboard&&navigator.clipboard.writeText('https://opulentsmm.in?ref='+refCode.toLowerCase()); Toast.success("URL copied!"); }}>Copy URL</Btn>
-            </div>
-            <div style={{background:"rgba(212,160,23,.06)",border:"1px solid rgba(212,160,23,.15)",borderRadius:12,padding:"14px 16px",marginBottom:16}}>
-              <div style={{fontSize:11,color:C.goldL,fontWeight:700,marginBottom:6}}>💡 How it works</div>
-              <div style={{fontSize:12,color:C.muted,lineHeight:1.7}}>Share your URL anywhere — Instagram bio, WhatsApp, Telegram. When someone signs up via your link, they're automatically tracked under your code.</div>
+              <Btn v="gold" size="sm" onClick={()=>navigator.clipboard?.writeText(refCode)}>Copy</Btn>
             </div>
             <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12}}>
-              {[{l:"Referrals",v:"—"},{l:"Earnings",v:"—"},{l:"Commission",v:`${REFERRAL_COMMISSION_PCT}%`},{l:"Your Code",v:refCode}].map(x=>(
+              {[{l:"Referrals",v:"0"},{l:"Earnings",v:"₹0.00"},{l:"Commission",v:`${REFERRAL_COMMISSION_PCT}%`}].map(x=>(
                 <div key={x.l} style={{background:"rgba(212,160,23,.06)",border:"1px solid rgba(212,160,23,.15)",borderRadius:10,padding:"14px",textAlign:"center"}}>
-                  <div style={{fontSize:x.l==="Your Code"?13:22,fontWeight:900,color:C.goldL,fontFamily:x.l==="Your Code"?"monospace":"inherit"}}>{x.v}</div>
+                  <div style={{fontSize:22,fontWeight:900,color:C.goldL}}>{x.v}</div>
                   <div style={{fontSize:11,color:C.muted}}>{x.l}</div>
                 </div>
               ))}
@@ -4682,7 +4022,7 @@ const AdminLogin = ({ onAdminLogin, goBack }) => {
             <h2 style={{fontFamily:"Syne,sans-serif",fontSize:26,fontWeight:900,color:"#f0f0ff",marginBottom:5}}>
               Admin Panel
             </h2>
-            <p style={{color:C.muted,fontSize:13}}>OpulentSMM — Control Center</p>
+            <p style={{color:C.muted,fontSize:13}}>Nexus SMM — Control Center</p>
           </div>
 
           <div style={{background:"rgba(212,160,23,.07)",border:"1px solid rgba(212,160,23,.2)",
@@ -4754,38 +4094,30 @@ const AdminDash = ({ onLogout }) => {
   const refresh=()=>{ loadFromFirebase(); };
 
   const NAV=[
-    {id:"a-overview",   label:"Analytics",     icon:"📊"},
-    {id:"a-orders",     label:"All Orders",    icon:"📦"},
-    {id:"a-services",   label:"Services",      icon:"◇"},
-    {id:"a-users",      label:"Users",         icon:"👥"},
-    {id:"a-coupons",    label:"Coupons",       icon:"🎟"},
-    {id:"a-payments",   label:"Payments",      icon:"💰"},
-    {id:"a-referrals",  label:"Referrals",     icon:"🔗"},
-    {id:"a-chatbot",    label:"Live Chat",     icon:"💬"},
-    {id:"a-refills",    label:"Refill Requests",icon:"🔄"},
-    {id:"a-suppliers",  label:"Suppliers",     icon:"🔌"},
-    {id:"a-markup",     label:"Pricing",       icon:"💹"},
-    {id:"a-tickets",    label:"Tickets",       icon:"🎫"},
-    {id:"a-influencer", label:"Influencers",   icon:"🌟"},
-    {id:"a-announce",   label:"Announcements", icon:"📣"},
+    {id:"a-overview",  label:"Analytics",     icon:"📊"},
+    {id:"a-orders",    label:"All Orders",    icon:"📦"},
+    {id:"a-services",  label:"Services",      icon:"◇"},
+    {id:"a-users",     label:"Users",         icon:"👥"},
+    {id:"a-coupons",   label:"Coupons",       icon:"🎟"},
+    {id:"a-payments",  label:"Payments",      icon:"💰"},
+    {id:"a-suppliers", label:"Suppliers",     icon:"🔌"},
+    {id:"a-markup",    label:"Pricing",       icon:"💹"},
+    {id:"a-tickets",    label:"Tickets",      icon:"🎫"},
+    {id:"a-influencer", label:"Influencers",  icon:"🌟"},
+    {id:"a-announce",   label:"Announcements",icon:"📣"},
   ];
 
   const renderPage=()=>{
     switch(page){
-      case "a-overview":  return <AdminOverview orders={orders} users={USERS} refresh={refresh} lastRefresh={lastRefresh}/>;
-      case "a-orders":    return <AdminOrders orders={orders} setOrders={setOrders}/>;
-      case "a-services":  return <AdminServices/>;
-      case "a-users":     return <AdminUsers/>;
-      case "a-coupons":   return <AdminCoupons/>;
-      case "a-payments":  return <AdminPayments/>;
-      case "a-referrals": return <AdminReferrals/>;
+      case "a-overview": return <AdminOverview orders={orders} users={USERS} refresh={refresh} lastRefresh={lastRefresh}/>;
+      case "a-orders":   return <AdminOrders orders={orders} setOrders={setOrders}/>;
+      case "a-services": return <AdminServices/>;
+      case "a-users":    return <AdminUsers/>;
+      case "a-coupons":  return <AdminCoupons/>;
+      case "a-payments": return <AdminPayments/>;
       case "a-announce":  return <AdminAnnounce announcements={announcements} setAnnouncements={(list)=>{ setAnnouncements(list); DB.setAnnounce(list); }}/>;
       case "a-suppliers": return <AdminSuppliers/>;
       case "a-markup":    return <AdminMarkup/>;
-      case "a-chatbot":   return <AdminChatbot/>;
-      case "a-refills":   return <AdminRefills/>;
-      case "a-tickets":   return <AdminTickets/>;
-      case "a-influencer":return <AdminInfluencer/>;
       default:            return <AdminOverview orders={orders} users={USERS}/>;
     }
   };
@@ -4833,7 +4165,7 @@ const AdminDash = ({ onLogout }) => {
           marginBottom:24,paddingBottom:18,borderBottom:`1px solid ${C.border}`}}>
           <div>
             <div style={{fontSize:10,color:C.muted,letterSpacing:".08em"}}>ADMIN CONTROL CENTER</div>
-            <div style={{fontFamily:"Syne,sans-serif",fontSize:16,fontWeight:800,color:C.goldL,marginTop:2}}>OpulentSMM Platform</div>
+            <div style={{fontFamily:"Syne,sans-serif",fontSize:16,fontWeight:800,color:C.goldL,marginTop:2}}>Nexus SMM Platform</div>
           </div>
           <div style={{display:"flex",alignItems:"center",gap:10}}>
             <div style={{padding:"6px 14px",background:"rgba(16,185,129,.1)",border:"1px solid rgba(16,185,129,.25)",
@@ -4862,25 +4194,6 @@ const AdminDash = ({ onLogout }) => {
 // ─── Admin: Overview ──────────────────────────────────────────
 const AdminOverview = ({ orders, users=[], refresh, lastRefresh }) => {
   const USERS=users;
-  const [pendingDeps,setPendingDeps]=useState(0);
-  const [pendingTickets,setPendingTickets]=useState(0);
-  const [pendingInfluencers,setPendingInfluencers]=useState(0);
-
-  useEffect(()=>{
-    // Load pending counts for overview badges
-    DB.getDepositRequestsFromFirebase().then(deps=>{
-      setPendingDeps(deps.filter(d=>d.status==="pending").length);
-    }).catch(()=>{});
-    getFS().then(async fs=>{
-      if(!fs) return;
-      try{
-        const tSnap=await fs.collection("tickets").where("status","==","Open").get();
-        setPendingTickets(tSnap.size);
-        const iSnap=await fs.collection("influencers").where("status","==","Pending").get();
-        setPendingInfluencers(iSnap.size);
-      }catch{}
-    });
-  },[]);
   const total=orders.reduce((s,o)=>s+o.price,0);
   const active=orders.filter(o=>["Processing","Pending"].includes(o.status)).length;
   const done=orders.filter(o=>o.status==="Completed").length;
@@ -4920,11 +4233,9 @@ const AdminOverview = ({ orders, users=[], refresh, lastRefresh }) => {
         {[
           {i:"🟢",l:"Platform Status",v:"All Systems Live",c:"#34d399"},
           {i:"👥",l:"Registered Users",v:String(USERS?.length||0),c:"#c4b5fd"},
-          {i:"📦",l:"Orders Today",v:`${orders.length}`,c:"#60a5fa"},
-          {i:"💰",l:"Revenue Total",v:fmt(total),c:C.goldL},
-          {i:"⏳",l:"Pending Deposits",v:`${pendingDeps}`,c:pendingDeps>0?"#fbbf24":"#34d399"},
-          {i:"🎫",l:"Open Tickets",v:`${pendingTickets}`,c:pendingTickets>0?"#f87171":"#34d399"},
-          {i:"🌟",l:"Influencer Reviews",v:`${pendingInfluencers}`,c:pendingInfluencers>0?"#a855f7":"#34d399"},
+          {i:"⚡",l:"Orders Today",v:`${orders.length}`,c:"#60a5fa"},
+          {i:"💰",l:"Revenue Today",v:fmt(total),c:C.goldL},
+          {i:"📦",l:"Pending",v:`${active}`,c:"#fbbf24"},
         ].map(s=>(
           <div key={s.l} style={{flexShrink:0,padding:"10px 16px",background:"rgba(255,255,255,.03)",
             border:`1px solid ${C.border}`,borderRadius:11,display:"flex",alignItems:"center",gap:10}}>
@@ -5555,60 +4866,22 @@ const AdminUsers = () => {
 
 // ─── Admin: Coupons ───────────────────────────────────────────
 const AdminCoupons = () => {
-  const [coupons,setCoupons]=useState([]);
-  const [loading,setLoading]=useState(true);
+  const [coupons,setCoupons]=useState([
+    {code:"NEXUS20",disc:20,limit:100,used:0,expires:"2026-12-31"},
+    {code:"SAVE10", disc:10,limit:500,used:0,expires:"2026-12-31"},
+    {code:"FIRST50",disc:50,limit:50, used:0,expires:"2026-12-31"},
+  ]);
   const [form,setForm]=useState({code:"",disc:"",limit:"",expires:""});
   const F=(k,v)=>setForm(f=>({...f,[k]:v}));
-
-  // Load from Firebase on mount
-  useEffect(()=>{
-    getFS().then(fs=>{
-      if(!fs){
-        setCoupons([
-          {code:"OPULENT20",disc:20,limit:100,used:0,expires:"2026-12-31"},
-          {code:"SAVE10",disc:10,limit:500,used:0,expires:"2026-12-31"},
-          {code:"FIRST50",disc:50,limit:50,used:0,expires:"2026-12-31"},
-        ]);
-        setLoading(false); return;
-      }
-      fs.collection("config").doc("coupons").get().then(snap=>{
-        if(snap.exists && snap.data().list?.length>0){
-          setCoupons(snap.data().list);
-        } else {
-          const defaults=[
-            {code:"OPULENT20",disc:20,limit:100,used:0,expires:"2026-12-31"},
-            {code:"SAVE10",disc:10,limit:500,used:0,expires:"2026-12-31"},
-            {code:"FIRST50",disc:50,limit:50,used:0,expires:"2026-12-31"},
-          ];
-          setCoupons(defaults);
-          fs.collection("config").doc("coupons").set({list:defaults}).catch(console.error);
-        }
-        setLoading(false);
-      }).catch(()=>setLoading(false));
-    });
-  },[]);
-
-  const saveCoupons=async(list)=>{
-    setCoupons(list);
-    try{
-      const fs=await getFS(); if(!fs) return;
-      await fs.collection("config").doc("coupons").set({list});
-    }catch(e){ console.error("Save coupons failed:",e); }
-  };
-
-  const add=async()=>{
-    if(!form.code||!form.disc){ Toast.error("Code and discount % are required"); return; }
-    if(coupons.find(c=>c.code.toUpperCase()===form.code.toUpperCase())){ Toast.error("Coupon code already exists"); return; }
-    const newList=[...coupons,{code:form.code.toUpperCase(),disc:parseInt(form.disc),limit:parseInt(form.limit)||100,used:0,expires:form.expires||"2026-12-31"}];
-    await saveCoupons(newList);
+  const add=()=>{
+    if(!form.code||!form.disc) return;
+    setCoupons(c=>[...c,{...form,disc:parseInt(form.disc),limit:parseInt(form.limit)||100,used:0}]);
     setForm({code:"",disc:"",limit:"",expires:""});
-    Toast.success("✅ Coupon created and saved!");
   };
 
   return (
     <div className="page-enter" style={{animation:"fadeIn .4s ease"}}>
       <PgH title="Coupon System" sub="Manage discount codes (codes are hidden from users)"/>
-      {loading?<CardSkel/>:(
       <div className="two-col" style={{display:"grid",gridTemplateColumns:"1fr 340px",gap:22}}>
         <Card style={{padding:22}}>
           <div style={{overflowX:"auto"}}>
@@ -5627,24 +4900,22 @@ const AdminCoupons = () => {
                     <td style={{padding:"11px 12px"}}><span style={{background:"rgba(16,185,129,.1)",color:"#34d399",border:"1px solid rgba(16,185,129,.3)",borderRadius:6,padding:"3px 9px",fontWeight:800,fontSize:11}}>{c.disc}% OFF</span></td>
                     <td style={{padding:"11px 12px",color:C.muted}}>{c.used} / {c.limit}</td>
                     <td style={{padding:"11px 12px",color:C.muted,fontSize:11}}>{c.expires}</td>
-                    <td style={{padding:"11px 12px"}}><button onClick={()=>saveCoupons(coupons.filter((_,j)=>j!==i))} style={{background:"rgba(239,68,68,.12)",border:"1px solid rgba(239,68,68,.3)",borderRadius:6,padding:"4px 10px",color:"#f87171",fontSize:10,fontWeight:700,cursor:"pointer"}}>Delete</button></td>
+                    <td style={{padding:"11px 12px"}}><button onClick={()=>setCoupons(x=>x.filter((_,j)=>j!==i))} style={{background:"rgba(239,68,68,.12)",border:"1px solid rgba(239,68,68,.3)",borderRadius:6,padding:"4px 10px",color:"#f87171",fontSize:10,fontWeight:700,cursor:"pointer"}}>Delete</button></td>
                   </tr>
                 ))}
-                {coupons.length===0&&<tr><td colSpan={5} style={{padding:24,textAlign:"center",color:C.muted,fontSize:12}}>No coupons yet — create one →</td></tr>}
               </tbody>
             </table>
           </div>
         </Card>
         <Card gold style={{padding:26}}>
           <h3 style={{fontWeight:800,color:"#e8e8f2",marginBottom:20,fontSize:15}}>Create Coupon</h3>
-          {[{l:"Coupon Code",k:"code",ph:"PROMO25"},{l:"Discount %",k:"disc",ph:"25"},{l:"Usage Limit",k:"limit",ph:"100"},{l:"Expiry Date",k:"expires",ph:"2026-12-31"}].map(({l,k,ph})=>(
+          {[{l:"Coupon Code",k:"code",ph:"PROMO25"},{l:"Discount %",k:"disc",ph:"25"},{l:"Usage Limit",k:"limit",ph:"100"},{l:"Expiry Date",k:"expires",ph:"2025-12-31"}].map(({l,k,ph})=>(
             <Inp key={k} label={l} value={form[k]} onChange={e=>F(k,e.target.value)} placeholder={ph}/>
           ))}
           <Btn v="gold" onClick={add} style={{width:"100%",justifyContent:"center"}}>🎟 Create Coupon</Btn>
           <p style={{fontSize:11,color:C.muted,marginTop:12,textAlign:"center"}}>Codes are only visible here — never shown to users</p>
         </Card>
       </div>
-      )}
     </div>
   );
 };
@@ -5985,7 +5256,7 @@ const AdminTickets = () => {
 
 // ─── SEO Tools (sitemap + robots) ────────────────────────────
 const SEOTools = () => {
-  const siteUrl = "https://opulentsmm.vercel.app";
+  const siteUrl = "https://nexus-smm.vercel.app";
   const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>${siteUrl}/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
@@ -6024,7 +5295,6 @@ const AdminInfluencer = () => {
   const [filter,setFilter]=useState("Pending");
   const [rewardNote,setRewardNote]=useState("");
   const [selected,setSelected]=useState(null);
-  const [modalImg,setModalImg]=useState(null);
 
   const load=async()=>{
     setLoading(true);
@@ -6088,18 +5358,15 @@ This will add free service credit to their wallet.`)) return;
   // Stats
   const pending=subs.filter(s=>s.status==="Pending").length;
   const approved=subs.filter(s=>s.status==="Approved").length;
-  const totalActiveUsers=subs.reduce((t,s)=>t+(s.activeUsers||0),0);
-  const qualified=subs.filter(s=>getInfluencerLevel(s.followers||0,s.activeUsers||0)!==null).length;
 
   return (
     <div className="page-enter" style={{animation:"fadeIn .4s ease"}}>
-      {modalImg&&<ImageModal src={modalImg} onClose={()=>setModalImg(null)}/>}
       <PgH title="Influencer Management" sub={`${subs.length} total submissions · ${pending} pending review`}
         action={<button onClick={load} style={{padding:"8px 16px",background:"rgba(124,58,237,.1)",border:"1px solid rgba(124,58,237,.3)",borderRadius:9,color:"#c4b5fd",fontSize:12,fontWeight:700,cursor:"pointer"}}>🔄 Refresh</button>}/>
 
       {/* Stats */}
       <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(150px,1fr))",gap:14,marginBottom:20}}>
-        {[["⏳","Pending",pending,"#fbbf24"],["✅","Approved",approved,"#34d399"],["📊","Total",subs.length,"#c4b5fd"],["✅","Active Users",totalActiveUsers,"#34d399"],["🎯","Qualified",qualified,"#a855f7"]].map(([ic,lb,val,col])=>(
+        {[["⏳","Pending",pending,"#fbbf24"],["✅","Approved",approved,"#34d399"],["📊","Total",subs.length,"#c4b5fd"]].map(([ic,lb,val,col])=>(
           <div key={lb} style={{background:"rgba(255,255,255,.04)",borderRadius:11,padding:"14px 16px",textAlign:"center"}}>
             <div style={{fontSize:22,fontWeight:900,color:col}}>{val}</div>
             <div style={{fontSize:11,color:C.muted,marginTop:3}}>{ic} {lb}</div>
@@ -6121,9 +5388,8 @@ This will add free service credit to their wallet.`)) return;
         <div style={{display:"flex",flexDirection:"column",gap:12}}>
           {filtered.map(s=>{
             const lvl=INFLUENCER_LEVELS.find(l=>l.level===s.level)||INFLUENCER_LEVELS[0];
-            const isQualified=getInfluencerLevel(s.followers||0,s.activeUsers||0)!==null;
             return (
-              <Card key={s.id} style={{padding:20,border:`1px solid ${selected===s.id?"rgba(124,58,237,.4)":isQualified?"rgba(52,211,153,.25)":C.border}`}}>
+              <Card key={s.id} style={{padding:20,border:`1px solid ${selected===s.id?"rgba(124,58,237,.4)":C.border}`}}>
                 <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",flexWrap:"wrap",gap:12}}>
                   <div style={{flex:1}}>
                     <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:8,flexWrap:"wrap"}}>
@@ -6134,13 +5400,10 @@ This will add free service credit to their wallet.`)) return;
                       </div>
                       <span style={{fontSize:10,padding:"3px 10px",borderRadius:20,background:`${statCol[s.status]||"#888"}20`,color:statCol[s.status]||"#888",fontWeight:700}}>{s.status}</span>
                       <span style={{fontSize:10,padding:"3px 10px",borderRadius:20,background:lvl.bg,color:lvl.color,fontWeight:700}}>{lvl.level}</span>
-                      {isQualified&&<span style={{fontSize:10,padding:"3px 10px",borderRadius:20,background:"rgba(52,211,153,.15)",color:"#34d399",fontWeight:700}}>✓ QUALIFIED</span>}
-                      {!isQualified&&s.status==="Pending"&&<span style={{fontSize:10,padding:"3px 10px",borderRadius:20,background:"rgba(239,68,68,.1)",color:"#f87171",fontWeight:700}}>⚠ NOT QUALIFIED</span>}
-                      {(s.activeUsers||0)===0&&<span style={{fontSize:10,padding:"3px 10px",borderRadius:20,background:"rgba(239,68,68,.12)",color:"#f87171",fontWeight:700}}>🚩 0 ACTIVE USERS</span>}
                       {s.rewardSent&&<span style={{fontSize:10,padding:"3px 10px",borderRadius:20,background:"rgba(52,211,153,.15)",color:"#34d399",fontWeight:700}}>🎁 Reward Sent</span>}
                     </div>
                     <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(140px,1fr))",gap:8,marginBottom:10}}>
-                      {[["Type",s.type],["Followers",(s.followers||0).toLocaleString()],["Active Users",s.activeUsers||0],["Total Refs",s.totalReferrals||0],["Reward",s.reward],["Date",s.date]].map(([l,v])=>(
+                      {[["Type",s.type],["Followers",(s.followers||0).toLocaleString()],["Reward",s.reward],["Date",s.date]].map(([l,v])=>(
                         <div key={l} style={{background:"rgba(255,255,255,.04)",borderRadius:8,padding:"8px 10px"}}>
                           <div style={{fontSize:9,color:C.muted,marginBottom:2}}>{l.toUpperCase()}</div>
                           <div style={{fontSize:12,fontWeight:700,color:"#c4b5fd"}}>{v}</div>
@@ -6152,18 +5415,18 @@ This will add free service credit to their wallet.`)) return;
                     {/* Proof Screenshot */}
                     {s.proofScreenshot?(
                       <div style={{marginBottom:8}}>
-                        <div style={{fontSize:10,color:C.muted,fontWeight:700,marginBottom:5,letterSpacing:".05em"}}>📸 PROOF SCREENSHOT — <span style={{color:"#34d399"}}>Click to enlarge</span></div>
-                        <div style={{cursor:"pointer",display:"inline-block",maxWidth:"100%"}} onClick={()=>setModalImg(s.proofScreenshot)}>
-                          <img src={s.proofScreenshot} alt="Proof" className="resp-img"
-                            style={{width:"100%",maxWidth:220,height:"auto",objectFit:"contain",
-                              borderRadius:10,border:"1px solid rgba(124,58,237,.3)",
-                              background:"rgba(0,0,0,.3)",display:"block",transition:"transform .2s"}}
-                            onMouseEnter={e=>e.currentTarget.style.transform="scale(1.03)"}
-                            onMouseLeave={e=>e.currentTarget.style.transform="scale(1)"}/>
+                        <div style={{fontSize:10,color:C.muted,fontWeight:700,marginBottom:5,letterSpacing:".05em"}}>PROOF SCREENSHOT</div>
+                        <div style={{position:"relative",display:"inline-block"}}>
+                          <img src={s.proofScreenshot} alt="Proof"
+                            style={{maxWidth:200,maxHeight:130,objectFit:"contain",borderRadius:10,border:"1px solid rgba(124,58,237,.3)",background:"rgba(0,0,0,.3)",cursor:"pointer",display:"block"}}
+                            onClick={()=>window.open(s.proofScreenshot,"_blank")}/>
+                          <div style={{position:"absolute",bottom:4,right:4,background:"rgba(0,0,0,.75)",color:"#fff",borderRadius:6,padding:"2px 6px",fontSize:9,fontWeight:700}}>
+                            🔍 View
+                          </div>
                         </div>
                       </div>
                     ):(
-                      <div style={{fontSize:11,color:"#f87171",fontWeight:600,marginBottom:6,padding:"6px 10px",background:"rgba(239,68,68,.08)",borderRadius:8,border:"1px solid rgba(239,68,68,.2)"}}>⚠ No screenshot provided</div>
+                      <div style={{fontSize:11,color:"#f87171",fontWeight:600,marginBottom:6}}>⚠ No screenshot provided</div>
                     )}
                     {s.adminNote&&<div style={{fontSize:11,color:C.muted,marginTop:4}}>Admin note: {s.adminNote}</div>}
                   </div>
@@ -6197,7 +5460,6 @@ const AdminPayments = () => {
   const [tab,setTab]=useState("pending");
   const [loading,setLoading]=useState(true);
   const [search,setSearch]=useState("");
-  const [modalImg,setModalImg]=useState(null);
 
   const loadDeps=()=>DB.getDepositRequestsFromFirebase().then(d=>{ setDeps(d); setLoading(false); });
   useEffect(()=>{
@@ -6230,8 +5492,8 @@ const AdminPayments = () => {
         const prevDeps = await fs.collection("deposits")
           .where("email","==",dep.email.toLowerCase().trim())
           .where("status","==","approved").get();
-        if(prevDeps.empty && dep.amount >= 100){
-          bonusAdded = 10; // Flat Rs.10 bonus, only on first deposit >= Rs.100
+        if(prevDeps.empty){
+          bonusAdded = parseFloat((dep.amount * FIRST_DEPOSIT_BONUS_PCT / 100).toFixed(2));
           newBal = parseFloat((newBal + bonusAdded).toFixed(2));
         }
       }catch{}
@@ -6249,57 +5511,8 @@ const AdminPayments = () => {
       if(!depositDocId) throw new Error("Deposit ID missing");
       await fs.collection("deposits").doc(depositDocId).set({status:"approved"},{merge:true});
 
-      // ── Increment totalDeposit for active-user tracking ──
-      try{
-        const uSnap2=await fs.collection("users").doc(key).get();
-        const prevDep=uSnap2.exists?(uSnap2.data().totalDeposit||0):0;
-        const newTotalDep=parseFloat((prevDep+Number(dep.amount)).toFixed(2));
-        await fs.collection("users").doc(key).set({totalDeposit:newTotalDep},{merge:true});
-        // Mark referral active if threshold met
-        if(newTotalDep>=ACTIVE_USER_MIN_DEPOSIT && uSnap2.exists && uSnap2.data().referredBy){
-          const rSnap=await fs.collection("referrals")
-            .where("newUserEmail","==",dep.email.toLowerCase().trim()).get();
-          for(const d of rSnap.docs)
-            await d.ref.set({isActive:true,totalDeposit:newTotalDep},{merge:true});
-        }
-      }catch(e){console.error("totalDeposit update failed:",e);}
-
-      // Pay referral commission (5%) to referrer on deposit approval
-      try{
-        const uDataSnap = await fs.collection("users").doc(key).get();
-        const referredBy = uDataSnap.exists ? (uDataSnap.data().referredBy || "") : "";
-        if(referredBy && referredBy.trim().length > 0){
-          // Find referral record
-          const refSnap = await fs.collection("referrals")
-            .where("referralCode","==",referredBy.toLowerCase().trim())
-            .where("newUserEmail","==",dep.email.toLowerCase().trim()).get();
-          if(!refSnap.empty){
-            const refDoc = refSnap.docs[0];
-            const alreadyRewarded = refDoc.data().rewarded || false;
-            if(!alreadyRewarded){
-              // Find referrer wallet using refCode to email mapping
-              const refUserSnap = await fs.collection("users")
-                .where("referralCode","==",referredBy.toLowerCase().trim()).get();
-              if(!refUserSnap.empty){
-                const refUserEmail = refUserSnap.docs[0].data().email || "";
-                if(refUserEmail){
-                  const refWalletKey = refUserEmail.toLowerCase().trim().replace(/[@.]/g,"_");
-                  const refWalletSnap = await fs.collection("wallets").doc(refWalletKey).get();
-                  const refCurrentBal = refWalletSnap.exists ? (refWalletSnap.data().balance||0) : 0;
-                  const commission = parseFloat((Number(dep.amount)*0.05).toFixed(2));
-                  const refNewBal = parseFloat((refCurrentBal+commission).toFixed(2));
-                  await fs.collection("wallets").doc(refWalletKey).set({balance:refNewBal,email:refUserEmail.toLowerCase().trim(),ts:Date.now()});
-                  await fs.collection("referrals").doc(refDoc.id).set({rewarded:true,commissionPaid:commission,rewardedAt:Date.now()},{merge:true});
-                  await DB.pushNotification(refUserEmail,"referral_reward","Referral Commission!","You earned Rs."+commission+" commission from your referral "+dep.userName+"!","wallet");
-                }
-              }
-            }
-          }
-        }
-      }catch(refErr){ console.error("Referral commission failed:",refErr); }
-
       // Push notification to customer
-      await DB.pushNotification(dep.email,"deposit_approved","?? Deposit Approved!","₹"+dep.amount+" added to your wallet"+(bonusAdded>0?" + ₹"+bonusAdded+" first deposit bonus!":"")+". New balance: ₹"+confirmedBal,"wallet");
+      await DB.pushNotification(dep.email,"deposit_approved","💰 Deposit Approved!",`₹${dep.amount} added to your wallet${bonusAdded>0?` + ₹${bonusAdded} first deposit bonus!`:""}. New balance: ₹${confirmedBal}`,"wallet");
 
       setDeps(d=>d.map(x=>x.id===dep.id?{...x,status:"approved"}:x));
       Toast.success(`✅ Approved ₹${dep.amount} for ${dep.userName}! Balance: ₹${confirmedBal}${bonusAdded>0?` (+₹${bonusAdded} bonus)`:""}`);
@@ -6327,7 +5540,6 @@ const AdminPayments = () => {
 
   return (
     <div className="page-enter" style={{animation:"fadeIn .4s ease"}}>
-      {modalImg&&<ImageModal src={modalImg} onClose={()=>setModalImg(null)}/>}
       <PgH title="Payment Approvals" sub="Verify UTR and approve wallet deposits"/>
       <div style={{marginBottom:16,display:"flex",gap:10,flexWrap:"wrap"}}>
         <button onClick={async()=>{
@@ -6338,7 +5550,8 @@ const AdminPayments = () => {
             const s=await fs.collection("_test").doc("ping").get();
             alert("✅ Firebase Working!\nProject: "+FIREBASE_CONFIG.projectId+"\nRead/Write: OK\n"+JSON.stringify(s.data()));
           }catch(e){alert("❌ Firebase Error:\n"+e.message);}
-        }} style={{padding:"8px 16px",background:"rgba(52,211,153,.15)",border:"1px solid rgba(52,211,153,.4)",borderRadius:8,color:"#34d399",fontSize:12,fontWeight:700,cursor:"pointer"}}>
+        }} style={{padding:"8px 16px",background:"rgba(52,211,153,.15)",border:"1px solid rgba(52,211,153,.4)",
+          borderRadius:8,color:"#34d399",fontSize:12,fontWeight:700,cursor:"pointer"}}>
           🔥 Test Firebase
         </button>
         <button onClick={async()=>{
@@ -6346,7 +5559,8 @@ const AdminPayments = () => {
           const d=await DB.getDepositRequestsFromFirebase();
           setDeps(d); setLoading(false);
           alert("Loaded "+d.length+" deposit(s) from Firebase");
-        }} style={{padding:"8px 16px",background:"rgba(124,58,237,.15)",border:"1px solid rgba(124,58,237,.4)",borderRadius:8,color:"#c4b5fd",fontSize:12,fontWeight:700,cursor:"pointer"}}>
+        }} style={{padding:"8px 16px",background:"rgba(124,58,237,.15)",border:"1px solid rgba(124,58,237,.4)",
+          borderRadius:8,color:"#c4b5fd",fontSize:12,fontWeight:700,cursor:"pointer"}}>
           🔄 Force Reload
         </button>
         <button onClick={async()=>{
@@ -6356,31 +5570,36 @@ const AdminPayments = () => {
           let deleted=0;
           for(const d of snap.docs){
             const data=d.data();
-            if(!data.email || !data.utr){ await d.ref.delete(); deleted++; }
+            // Delete if no email, no utr, or no id field in data
+            if(!data.email || !data.utr){
+              await d.ref.delete();
+              deleted++;
+            }
           }
           alert("Cleaned "+deleted+" invalid deposits. Reloading...");
           DB.getDepositRequestsFromFirebase().then(setDeps);
-        }} style={{padding:"8px 16px",background:"rgba(239,68,68,.1)",border:"1px solid rgba(239,68,68,.3)",borderRadius:8,color:"#f87171",fontSize:12,fontWeight:700,cursor:"pointer"}}>
+        }} style={{padding:"8px 16px",background:"rgba(239,68,68,.1)",border:"1px solid rgba(239,68,68,.3)",
+          borderRadius:8,color:"#f87171",fontSize:12,fontWeight:700,cursor:"pointer"}}>
           🗑️ Clean Invalid Deposits
         </button>
       </div>
 
+      {/* Payment stats */}
       <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(160px,1fr))",gap:14,marginBottom:18}}>
-        {[["⏳","Pending Amount",`₹${totalPending.toFixed(2)}`,"#fbbf24"],["✅","Approved Amount",`₹${totalApproved.toFixed(2)}`,"#34d399"],["📋","Total Requests",deps.length,"#c4b5fd"]].map(([ic,lb,val,col])=>(
+        {[["⏳","Pending Amount",`₹${totalPending.toFixed(2)}`,"#fbbf24"],[" ✅","Approved Amount",`₹${totalApproved.toFixed(2)}`,"#34d399"],["📋","Total Requests",deps.length,"#c4b5fd"]].map(([ic,lb,val,col])=>(
           <div key={lb} style={{background:"rgba(255,255,255,.04)",borderRadius:11,padding:"14px 16px",textAlign:"center"}}>
             <div style={{fontSize:18,fontWeight:900,color:col}}>{val}</div>
-            <div style={{fontSize:11,color:C.muted,marginTop:3}}>{ic} {lb}</div>
+            <div style={{fontSize:11,color:C.muted,marginTop:3}}>{lb}</div>
           </div>
         ))}
       </div>
-
+      {/* Search */}
       <input value={search} onChange={e=>setSearch(e.target.value)}
         placeholder="🔍 Search by email, name or UTR..."
         style={{width:"100%",background:"rgba(255,255,255,.04)",border:`1px solid ${C.border}`,borderRadius:10,padding:"10px 14px",color:C.text,fontSize:13,marginBottom:14,boxSizing:"border-box"}}/>
-
       <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:14,marginBottom:22}}>
         {[["⏳","Pending",pending.length,"#fbbf24"],["✅","Approved",approved.length,"#34d399"],["❌","Rejected",rejected.length,"#f87171"]].map(([ic,lb,val,col])=>(
-          <Card key={lb} style={{padding:16,textAlign:"center",cursor:"pointer",border:tab===lb.toLowerCase()?`1px solid ${col}`:`1px solid ${C.border}`}}
+          <Card key={lb} style={{padding:16,textAlign:"center",cursor:"pointer",border:tab===lb.toLowerCase()?"1px solid "+col:"1px solid "+C.border}}
             onClick={()=>setTab(lb.toLowerCase())}>
             <div style={{fontSize:24,marginBottom:6}}>{ic}</div>
             <div style={{fontSize:22,fontWeight:900,color:col,fontFamily:"Syne,sans-serif"}}>{val}</div>
@@ -6394,311 +5613,59 @@ const AdminPayments = () => {
        shown.map(dep=>(
         <Card key={dep.id} style={{padding:18,marginBottom:12}}>
           <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",flexWrap:"wrap",gap:12}}>
-            <div style={{flex:1,minWidth:0}}>
-              <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:8,flexWrap:"wrap"}}>
-                <div style={{width:36,height:36,borderRadius:"50%",background:C.gG,display:"flex",alignItems:"center",justifyContent:"center",fontWeight:900,color:"#000",fontSize:14,flexShrink:0}}>
+            <div style={{flex:1}}>
+              <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:8}}>
+                <div style={{width:36,height:36,borderRadius:"50%",background:C.gP,
+                  display:"flex",alignItems:"center",justifyContent:"center",fontWeight:900,color:"#fff",fontSize:14}}>
                   {(dep.userName||"U")[0].toUpperCase()}</div>
-                <div style={{flex:1,minWidth:0}}>
+                <div>
                   <div style={{fontWeight:800,color:"#f0f0ff",fontSize:14}}>{dep.userName}</div>
-                  <div style={{fontSize:11,color:C.muted,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{dep.email}</div>
+                  <div style={{fontSize:11,color:C.muted}}>{dep.email}</div>
                 </div>
-                <div style={{padding:"3px 10px",borderRadius:20,fontSize:11,fontWeight:700,background:"rgba(255,255,255,.06)",color:statCol[dep.status]||C.muted,flexShrink:0}}>
+                <div style={{marginLeft:"auto",padding:"3px 10px",borderRadius:20,fontSize:11,fontWeight:700,
+                  background:"rgba(255,255,255,.06)",color:statCol[dep.status]||C.muted}}>
                   {dep.status==="pending"?"⏳ Pending":dep.status==="approved"?"✅ Approved":"❌ Rejected"}
                 </div>
               </div>
-              <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(110px,1fr))",gap:8,marginBottom:10}}>
-                {[["Amount","₹"+dep.amount,C.goldL],["UTR / Txn ID",dep.utr,"#c4b5fd"],["Method",dep.method||"UPI",C.muted],["Date",dep.date,C.muted]].map(([l,v,col])=>(
+              <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(120px,1fr))",gap:8,marginBottom:dep.screenshot?10:0}}>
+                {[["Amount","₹"+dep.amount,C.goldL],["UTR / Txn ID",dep.utr,"#c4b5fd"],
+                  ["Method",dep.method||"UPI",C.muted],["Date",dep.date,C.muted]].map(([l,v,col])=>(
                   <div key={l} style={{background:"rgba(255,255,255,.04)",borderRadius:8,padding:"8px 10px"}}>
                     <div style={{fontSize:10,color:C.muted,marginBottom:2,textTransform:"uppercase"}}>{l}</div>
                     <div style={{fontSize:12,fontWeight:700,color:col,fontFamily:l==="UTR / Txn ID"?"monospace":"inherit",wordBreak:"break-all"}}>{v}</div>
                   </div>
                 ))}
               </div>
-              {/* Payment Screenshot — responsive with modal */}
+              {/* Payment Screenshot Preview */}
               {dep.screenshot?(
                 <div style={{marginTop:8}}>
-                  <div style={{fontSize:10,color:C.muted,marginBottom:6,fontWeight:700,letterSpacing:".05em"}}>📸 PAYMENT SCREENSHOT — <span style={{color:"#34d399"}}>Click to enlarge</span></div>
-                  <div style={{position:"relative",display:"inline-block",maxWidth:"100%",cursor:"pointer"}} onClick={()=>setModalImg(dep.screenshot)}>
-                    <img src={dep.screenshot} alt="Payment proof" className="resp-img"
-                      style={{width:"100%",maxWidth:280,height:"auto",objectFit:"contain",borderRadius:10,
-                        border:"1px solid rgba(52,211,153,.4)",background:"rgba(0,0,0,.3)",display:"block",
-                        boxShadow:"0 4px 20px rgba(0,0,0,.4)",transition:"transform .2s"}}
-                      onMouseEnter={e=>e.currentTarget.style.transform="scale(1.02)"}
-                      onMouseLeave={e=>e.currentTarget.style.transform="scale(1)"}/>
-                    <div style={{position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center",
-                      background:"rgba(0,0,0,0)",borderRadius:10,transition:"background .2s",pointerEvents:"none"}}
-                      onMouseEnter={e=>e.currentTarget.style.background="rgba(0,0,0,.3)"}
-                      onMouseLeave={e=>e.currentTarget.style.background="rgba(0,0,0,0)"}>
-                      <span style={{fontSize:22,opacity:0.8}}>🔍</span>
+                  <div style={{fontSize:10,color:C.muted,marginBottom:6,fontWeight:700,letterSpacing:".05em"}}>PAYMENT SCREENSHOT</div>
+                  <div style={{position:"relative",display:"inline-block"}}>
+                    <img src={dep.screenshot} alt="Payment proof"
+                      style={{maxWidth:260,maxHeight:160,objectFit:"contain",borderRadius:10,border:"1px solid rgba(52,211,153,.35)",background:"rgba(0,0,0,.3)",cursor:"pointer",display:"block"}}
+                      onClick={()=>window.open(dep.screenshot,"_blank")}/>
+                    <div style={{position:"absolute",bottom:6,right:6,background:"rgba(0,0,0,.7)",color:"#fff",borderRadius:6,padding:"2px 8px",fontSize:9,fontWeight:700}}>
+                      🔍 Click to enlarge
                     </div>
                   </div>
                 </div>
               ):(
-                <div style={{marginTop:6,padding:"8px 12px",background:"rgba(239,68,68,.08)",border:"1px solid rgba(239,68,68,.2)",borderRadius:8,fontSize:11,color:"#f87171",fontWeight:600}}>⚠ No screenshot uploaded by user</div>
+                <div style={{marginTop:6,fontSize:11,color:"#f87171",fontWeight:600}}>⚠ No screenshot uploaded</div>
               )}
             </div>
             {dep.status==="pending"&&(
-              <div style={{display:"flex",gap:8,flexDirection:"column",minWidth:110,flexShrink:0}}>
+              <div style={{display:"flex",gap:8,flexDirection:"column",minWidth:110}}>
                 <button onClick={()=>approve(dep)}
-                  style={{background:"rgba(5,150,105,.15)",border:"1px solid rgba(5,150,105,.4)",borderRadius:8,padding:"9px 14px",color:"#34d399",fontSize:12,fontWeight:800,cursor:"pointer",transition:"all .2s"}}
-                  onMouseEnter={e=>{e.currentTarget.style.background="rgba(5,150,105,.3)";}}
-                  onMouseLeave={e=>{e.currentTarget.style.background="rgba(5,150,105,.15)";}}>✅ Approve</button>
+                  style={{background:"rgba(5,150,105,.15)",border:"1px solid rgba(5,150,105,.4)",borderRadius:8,
+                    padding:"8px 14px",color:"#34d399",fontSize:12,fontWeight:800,cursor:"pointer"}}>✅ Approve</button>
                 <button onClick={()=>reject(dep)}
-                  style={{background:"rgba(239,68,68,.1)",border:"1px solid rgba(239,68,68,.3)",borderRadius:8,padding:"9px 14px",color:"#f87171",fontSize:12,fontWeight:800,cursor:"pointer",transition:"all .2s"}}
-                  onMouseEnter={e=>{e.currentTarget.style.background="rgba(239,68,68,.25)";}}
-                  onMouseLeave={e=>{e.currentTarget.style.background="rgba(239,68,68,.1)";}}>❌ Reject</button>
+                  style={{background:"rgba(239,68,68,.1)",border:"1px solid rgba(239,68,68,.3)",borderRadius:8,
+                    padding:"8px 14px",color:"#f87171",fontSize:12,fontWeight:800,cursor:"pointer"}}>❌ Reject</button>
               </div>
             )}
           </div>
         </Card>
       ))}
-    </div>
-  );
-};
-
-
-// ─── Admin: Referrals ─────────────────────────────────────────
-const AdminReferrals = () => {
-  const [refs,setRefs]=useState([]);
-  const [users,setUsers]=useState([]);
-  const [loading,setLoading]=useState(true);
-  const [search,setSearch]=useState("");
-
-  const load=async()=>{
-    setLoading(true);
-    try{
-      const fs=await getFS(); if(!fs){setLoading(false);return;}
-      const [rSnap,uSnap]=await Promise.all([
-        fs.collection("referrals").get().catch(()=>({docs:[]})),
-        fs.collection("users").get().catch(()=>({docs:[]})),
-      ]);
-      setRefs(rSnap.docs.map(d=>({id:d.id,...d.data()})));
-      setUsers(uSnap.docs.map(d=>d.data()).filter(u=>u.referredBy||u.referral));
-    }catch(e){console.error(e);}
-    setLoading(false);
-  };
-
-  useEffect(()=>{ load(); },[]);
-
-  // Aggregate: group by referralCode with active breakdown
-  const grouped = refs.reduce((m,r)=>{
-    const k=(r.referralCode||"unknown").toLowerCase();
-    const e=m[k]||{code:k,total:0,active:0,totalDeposit:0,emails:[],lastConversion:null};
-    e.total++;
-    if(r.isActive===true) e.active++;
-    e.totalDeposit+=r.totalDeposit||0;
-    e.emails.push({email:r.newUserEmail||"",isActive:r.isActive===true,deposit:r.totalDeposit||0,orders:r.totalOrders||0});
-    if(!e.lastConversion||(r.convertedAt||0)>e.lastConversion) e.lastConversion=r.convertedAt||null;
-    m[k]=e; return m;
-  },{});
-  const rows=Object.values(grouped).sort((a,b)=>b.active-a.active||b.total-a.total);
-  const filtered=search?rows.filter(r=>r.code.includes(search.toLowerCase())):rows;
-  const totalActive=refs.filter(r=>r.isActive===true).length;
-  const totalDep=refs.reduce((s,r)=>s+(r.totalDeposit||0),0);
-
-  return (
-    <div className="page-enter" style={{animation:"fadeIn .4s ease"}}>
-      <PgH title="Referral Tracking" sub={`${refs.length} total conversions · ${rows.length} unique referral codes`}
-        action={<button onClick={()=>{setLoading(true);setRefs([]);setUsers([]);setTimeout(()=>window.location.reload(),100);}}
-          style={{padding:"8px 16px",background:"rgba(124,58,237,.1)",border:"1px solid rgba(124,58,237,.3)",borderRadius:9,color:"#c4b5fd",fontSize:12,fontWeight:700,cursor:"pointer"}}>🔄 Refresh</button>}/>
-
-      {/* Stats */}
-      <div style={{background:"rgba(52,211,153,.05)",border:"1px solid rgba(52,211,153,.2)",borderRadius:12,padding:"12px 18px",marginBottom:16,fontSize:12,color:C.muted}}>
-        🛡️ <strong style={{color:"#34d399"}}>Anti-Fake Active.</strong> Only users who deposited ₹{ACTIVE_USER_MIN_DEPOSIT}+ or placed ≥1 order count as active. Zero-activity signups are tracked but excluded from rewards.
-      </div>
-      <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(140px,1fr))",gap:14,marginBottom:20}}>
-        {[
-          ["👥","Total Signups",refs.length,"#c4b5fd"],
-          ["✅","Active Users",totalActive,"#34d399"],
-          ["❌","Inactive/Fake",refs.length-totalActive,"#f87171"],
-          ["💰","Total Deposits","₹"+totalDep.toFixed(0),C.goldL],
-          ["🔗","Unique Codes",rows.length,"#a855f7"],
-        ].map(([ic,lb,val,col])=>(
-          <div key={lb} style={{background:"rgba(255,255,255,.04)",borderRadius:11,padding:"14px 16px",textAlign:"center"}}>
-            <div style={{fontSize:20,fontWeight:900,color:col}}>{val}</div>
-            <div style={{fontSize:10,color:C.muted,marginTop:3}}>{ic} {lb}</div>
-          </div>
-        ))}
-      </div>
-
-      {/* How to share */}
-      <Card gold style={{padding:20,marginBottom:20}}>
-        <div style={{fontSize:12,color:C.goldL,fontWeight:800,marginBottom:8}}>🔗 How Referral URLs Work</div>
-        <div style={{fontSize:12,color:C.muted,lineHeight:1.7}}>
-          Influencers share links like: <code style={{background:"rgba(255,255,255,.06)",padding:"2px 8px",borderRadius:6,color:"#c4b5fd",fontFamily:"monospace"}}>https://yoursite.com?ref=THEIRCODE</code><br/>
-          When a visitor clicks that link, their referral code is captured and stored. On signup, it's saved to their Firebase user document under the <code style={{background:"rgba(255,255,255,.06)",padding:"2px 6px",borderRadius:4,color:C.goldL,fontFamily:"monospace"}}>referral</code> field. You can then track and reward influencers manually from this panel.
-        </div>
-      </Card>
-
-      <input value={search} onChange={e=>setSearch(e.target.value)}
-        placeholder="🔍 Search by referral code..."
-        style={{width:"100%",background:"rgba(255,255,255,.04)",border:`1px solid ${C.border}`,borderRadius:10,padding:"10px 14px",color:C.text,fontSize:13,marginBottom:14,boxSizing:"border-box"}}/>
-
-      {loading?<div style={{display:"flex",flexDirection:"column",gap:10}}>{[1,2,3].map(i=><CardSkel key={i}/>)}</div>:
-       filtered.length===0?<Card style={{padding:30,textAlign:"center",color:C.muted}}>
-         <div style={{fontSize:40,marginBottom:12}}>🔗</div>
-         <p style={{fontWeight:700,color:"#e8e8f2",marginBottom:6}}>No referral conversions yet</p>
-         <p style={{fontSize:13}}>Share your referral link to start tracking signups.</p>
-       </Card>:(
-        <div style={{display:"flex",flexDirection:"column",gap:12}}>
-          {filtered.map((r,i)=>(
-            <Card key={r.code} style={{padding:18,border:`1px solid ${r.active>0?"rgba(52,211,153,.2)":C.border}`}}>
-              <div style={{display:"flex",justifyContent:"space-between",flexWrap:"wrap",gap:12,marginBottom:12}}>
-                <span style={{background:"rgba(212,160,23,.12)",border:"1px solid rgba(212,160,23,.25)",borderRadius:6,padding:"4px 12px",color:C.goldL,fontWeight:800,fontFamily:"monospace",fontSize:13}}>{r.code.toUpperCase()}</span>
-                <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
-                  {[
-                    {v:r.total,  l:"Signups",  c:"#c4b5fd"},
-                    {v:r.active, l:"Active",   c:"#34d399", hi:true},
-                    {v:r.total-r.active,l:"Inactive",c:"#f87171"},
-                    {v:"₹"+r.totalDeposit.toFixed(0),l:"Deposits",c:C.goldL},
-                  ].map(s=>(
-                    <div key={s.l} style={{textAlign:"center",background:s.hi?"rgba(52,211,153,.06)":"rgba(255,255,255,.04)",
-                      border:`1px solid ${s.hi?"rgba(52,211,153,.2)":C.border}`,borderRadius:9,padding:"8px 14px",minWidth:60}}>
-                      <div style={{fontSize:18,fontWeight:900,color:s.c}}>{s.v}</div>
-                      <div style={{fontSize:10,color:C.muted}}>{s.l}</div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-              {r.total>0&&(
-                <div style={{marginBottom:10}}>
-                  <div style={{display:"flex",justifyContent:"space-between",fontSize:10,color:C.muted,marginBottom:3}}>
-                    <span>Active rate</span>
-                    <span style={{color:"#34d399"}}>{Math.round((r.active/r.total)*100)}%</span>
-                  </div>
-                  <div style={{height:4,background:"rgba(255,255,255,.06)",borderRadius:10,overflow:"hidden"}}>
-                    <div style={{height:"100%",width:Math.round((r.active/r.total)*100)+"%",background:"#34d399",borderRadius:10}}/>
-                  </div>
-                </div>
-              )}
-              <div style={{display:"flex",flexDirection:"column",gap:4}}>
-                {r.emails.slice(0,5).map((u,i)=>(
-                  <div key={i} style={{display:"flex",alignItems:"center",gap:10,padding:"5px 10px",
-                    background:u.isActive?"rgba(52,211,153,.05)":"rgba(255,255,255,.02)",
-                    border:`1px solid ${u.isActive?"rgba(52,211,153,.15)":"rgba(255,255,255,.04)"}`,borderRadius:7}}>
-                    <span style={{color:u.isActive?"#34d399":"#f87171",fontSize:12,flexShrink:0}}>{u.isActive?"✅":"❌"}</span>
-                    <span style={{fontSize:11,color:"#60a5fa",fontFamily:"monospace",flex:1,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{u.email}</span>
-                    <span style={{fontSize:10,color:C.muted,whiteSpace:"nowrap",flexShrink:0}}>₹{(u.deposit||0).toFixed(0)} · {u.orders||0} orders</span>
-                  </div>
-                ))}
-                {r.emails.length>5&&<div style={{fontSize:11,color:C.muted,padding:"3px 10px"}}>+{r.emails.length-5} more users</div>}
-              </div>
-            </Card>
-          ))}
-        </div>
-      )}
-
-      {/* Users with referral field */}
-      {users.length>0&&(
-        <Card style={{padding:22,marginTop:20}}>
-          <h3 style={{fontWeight:800,color:"#e8e8f2",fontSize:14,marginBottom:14}}>👥 Referred Users (from Firebase users collection)</h3>
-          <div style={{overflowX:"auto"}}>
-            <table style={{width:"100%",borderCollapse:"collapse",fontSize:12}}>
-              <thead>
-                <tr style={{borderBottom:`1px solid ${C.border}`}}>
-                  {["Name","Email","Referred By (code)","Joined"].map(h=>(
-                    <th key={h} style={{padding:"9px 12px",textAlign:"left",color:C.muted,fontWeight:700,fontSize:10,letterSpacing:".05em"}}>{h}</th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {users.map((u,i)=>(
-                  <tr key={u.email} style={{borderBottom:`1px solid rgba(255,255,255,.04)`,background:i%2?"rgba(255,255,255,.01)":"transparent"}}>
-                    <td style={{padding:"10px 12px",color:"#e8e8f2",fontWeight:600}}>{u.name||"—"}</td>
-                    <td style={{padding:"10px 12px",color:"#60a5fa",fontSize:11}}>{u.email}</td>
-                    <td style={{padding:"10px 12px"}}>
-                      <span style={{background:"rgba(212,160,23,.1)",border:"1px solid rgba(212,160,23,.2)",borderRadius:6,padding:"2px 8px",color:C.goldL,fontWeight:700,fontFamily:"monospace",fontSize:11}}>{u.referral}</span>
-                    </td>
-                    <td style={{padding:"10px 12px",color:C.muted,fontSize:11}}>{u.joined||"—"}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </Card>
-      )}
-    </div>
-  );
-};
-
-
-const AdminChatbot = () => {
-  return (
-    <div className="page-enter" style={{animation:"fadeIn .4s ease"}}>
-      <PgH title="Live Chat Support" sub="Customer support via Tawk.to"/>
-      <Card style={{padding:24}}>
-        <div style={{textAlign:"center",padding:30}}>
-          <div style={{fontSize:40,marginBottom:16}}>💬</div>
-          <div style={{fontWeight:800,color:"#e8e8f2",fontSize:18,marginBottom:8}}>Tawk.to Live Chat</div>
-          <div style={{color:C.muted,fontSize:14,marginBottom:16}}>Live chat support is available via the chat button at the bottom of the screen.</div>
-          <div style={{color:"#34d399",fontWeight:700,fontSize:13}}>Chat widget is active and ready for customers.</div>
-        </div>
-      </Card>
-    </div>
-  );
-};
-
-// ── Admin Refill Requests ─────────────────────────────────────
-const AdminRefills = () => {
-  const [reqs,setReqs]=useState([]);
-  const [loading,setLoading]=useState(true);
-
-  useEffect(function(){
-    try{
-      getFS().then(function(fs){
-        if(!fs){ setLoading(false); return; }
-        fs.collection("refillRequests").orderBy("ts","desc").limit(50).get()
-          .then(function(snap){
-            var list=[];
-            snap.forEach(function(d){ list.push(Object.assign({_id:d.id},d.data())); });
-            setReqs(list);
-            setLoading(false);
-          }).catch(function(){ setLoading(false); });
-      });
-    }catch(e){ setLoading(false); }
-  },[]);
-
-  function updateStatus(id,status){
-    getFS().then(function(fs){
-      if(!fs) return;
-      fs.collection("refillRequests").doc(id).update({status:status})
-        .then(function(){
-          setReqs(function(prev){
-            return prev.map(function(r){ return r._id===id ? Object.assign({},r,{status:status}) : r; });
-          });
-          Toast.success("Status updated to "+status);
-        }).catch(function(e){ Toast.error("Update failed"); });
-    });
-  }
-
-  if(loading) return <div style={{padding:20,color:C.muted}}>Loading refill requests...</div>;
-
-  return (
-    <div className="page-enter" style={{animation:"fadeIn 0.4s ease"}}>
-      <PgH title="Refill Requests" sub={reqs.length+" total requests"}/>
-      {reqs.length===0
-        ? <Card style={{padding:30,textAlign:"center"}}><div style={{color:C.muted}}>No refill requests yet</div></Card>
-        : <Card style={{padding:16}}>
-            {reqs.map(function(r){
-              return (
-                <div key={r._id} style={{padding:"12px 0",borderBottom:"1px solid rgba(255,255,255,0.06)"}}>
-                  <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:8}}>
-                    <div>
-                      <div style={{fontWeight:700,color:"#c4b5fd",fontSize:13}}>{r.service||r.orderId}</div>
-                      <div style={{fontSize:11,color:C.muted,marginTop:2}}>{r.userEmail||"-"} - {r.date||"-"}</div>
-                      {r.reason&&<div style={{fontSize:12,color:"#e8e8f2",marginTop:4}}>Reason: {r.reason}</div>}
-                    </div>
-                    <Badge s={r.status||"pending"}/>
-                  </div>
-                  <div style={{display:"flex",gap:8}}>
-                    {r.status!=="approved"&&<button onClick={function(){ updateStatus(r._id,"approved"); }} style={{background:"rgba(52,211,153,0.12)",border:"1px solid rgba(52,211,153,0.3)",borderRadius:7,padding:"5px 12px",color:"#34d399",fontSize:11,fontWeight:700,cursor:"pointer"}}>Approve</button>}
-                    {r.status!=="rejected"&&<button onClick={function(){ updateStatus(r._id,"rejected"); }} style={{background:"rgba(239,68,68,0.12)",border:"1px solid rgba(239,68,68,0.3)",borderRadius:7,padding:"5px 12px",color:"#f87171",fontSize:11,fontWeight:700,cursor:"pointer"}}>Reject</button>}
-                  </div>
-                </div>
-              );
-            })}
-          </Card>
-      }
     </div>
   );
 };
@@ -6824,14 +5791,8 @@ const AdminAnnounce = ({ announcements, setAnnouncements }) => {
 //  ROOT
 // ═══════════════════════════════════════════════════════════════
 function App() {
-  // ── SPA routing: detect hidden admin route via URL hash ──────
-  const getInitialScreen = () => {
-    const hash = window.location.hash;
-    if(hash === "#secure-opulent-dashboard-9821") return "adminlogin";
-    return sessionStorage.getItem("nx_screen") || "landing";
-  };
-
-  const savedScreen = getInitialScreen();
+  // Restore session on page refresh
+  const savedScreen = sessionStorage.getItem("nx_screen")||"landing";
   const savedName   = sessionStorage.getItem("nx_name")||"";
   const savedEmail  = sessionStorage.getItem("nx_email")||"";
 
@@ -6868,12 +5829,8 @@ function App() {
       }
       setScreen(s);
     };
-    const handleHash = () => {
-      if(window.location.hash === "#secure-opulent-dashboard-9821") setScreen("adminlogin");
-    };
     window.addEventListener("popstate", handlePop);
-    window.addEventListener("hashchange", handleHash);
-    return()=>{ window.removeEventListener("popstate", handlePop); window.removeEventListener("hashchange", handleHash); };
+    return()=>window.removeEventListener("popstate", handlePop);
   },[]);
 
   const loginUser=(name,email="")=>{
@@ -6903,7 +5860,7 @@ function App() {
     <>
       <GS/>
       <ToastContainer/>
-      {screen==="landing"    && <Landing goLogin={()=>goScreen("login")} goSignup={()=>goScreen("signup")}/>}
+      {screen==="landing"    && <Landing goLogin={()=>goScreen("login")} goSignup={()=>goScreen("signup")} goAdmin={()=>goScreen("adminlogin")}/>}
       {screen==="signup"     && <Signup goLogin={()=>goScreen("login")} onSuccess={(n,e)=>loginUser(n,e)}/>}
       {screen==="login"      && <Login goSignup={()=>goScreen("signup")} onUserLogin={(n,e)=>loginUser(n,e)} onAdminLogin={()=>goScreen("adminlogin")}/>}
       {screen==="adminlogin" && <AdminLogin onAdminLogin={loginAdmin} goBack={()=>goScreen("landing")}/>}
@@ -6917,4 +5874,4 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(React.createElement(App));
   </script>
 </body>
-  </html>
+</html>
