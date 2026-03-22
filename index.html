@@ -2558,6 +2558,37 @@ const OTable = ({ orders, onCancel, adminView=false }) => (
   </div>
 );
 
+// ─── Live Services Hook ───────────────────────────────────────
+// Loads from Firebase services/list — falls back to SERVICES const
+// Runs on every mount so user always sees latest admin changes
+const useLiveServices = () => {
+  const [liveServices, setLiveServices] = useState(SERVICES);
+  const [svcLoading, setSvcLoading] = useState(true);
+  useEffect(()=>{
+    let mounted = true;
+    const load = async () => {
+      try {
+        const fs = await getFS();
+        if(!fs){ setSvcLoading(false); return; }
+        const snap = await fs.collection("services").doc("list").get();
+        if(snap.exists && snap.data().services?.length > 0){
+          const fetched = snap.data().services;
+          console.log("Loaded services from Firebase:", fetched.length, "services");
+          if(mounted) setLiveServices(fetched);
+        } else {
+          console.log("Loaded services: using default SERVICES (no Firebase override yet)");
+        }
+      } catch(e) {
+        console.error("Failed to load services from Firebase:", e);
+      }
+      if(mounted) setSvcLoading(false);
+    };
+    load();
+    return () => { mounted = false; };
+  },[]);
+  return { liveServices, svcLoading };
+};
+
 // ─── User: New Order ──────────────────────────────────────────
 const UserNewOrder = ({ orders, addOrderSync, balance, setBalance, setPage }) => {
   const [step,setStep]=useState(1);
@@ -2571,7 +2602,8 @@ const UserNewOrder = ({ orders, addOrderSync, balance, setBalance, setPage }) =>
   const [linkErr,setLinkErr]=useState("");
   const [loading,setLoading]=useState(false);
 
-  const filtered=(pf==="All"?SERVICES:SERVICES.filter(s=>s.platform===pf)).filter(s=>!s.hidden);
+  const { liveServices, svcLoading } = useLiveServices();
+  const filtered=(pf==="All"?liveServices:liveServices.filter(s=>s.platform===pf)).filter(s=>!s.hidden);
   // Price calc: use tiers if available, else price per unit
   const calcTierPrice = (svc, qty) => {
     if (!svc) return 0;
@@ -3610,11 +3642,12 @@ const SmartServiceBrowser = ({ onOrder, showOrderBtn=true }) => {
   const [search,setSearch]=useState("");
   const [showFilters,setShowFilters]=useState(false);
 
+  const { liveServices } = useLiveServices();
   const toggleQuality=(q)=>setQuality(prev=>prev.includes(q)?prev.filter(x=>x!==q):[...prev,q]);
 
   const getMinPrice=(s)=> s.tiers?s.tiers[0].price:(s.price||0)*100;
 
-  const filtered = SERVICES.filter(s=>{
+  const filtered = liveServices.filter(s=>{
     if(pf!=="All" && s.platform!==pf) return false;
     if(cat!=="All" && s.cat!==cat) return false;
     if(speedF!=="All" && s.speedTag!==speedF) return false;
@@ -3737,7 +3770,7 @@ const SmartServiceBrowser = ({ onOrder, showOrderBtn=true }) => {
 
       {/* Results count */}
       <div style={{fontSize:12,color:C.muted,marginBottom:14}}>
-        Showing <strong style={{color:"#c4b5fd"}}>{filtered.length}</strong> of {SERVICES.length} services
+        Showing <strong style={{color:"#c4b5fd"}}>{filtered.length}</strong> of {liveServices.length} services
         {activeFilters.length>0&&<span> · Filters: {activeFilters.join(", ")}</span>}
       </div>
 
@@ -3856,7 +3889,8 @@ const ServiceCompare = ({ services, onOrder }) => {
 const UserServices = ({ setPage }) => {
   const [view,setView]=useState("grid"); // "grid" | "compare"
   const [pf,setPf]=useState("All");
-  const filtered=(pf==="All"?SERVICES:SERVICES.filter(s=>s.platform===pf)).filter(s=>!s.hidden);
+  const { liveServices, svcLoading } = useLiveServices();
+  const filtered=(pf==="All"?liveServices:liveServices.filter(s=>s.platform===pf)).filter(s=>!s.hidden);
 
   return (
     <div className="page-enter" style={{animation:"fadeIn .4s ease"}}>
