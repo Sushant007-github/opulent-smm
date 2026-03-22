@@ -73,8 +73,14 @@
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 </head>
 <body>
-  <div id="root"></div>
+  <div style="position:fixed;bottom:10px;left:10px;right:10px;background:#fff3cd;color:#856404;padding:10px 12px;border-radius:8px;font-size:13px;line-height:1.5;z-index:9999;box-shadow:0 4px 12px rgba(0,0,0,0.1);text-align:center;">
+  ⚠️ Your account must be <strong>PUBLIC</strong> before placing an order. Private accounts will not receive followers or likes.
+</div>
+<div id="root"></div>
   <script type="text/babel" data-presets="react">
+window.onerror = function(msg, src, line, col, err) {
+  document.body.innerHTML = '<div style="padding:20px;font-family:Arial;background:#fff;color:red;position:fixed;inset:0;z-index:99999;overflow:auto"><h2>&#x26A0; App Error</h2><p><b>'+msg+'</b></p><p>Line: '+line+'</p><pre style="background:#fee;padding:12px;font-size:12px;overflow:auto">'+(err&&err.stack?err.stack:'')+'</pre></div>';
+};
 const { useState, useEffect, useRef, useCallback } = React;
 
 /* ═══════════════════════════════════════════════════════════════
@@ -2599,7 +2605,7 @@ const UserNewOrder = ({ orders, addOrderSync, balance, setBalance, setPage, init
   const [pf,setPf]=useState("All");
   const [sel,setSel]=useState(initialService);
   const [link,setLink]=useState("");
-  const [qty,setQty]=useState(initialService?.min || 1000);
+  const [qty,setQty]=useState((initialService && initialService.min) || 1000);
   const [coupon,setCoupon]=useState("");
   const [disc,setDisc]=useState(0);
   const [couponMsg,setCouponMsg]=useState("");
@@ -7030,18 +7036,4 @@ function App() {
     <>
       <GS/>
       <ToastContainer/>
-      {screen==="landing"    && <Landing goLogin={()=>goScreen("login")} goSignup={()=>goScreen("signup")}/>}
-      {screen==="signup"     && <Signup goLogin={()=>goScreen("login")} onSuccess={(n,e)=>loginUser(n,e)}/>}
-      {screen==="login"      && <Login goSignup={()=>goScreen("signup")} onUserLogin={(n,e)=>loginUser(n,e)} onAdminLogin={()=>goScreen("adminlogin")}/>}
-      {screen==="adminlogin" && <AdminLogin onAdminLogin={loginAdmin} goBack={()=>goScreen("landing")}/>}
-      {screen==="user"       && <UserDash userName={userName||"User"} userEmail={userEmail} onLogout={logout}/>}
-      {screen==="admin"      && <AdminDash onLogout={logout}/>}
-    </>
-  );
-}
-
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(React.createElement(App));
-  </script>
-</body>
-  </html>
+      {screen==="landing"    && <Landing goLogin={()=>goScreen("login")} goSignup={()=>goScreen("signup")
