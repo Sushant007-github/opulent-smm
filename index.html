@@ -729,7 +729,7 @@ const GS = () => (
     p{font-size:14px;font-weight:400;line-height:1.6;word-break:break-word;overflow-wrap:break-word;margin-bottom:10px}
     p:last-child{margin-bottom:0}
     /* ── Overflow protection — global ── */
-    *{word-break:break-word;overflow-wrap:break-word;min-width:0}
+    body *{word-break:break-word;overflow-wrap:break-word;}
     /* ── Large hero text clamp ── */
     .hero-title{font-family:'Playfair Display',serif!important;font-size:clamp(18px,4vw,22px)!important;font-weight:600!important;line-height:1.4!important;word-break:break-word!important;overflow-wrap:break-word!important;max-width:90%!important}
     /* ── Section spacing ── */
@@ -869,8 +869,7 @@ const GS = () => (
     /* ── Table cells consistent ── */
     th,td{ padding:10px 12px !important; }
 
-    /* ── Button consistent padding ── */
-    button{ padding:10px 16px; }
+    /* ── Button padding handled by Btn component inline styles ── */
 
     /* ── List items consistent ── */
     li{ margin-bottom:8px; line-height:1.6; }
@@ -899,8 +898,8 @@ const GS = () => (
       th,td{ padding:8px 10px !important; }
     }
 
-    /* ── Remove excess bold from body text ── */
-    p,span,div{ font-weight:inherit; }
+    /* ── Body text weight — only paragraphs, not all divs ── */
+    p{ font-weight:400; }
 
     /* ── Equal left/right alignment in cards ── */
     .card-row{
@@ -7074,3 +7073,4 @@ function App() {
         return;
       }
       if(s==="landing" && sessionStorage.getItem("nx_screen")==="admin"){
+        s
