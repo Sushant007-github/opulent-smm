@@ -1000,7 +1000,7 @@ const MobileBar = ({ page, setPage, isAdmin, onLogout }) => {
   // User bottom tabs (5 fit perfectly)
   const uItems = [
     {id:"overview", i:"⊞", l:"Home"},
-    {id:"neworder", i:"✦", l:"Order"},
+    {id:"services", i:"◇", l:"Services"},
     {id:"orders",   i:"📦", l:"Orders"},
     {id:"wallet",   i:"◈", l:"Wallet"},
     {id:"settings", i:"👤", l:"Me"},
@@ -2193,11 +2193,10 @@ const UserDash = ({ userName, userEmail, onLogout }) => {
 
   const NAV=[
     {id:"overview",   label:"Overview",      icon:"⊞"},
-    {id:"neworder",   label:"New Order",     icon:"✦"},
-    {id:"orders",     label:"My Orders",     icon:"📦"},
-    {id:"wallet",     label:"Wallet",        icon:"◈"},
-    {id:"addfunds",   label:"Add Funds",     icon:"⊕"},
     {id:"services",   label:"Services",      icon:"◇"},
+    {id:"orders",     label:"My Orders",     icon:"📦"},
+    {id:"addfunds",   label:"Add Funds",     icon:"⊕"},
+    {id:"wallet",     label:"Wallet",        icon:"◈"},
     {id:"influencer", label:"Influencer",    icon:"🌟"},
     {id:"support",    label:"Support",       icon:"💬"},
     {id:"settings",   label:"Profile",       icon:"👤"},
@@ -2475,14 +2474,12 @@ const UserOverview = ({ orders, balance, setPage, userName, announcements, userE
       {/* QUICK ACTIONS */}
       <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(190px,1fr))",gap:12,marginBottom:24}}>
         {[
-          {icon:"✦",label:"New Order", sub:"Buy followers, likes & more",page:"neworder",grad:C.gP},
-          {icon:"⊕",label:"Add Funds", sub:"Top up your ₹ wallet",      page:"addfunds",grad:C.gG},
-          {icon:"📦",label:"My Orders", sub:"Track all your orders",       page:"orders",  grad:C.gB},
-          {icon:"💬",label:"Support",   sub:"Chat with our team",          page:"support", grad:C.gGr},
-          {icon:"◇",label:"Services",  sub:"Browse all services",          page:"services",grad:"linear-gradient(135deg,#6366f1,#8b5cf6)"},
-          {icon:"👤",label:"Profile",   sub:"Account settings & referral", page:"settings",grad:"linear-gradient(135deg,#0f766e,#14b8a6)"},
-          {icon:"🌟",label:"Influencer", sub:"Submit proof & earn rewards",    page:"influencer",grad:"linear-gradient(135deg,#f5c842,#d4a017)"},
-          {icon:"🎫",label:"Support",   sub:"Tickets & help center",         page:"support", grad:"linear-gradient(135deg,#7c3aed,#6d28d9)"},
+          {icon:"◇",label:"Services",  sub:"Browse & order services",      page:"services",grad:"linear-gradient(135deg,#6366f1,#8b5cf6)"},
+          {icon:"⊕",label:"Add Funds", sub:"Top up your ₹ wallet",         page:"addfunds",grad:C.gG},
+          {icon:"📦",label:"My Orders", sub:"Track all your orders",        page:"orders",  grad:C.gB},
+          {icon:"💬",label:"Support",   sub:"Tickets & help center",        page:"support", grad:C.gGr},
+          {icon:"👤",label:"Profile",   sub:"Account settings & referral",  page:"settings",grad:"linear-gradient(135deg,#0f766e,#14b8a6)"},
+          {icon:"🌟",label:"Influencer", sub:"Submit proof & earn rewards", page:"influencer",grad:"linear-gradient(135deg,#f5c842,#d4a017)"},
         ].map(q=>(
           <Card key={q.label} onClick={()=>setPage(q.page)} style={{padding:18,cursor:"pointer",display:"flex",alignItems:"center",gap:13,transition:"transform .18s,box-shadow .18s"}}
             onMouseEnter={e=>{ e.currentTarget.style.transform="translateY(-2px)"; e.currentTarget.style.boxShadow="0 8px 30px rgba(0,0,0,.4)"; }}
