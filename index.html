@@ -31,6 +31,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800;900&family=DM+Sans:wght@400;500;600;700&display=swap"/>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800;900&family=DM+Sans:wght@400;500;600;700&display=swap" media="print" onload="this.media='all'"/>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Poppins:wght@300;400;500;600&display=swap"/>
   <meta name="format-detection" content="telephone=yes"/>
   <meta name="mobile-web-app-capable" content="yes"/>
   <meta name="apple-mobile-web-app-capable" content="yes"/>
@@ -717,15 +718,28 @@ const UTRGuard = {
 // ─── Global CSS ────────────────────────────────────────────────
 const GS = () => (
   <style>{`
-    @import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800;900&family=DM+Sans:wght@400;500;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800;900&family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&family=Poppins:wght@300;400;500;600&display=swap');
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     html{scroll-behavior:smooth}
-    body{background:#06060a;color:#e8e8f2;font-family:'DM Sans',sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+    body{background:#06060a;color:#e8e8f2;font-family:'Poppins',sans-serif;font-size:14px;font-weight:400;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+    /* ── Typography scale ── */
+    h1{font-family:'Playfair Display',serif;font-size:24px;font-weight:600;line-height:1.3;letter-spacing:0.3px;word-break:break-word;overflow-wrap:break-word;max-width:90%}
+    h2{font-family:'Playfair Display',serif;font-size:20px;font-weight:600;line-height:1.4;letter-spacing:0.3px;word-break:break-word;overflow-wrap:break-word}
+    h3{font-family:'Playfair Display',serif;font-size:16px;font-weight:500;line-height:1.5;letter-spacing:0.2px;word-break:break-word;overflow-wrap:break-word}
+    p{font-size:14px;font-weight:400;line-height:1.6;word-break:break-word;overflow-wrap:break-word;margin-bottom:10px}
+    p:last-child{margin-bottom:0}
+    /* ── Overflow protection — global ── */
+    *{word-break:break-word;overflow-wrap:break-word;min-width:0}
+    /* ── Large hero text clamp ── */
+    .hero-title{font-family:'Playfair Display',serif!important;font-size:clamp(18px,4vw,22px)!important;font-weight:600!important;line-height:1.4!important;word-break:break-word!important;overflow-wrap:break-word!important;max-width:90%!important}
+    /* ── Section spacing ── */
+    section{margin-bottom:20px}
+    /* ── Poppins for all inputs/buttons ── */
     ::-webkit-scrollbar{width:5px;height:5px}
     ::-webkit-scrollbar-track{background:rgba(255,255,255,.02)}
     ::-webkit-scrollbar-thumb{background:rgba(212,160,23,.4);border-radius:4px}
     ::-webkit-scrollbar-thumb:hover{background:rgba(212,160,23,.7)}
-    input,textarea,select,button{font-family:'DM Sans',sans-serif}
+    input,textarea,select,button{font-family:'Poppins',sans-serif;font-size:14px}
     input:focus,textarea:focus{outline:none;border-color:rgba(212,160,23,.6)!important;box-shadow:0 0 0 3px rgba(212,160,23,.1)}
     select:focus{outline:none;border-color:rgba(212,160,23,.6)!important;}
     img{max-width:100%;height:auto;display:block}
@@ -801,7 +815,7 @@ const GS = () => (
       .order-panel{grid-template-columns:1fr!important}
       .hide-mob{display:none!important}
       .two-col{grid-template-columns:1fr!important}
-      .hero-title{font-size:clamp(2rem,8vw,3.5rem)!important}
+      .hero-title{font-size:clamp(18px,4vw,22px)!important;line-height:1.4!important}
       .nav-tagline{display:none!important}
     }
     @media(max-width:480px){
@@ -1295,8 +1309,8 @@ const Landing = ({ goLogin, goSignup }) => {
           </div>
 
           {/* Headline */}
-          <h1 style={{fontSize:"clamp(2.6rem,5.8vw,5rem)",fontWeight:900,lineHeight:1.04,
-            letterSpacing:"-.04em",fontFamily:"Syne,sans-serif",marginBottom:22}}>
+          <h1 className="hero-title" style={{fontWeight:600,letterSpacing:"0.3px",
+            fontFamily:"'Playfair Display',serif",marginBottom:22,textAlign:"center"}}>
             <span style={{color:"#f0f0ff"}}>Premium Growth</span>
             <br/>
             <span style={{background:"linear-gradient(135deg,#7c3aed 0%,#a855f7 50%,#d4a017 100%)",
@@ -1393,8 +1407,8 @@ const Landing = ({ goLogin, goSignup }) => {
               borderRadius:20,padding:"5px 16px",marginBottom:16}}>
               <span style={{fontSize:10,fontWeight:800,color:C.goldL,letterSpacing:".1em"}}>💎 PREMIUM SERVICES</span>
             </div>
-            <h2 style={{fontFamily:"Syne,sans-serif",fontSize:36,fontWeight:900,
-              color:"#f0f0ff",marginBottom:10,letterSpacing:"-.02em"}}>
+            <h2 style={{lineHeight:1.4,wordBreak:"break-word",fontFamily:"'Playfair Display',serif",fontSize:20,fontWeight:600,
+              color:"#f0f0ff",marginBottom:10,letterSpacing:"0.3px"}}>
               100+ Services Available
             </h2>
             <p style={{color:C.muted,fontSize:14}}>Fast delivery · Non-drop guarantee · Secure ₹ payments</p>
@@ -1457,7 +1471,7 @@ const Landing = ({ goLogin, goSignup }) => {
               borderRadius:20,padding:"5px 16px",marginBottom:16}}>
               <span style={{fontSize:10,fontWeight:800,color:"#c4b5fd",letterSpacing:".1em"}}>✦ WHY CHOOSE US</span>
             </div>
-            <h2 style={{fontFamily:"Syne,sans-serif",fontSize:34,fontWeight:900,color:"#f0f0ff",marginBottom:8,letterSpacing:"-.02em"}}>
+            <h2 style={{fontFamily:"'Playfair Display',serif",fontSize:22,fontWeight:600,color:"#f0f0ff",marginBottom:8,letterSpacing:"0.3px",wordBreak:"break-word",lineHeight:1.4}}>
               The OpulentSMM Standard
             </h2>
             <p style={{color:C.muted,fontSize:14,maxWidth:440,margin:"0 auto"}}>Built for results. Not promises.</p>
@@ -1489,7 +1503,7 @@ const Landing = ({ goLogin, goSignup }) => {
       {/* ── HOW IT WORKS ────────────────────────────────────── */}
       <section style={{padding:"90px 6%",borderTop:"1px solid rgba(255,255,255,.05)"}}>
         <div style={{maxWidth:900,margin:"0 auto",textAlign:"center"}}>
-          <h2 style={{fontFamily:"Syne,sans-serif",fontSize:32,fontWeight:900,color:"#f0f0ff",marginBottom:8,letterSpacing:"-.02em"}}>
+          <h2 style={{lineHeight:1.4,wordBreak:"break-word",fontFamily:"'Playfair Display',serif",fontSize:20,fontWeight:600,color:"#f0f0ff",marginBottom:8,letterSpacing:"0.3px"}}>
             Start in 4 Steps
           </h2>
           <p style={{color:C.muted,marginBottom:52,fontSize:14}}>No technical knowledge needed.</p>
@@ -1531,8 +1545,8 @@ const Landing = ({ goLogin, goSignup }) => {
                 borderRadius:20,padding:"5px 16px",marginBottom:20}}>
                 <span style={{fontSize:10,fontWeight:800,color:C.goldL,letterSpacing:".1em"}}>✦ ABOUT OPULENTSMM</span>
               </div>
-              <h2 style={{fontFamily:"Syne,sans-serif",fontSize:32,fontWeight:900,color:"#f0f0ff",
-                marginBottom:18,letterSpacing:"-.02em",lineHeight:1.15}}>
+              <h2 style={{fontFamily:"'Playfair Display',serif",fontSize:20,fontWeight:600,color:"#f0f0ff",
+                marginBottom:18,letterSpacing:"0.3px",lineHeight:1.15}}>
                 Built for<br/>
                 <span style={{background:"linear-gradient(135deg,#7c3aed,#d4a017)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent"}}>
                   Digital Growth
@@ -1585,7 +1599,7 @@ const Landing = ({ goLogin, goSignup }) => {
                 animation:"pulse 1.5s infinite",display:"inline-block"}}/>
               <span style={{fontSize:11,fontWeight:700,color:"#34d399",letterSpacing:".06em"}}>LIVE ACTIVITY</span>
             </div>
-            <h2 style={{fontFamily:"Syne,sans-serif",fontSize:28,fontWeight:900,color:"#f0f0ff",marginBottom:4}}>
+            <h2 style={{lineHeight:1.4,wordBreak:"break-word",fontFamily:"'Playfair Display',serif",fontSize:20,fontWeight:600,color:"#f0f0ff",marginBottom:4}}>
               Orders Happening Right Now
             </h2>
             <p style={{color:C.muted,fontSize:13}}>Join thousands of creators growing with OpulentSMM</p>
@@ -1603,7 +1617,7 @@ const Landing = ({ goLogin, goSignup }) => {
               borderRadius:20,padding:"5px 16px",marginBottom:16}}>
               <span style={{fontSize:10,fontWeight:800,color:C.goldL,letterSpacing:".1em"}}>⭐ CUSTOMER REVIEWS</span>
             </div>
-            <h2 style={{fontFamily:"Syne,sans-serif",fontSize:32,fontWeight:900,color:"#f0f0ff",letterSpacing:"-.02em"}}>
+            <h2 style={{lineHeight:1.4,wordBreak:"break-word",fontFamily:"'Playfair Display',serif",fontSize:20,fontWeight:600,color:"#f0f0ff",letterSpacing:"0.3px"}}>
               Trusted by Creators
             </h2>
           </div>
@@ -1646,7 +1660,7 @@ const Landing = ({ goLogin, goSignup }) => {
               border:"1px solid rgba(212,160,23,.25)",borderRadius:20,padding:"5px 16px",marginBottom:14}}>
               <span style={{fontSize:10,fontWeight:800,color:C.goldL,letterSpacing:".1em"}}>🎁 NEW USER REWARDS</span>
             </div>
-            <h2 style={{fontFamily:"Syne,sans-serif",fontSize:30,fontWeight:900,color:"#f0f0ff",marginBottom:8,letterSpacing:"-.02em"}}>Rewards After Your First Order</h2>
+            <h2 style={{lineHeight:1.4,wordBreak:"break-word",fontFamily:"'Playfair Display',serif",fontSize:20,fontWeight:600,color:"#f0f0ff",marginBottom:8,letterSpacing:"0.3px"}}>Rewards After Your First Order</h2>
             <p style={{color:C.muted,fontSize:13}}>Real bonuses automatically granted on completion</p>
           </div>
           <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(270px,1fr))",gap:16}}>
@@ -1679,7 +1693,7 @@ const Landing = ({ goLogin, goSignup }) => {
             <span>🎁</span>
             <span style={{fontSize:11,fontWeight:800,color:C.goldL,letterSpacing:".1em"}}>FIRST DEPOSIT BONUS</span>
           </div>
-          <h2 style={{fontFamily:"Syne,sans-serif",fontSize:34,fontWeight:900,color:"#f0f0ff",marginBottom:12,letterSpacing:"-.02em"}}>
+          <h2 style={{lineHeight:1.4,wordBreak:"break-word",fontFamily:"'Playfair Display',serif",fontSize:20,fontWeight:600,color:"#f0f0ff",marginBottom:12,letterSpacing:"0.3px"}}>
             Get <span style={{background:C.gG,WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent"}}>Rs.10 Bonus</span> Free
           </h2>
           <p style={{color:C.muted,fontSize:14,marginBottom:32,lineHeight:1.7}}>
@@ -1707,8 +1721,8 @@ const Landing = ({ goLogin, goSignup }) => {
               background:"radial-gradient(ellipse,rgba(124,58,237,.1) 0%,transparent 70%)",pointerEvents:"none"}}/>
             <div style={{position:"relative",zIndex:1}}>
               <div style={{fontSize:48,marginBottom:16,animation:"floatY 3s ease-in-out infinite"}}>🚀</div>
-              <h2 style={{fontFamily:"Syne,sans-serif",fontSize:34,fontWeight:900,marginBottom:12,
-                background:"linear-gradient(135deg,#c4b5fd,#f5c842)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",letterSpacing:"-.02em"}}>
+              <h2 style={{lineHeight:1.4,wordBreak:"break-word",fontFamily:"'Playfair Display',serif",fontSize:20,fontWeight:600,marginBottom:12,
+                background:"linear-gradient(135deg,#c4b5fd,#f5c842)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",letterSpacing:"0.3px"}}>
                 Start Growing Today
               </h2>
               <p style={{color:C.muted,fontSize:14,marginBottom:32,maxWidth:380,margin:"0 auto 32px",lineHeight:1.7}}>
@@ -1759,7 +1773,7 @@ const Landing = ({ goLogin, goSignup }) => {
       {/* ── FAQ ──────────────────────────────────────────────── */}
       <section style={{padding:"80px 6%",borderTop:`1px solid ${C.border}`}}>
         <div style={{maxWidth:700,margin:"0 auto"}}>
-          <h2 style={{fontFamily:"Syne,sans-serif",fontSize:30,fontWeight:900,color:"#f0f0ff",marginBottom:36,textAlign:"center",letterSpacing:"-.02em"}}>
+          <h2 style={{lineHeight:1.4,wordBreak:"break-word",fontFamily:"'Playfair Display',serif",fontSize:20,fontWeight:600,color:"#f0f0ff",marginBottom:36,textAlign:"center",letterSpacing:"0.3px"}}>
             Frequently Asked Questions
           </h2>
           {[
