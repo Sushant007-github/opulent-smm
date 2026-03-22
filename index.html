@@ -73,15 +73,6 @@
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 </head>
 <body>
-  <div style="
-background:#fff3cd;
-color:#856404;
-padding:10px;
-text-align:center;
-font-size:13px;
-">
-⚠️ Your account must be PUBLIC before placing an order.
-</div>
   <div id="root"></div>
   <script type="text/babel" data-presets="react">
 const { useState, useEffect, useRef, useCallback } = React;
@@ -2761,6 +2752,9 @@ const UserNewOrder = ({ orders, addOrderSync, balance, setBalance, setPage, init
                   </div>
                 </div>
               )}
+              <div style={{background:"#fff3cd",color:"#856404",padding:"10px",borderRadius:"8px",marginBottom:"12px",fontSize:"13px",textAlign:"center"}}>
+                ⚠️ Your account must be <strong>PUBLIC</strong> before placing an order.
+              </div>
               <Inp label="Your Link / URL" value={link} onChange={e=>setLink(e.target.value)}
                 placeholder={`e.g. https://instagram.com/yourprofile`} error={linkErr} icon="🔗"
                 hint={`Paste your ${sel.platform} profile or post link`}/>
@@ -7044,13 +7038,4 @@ function App() {
       {screen==="login"      && <Login goSignup={()=>goScreen("signup")} onUserLogin={(n,e)=>loginUser(n,e)} onAdminLogin={()=>goScreen("adminlogin")}/>}
       {screen==="adminlogin" && <AdminLogin onAdminLogin={loginAdmin} goBack={()=>goScreen("landing")}/>}
       {screen==="user"       && <UserDash userName={userName||"User"} userEmail={userEmail} onLogout={logout}/>}
-      {screen==="admin"      && <AdminDash onLogout={logout}/>}
-    </>
-  );
-}
-
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(React.createElement(App));
-  </script>
-</body>
-  </html>
+      {screen==="admin"       
