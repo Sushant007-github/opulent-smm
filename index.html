@@ -76,6 +76,7 @@ body.order-page #order-warning {
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
 </head>
 <body>
   <div id="order-warning" style="
@@ -94,6 +95,25 @@ if (window.location.href.includes("order")) {
   document.body.classList.add("order-page");
 }
 </script>
+  <script>
+  document.addEventListener("DOMContentLoaded", function() {
+    if(typeof emailjs !== "undefined") {
+      emailjs.init("kJpGHyAXtp83jE5U");
+    }
+  });
+  window.sendAdminAlert = function(subject, body) {
+    try {
+      if(typeof emailjs === "undefined") return;
+      emailjs.send("service_42ypkd9", "template_6f1wrnp", {
+        subject: subject,
+        body: body,
+        time: new Date().toLocaleString("en-IN", {timeZone:"Asia/Kolkata"})
+      });
+    } catch(e) {
+      console.log("EmailJS error:", e);
+    }
+  };
+  </script>
   <script type="text/babel" data-presets="react">
 const { useState, useEffect, useRef, useCallback } = React;
 
@@ -1927,6 +1947,7 @@ const Signup = ({ goLogin, onSuccess }) => {
         if(referralCode) clearReferral(); // clear after successful use
         setLoading(false);
         setDone(true);
+        try { window.sendAdminAlert("New Signup - OpulentSMM", "Name: "+form.name+"\nEmail: "+form.email); } catch(ignore) {}
       }
     } catch(e){
       setLoading(false);
@@ -2669,6 +2690,7 @@ const UserNewOrder = ({ orders, addOrderSync, balance, setBalance, setPage, init
       addOrderSync(newOrd);
       setBalance(b=>parseFloat((b-total).toFixed(2)));
       setLoading(false); setStep(4);
+      try { window.sendAdminAlert("New Order - OpulentSMM", "Service: "+sel.name+"\nPlatform: "+sel.platform+"\nQty: "+qty+"\nAmount: Rs."+total.toFixed(2)+"\nLink: "+link+"\nUser: "+userEmail); } catch(ignore) {}
     },1400);
   };
 
@@ -6450,6 +6472,7 @@ const AdminPayments = () => {
 
       setDeps(d=>d.map(x=>x.id===dep.id?{...x,status:"approved"}:x));
       Toast.success(`✅ Approved ₹${dep.amount} for ${dep.userName}! Balance: ₹${confirmedBal}${bonusAdded>0?` (+₹${bonusAdded} bonus)`:""}`);
+      try { window.sendAdminAlert("Payment Approved - OpulentSMM", "User: "+dep.userName+"\nEmail: "+dep.email+"\nAmount: Rs."+dep.amount+"\nNew Balance: Rs."+confirmedBal); } catch(ignore) {}
     } catch(e) {
       Toast.error("❌ Approve failed: " + e.message);
     }
@@ -7025,43 +7048,4 @@ function App() {
 
   const loginUser=(name,email="")=>{
     const normEmail = (email||"").toLowerCase().trim();
-    setUserName(name);
-    setUserEmail(normEmail);
-    sessionStorage.setItem("nx_screen","user");
-    sessionStorage.setItem("nx_name",name);
-    sessionStorage.setItem("nx_email",normEmail);
-    DB.addUser({
-      id:"USR-"+Date.now(),
-      name: name||(normEmail.split("@")[0]),
-      email: normEmail,
-      balance:0, orders:0,
-      joined:today(), status:"Active",
-    });
-    goScreen("user");
-  };
-  const loginAdmin=()=>{ sessionStorage.setItem("nx_screen","admin"); goScreen("admin"); };
-  const logout=()=>{
-    sessionStorage.clear();
-    goScreen("landing", true);
-    setUserName(""); setUserEmail("");
-  };
-
-  return (
-    <>
-      <GS/>
-      <ToastContainer/>
-      {screen==="landing"    && <Landing goLogin={()=>goScreen("login")} goSignup={()=>goScreen("signup")}/>}
-      {screen==="signup"     && <Signup goLogin={()=>goScreen("login")} onSuccess={(n,e)=>loginUser(n,e)}/>}
-      {screen==="login"      && <Login goSignup={()=>goScreen("signup")} onUserLogin={(n,e)=>loginUser(n,e)} onAdminLogin={()=>goScreen("adminlogin")}/>}
-      {screen==="adminlogin" && <AdminLogin onAdminLogin={loginAdmin} goBack={()=>goScreen("landing")}/>}
-      {screen==="user"       && <UserDash userName={userName||"User"} userEmail={userEmail} onLogout={logout}/>}
-      {screen==="admin"      && <AdminDash onLogout={logout}/>}
-    </>
-  );
-}
-
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(React.createElement(App));
-  </script>
-</body>
-  </html>
+    setUserName(
