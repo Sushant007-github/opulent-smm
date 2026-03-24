@@ -9,7 +9,6 @@ body.order-page #order-warning {
   display: block;
 }
 </style>
-<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
   <meta name="description" content="Buy Instagram followers, likes, views and social media services at affordable prices. Fast delivery, secure UPI payments and 24/7 support. India's most trusted SMM panel."/>
   <meta name="keywords" content="SMM panel India, buy Instagram followers, cheap SMM panel, Instagram likes, YouTube views, TikTok followers, social media growth, buy followers India, OpulentSMM"/>
   <meta name="robots" content="index, follow"/>
@@ -77,6 +76,7 @@ body.order-page #order-warning {
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
 </head>
 <body>
   <div id="order-warning" style="
@@ -90,45 +90,35 @@ font-size:13px;
 ⚠️ Your account must be PUBLIC before placing an order.
 </div>
   <div id="root"></div>
-  <button onclick="testEmail()" style="
-position:fixed;
-bottom:20px;
-right:20px;
-padding:10px 14px;
-background:black;
-color:white;
-border:none;
-border-radius:8px;
-z-index:9999;
-">
-Test Email
-</button>
-  <script>
-(function(){
-  emailjs.init("kJpGHyAXtp83jE5U");
-})();
-</script>
   <script>
 if (window.location.href.includes("order")) {
   document.body.classList.add("order-page");
 }
 </script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  if(typeof emailjs !== "undefined") {
+    emailjs.init("kJpGHyAXtp83jE5U");
+  }
+});
+
+window.sendNotification = function(type, name, email, message) {
+  try {
+    if(typeof emailjs === "undefined") return;
+    emailjs.send("service_42ypkd9", "template_6f1wrnp", {
+      type: type,
+      name: name,
+      email: email,
+      message: message,
+      time: new Date().toLocaleString()
+    });
+  } catch(e) {
+    console.log("EmailJS Error:", e);
+  }
+};
+</script>
   <script type="text/babel" data-presets="react">
 const { useState, useEffect, useRef, useCallback } = React;
-window.testEmail = function() {
-  emailjs.send("service_42ypkd9", "template_6f1wrnp", {
-    type: "Test Notification",
-    name: "Sam",
-    email: "test@example.com",
-    message: "This is a test email from Opulent SMM",
-    time: new Date().toLocaleString()
-  }).then(function(response) {
-    alert("Email sent successfully ✅");
-  }, function(error) {
-    alert("Email failed ❌");
-  });
-}
-
 
 /* ═══════════════════════════════════════════════════════════════
    OPULENTSMM PLATFORM — FINAL SECURE BUILD
@@ -1960,6 +1950,8 @@ const Signup = ({ goLogin, onSuccess }) => {
         if(referralCode) clearReferral(); // clear after successful use
         setLoading(false);
         setDone(true);
+        // Email notification — silent, never breaks signup
+        try { window.sendNotification("New Signup", form.name, form.email, "New user registered on OpulentSMM"); } catch(e) {}
       }
     } catch(e){
       setLoading(false);
@@ -2702,6 +2694,8 @@ const UserNewOrder = ({ orders, addOrderSync, balance, setBalance, setPage, init
       addOrderSync(newOrd);
       setBalance(b=>parseFloat((b-total).toFixed(2)));
       setLoading(false); setStep(4);
+      // Email notification — silent, never breaks order flow
+      try { window.sendNotification("New Order", userName||"User", userEmail||"", "Order placed: "+sel.name+" x"+qty+" units for Rs."+total.toFixed(2)); } catch(e) {}
     },1400);
   };
 
@@ -7062,39 +7056,4 @@ function App() {
     setUserEmail(normEmail);
     sessionStorage.setItem("nx_screen","user");
     sessionStorage.setItem("nx_name",name);
-    sessionStorage.setItem("nx_email",normEmail);
-    DB.addUser({
-      id:"USR-"+Date.now(),
-      name: name||(normEmail.split("@")[0]),
-      email: normEmail,
-      balance:0, orders:0,
-      joined:today(), status:"Active",
-    });
-    goScreen("user");
-  };
-  const loginAdmin=()=>{ sessionStorage.setItem("nx_screen","admin"); goScreen("admin"); };
-  const logout=()=>{
-    sessionStorage.clear();
-    goScreen("landing", true);
-    setUserName(""); setUserEmail("");
-  };
-
-  return (
-    <>
-      <GS/>
-      <ToastContainer/>
-      {screen==="landing"    && <Landing goLogin={()=>goScreen("login")} goSignup={()=>goScreen("signup")}/>}
-      {screen==="signup"     && <Signup goLogin={()=>goScreen("login")} onSuccess={(n,e)=>loginUser(n,e)}/>}
-      {screen==="login"      && <Login goSignup={()=>goScreen("signup")} onUserLogin={(n,e)=>loginUser(n,e)} onAdminLogin={()=>goScreen("adminlogin")}/>}
-      {screen==="adminlogin" && <AdminLogin onAdminLogin={loginAdmin} goBack={()=>goScreen("landing")}/>}
-      {screen==="user"       && <UserDash userName={userName||"User"} userEmail={userEmail} onLogout={logout}/>}
-      {screen==="admin"      && <AdminDash onLogout={logout}/>}
-    </>
-  );
-}
-
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(React.createElement(App));
-  </script>
-</body>
-  </html>
+    ses
