@@ -1273,714 +1273,313 @@ const LiveActivity = () => {
 //  LANDING PAGE
 // ═══════════════════════════════════════════════════════════════
 const Landing = ({ goLogin, goSignup }) => {
-  const [wi,setWi]=useState(0);
-  const words=["Brands","Creators","Agencies","Influencers"];
-  useEffect(()=>{const t=setInterval(()=>setWi(i=>(i+1)%4),2200);return()=>clearInterval(t);},[]);
-
   return (
-    <div style={{background:C.bg,minHeight:"100vh"}}>
-      {/* Live purchase notification popup */}
+    <div style={{background:"#0F172A",minHeight:"100vh",fontFamily:"'Sora',sans-serif"}}>
       <LivePurchaseNotif/>
 
-      {/* ── NAV ─────────────────────────────────────────────── */}
+      {/* NAV */}
       <nav style={{position:"fixed",top:0,left:0,right:0,zIndex:300,
-        background:"rgba(6,6,10,.92)",backdropFilter:"blur(28px)",
-        borderBottom:"1px solid rgba(124,58,237,.12)",
-        padding:"12px 16px",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-        <Logo/>
-        <Btn v="ghost" onClick={goLogin} size="sm">Log In</Btn>
+        background:"rgba(15,23,42,0.95)",backdropFilter:"blur(20px)",
+        borderBottom:"1px solid rgba(99,102,241,0.15)",
+        padding:"0 6%",height:64,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+        <div style={{display:"flex",alignItems:"center",gap:10}}>
+          <div style={{width:32,height:32,borderRadius:8,
+            background:"linear-gradient(135deg,#6366F1,#818CF8)",
+            display:"flex",alignItems:"center",justifyContent:"center",
+            fontSize:16,fontWeight:900,color:"#fff"}}>O</div>
+          <span style={{fontWeight:700,fontSize:17,color:"#fff",letterSpacing:"-0.02em"}}>OpulentSMM</span>
+        </div>
+        <div style={{display:"flex",alignItems:"center",gap:24}}>
+          <span style={{color:"#94A3B8",fontSize:13,fontWeight:500,cursor:"pointer"}}
+            onClick={function(){document.getElementById("features-sec").scrollIntoView({behavior:"smooth"});}}>Features</span>
+          <span style={{color:"#94A3B8",fontSize:13,fontWeight:500,cursor:"pointer"}}
+            onClick={function(){document.getElementById("svc-sec").scrollIntoView({behavior:"smooth"});}}>Services</span>
+          <span style={{color:"#94A3B8",fontSize:13,fontWeight:500,cursor:"pointer"}}
+            onClick={goLogin}>Login</span>
+          <button onClick={goSignup} style={{background:"#6366F1",border:"none",borderRadius:8,
+            padding:"8px 18px",color:"#fff",fontSize:13,fontWeight:600,cursor:"pointer"}}>Get Started</button>
+        </div>
       </nav>
 
-      {/* ── HERO ────────────────────────────────────────────── */}
-      <section style={{minHeight:"100vh",display:"flex",flexDirection:"column",alignItems:"center",
-        justifyContent:"center",padding:"120px 6% 80px",textAlign:"center",position:"relative",overflow:"hidden"}}>
-        {/* Deep glow orbs */}
-        <div style={{position:"absolute",top:"10%",left:"50%",transform:"translateX(-50%)",
-          width:800,height:800,borderRadius:"50%",
-          background:"radial-gradient(ellipse,rgba(124,58,237,.12) 0%,transparent 65%)",pointerEvents:"none",zIndex:0}}/>
-        <div style={{position:"absolute",bottom:"10%",left:"10%",width:500,height:500,borderRadius:"50%",
-          background:"radial-gradient(ellipse,rgba(212,160,23,.06) 0%,transparent 70%)",pointerEvents:"none",zIndex:0}}/>
-        <div style={{position:"absolute",top:"25%",right:"8%",width:350,height:350,borderRadius:"50%",
-          background:"radial-gradient(ellipse,rgba(168,85,247,.07) 0%,transparent 70%)",pointerEvents:"none",zIndex:0}}/>
+      {/* HERO */}
+      <section style={{minHeight:"100vh",display:"flex",flexDirection:"column",
+        alignItems:"center",justifyContent:"center",padding:"100px 6% 80px",
+        textAlign:"center",position:"relative",overflow:"hidden"}}>
+        <div style={{position:"absolute",inset:0,
+          background:"radial-gradient(ellipse 80% 50% at 50% -10%,rgba(99,102,241,0.15),transparent)",
+          pointerEvents:"none"}}/>
+        <div style={{position:"absolute",top:"60%",left:"5%",width:400,height:400,
+          background:"radial-gradient(circle,rgba(99,102,241,0.06),transparent 70%)",
+          pointerEvents:"none",borderRadius:"50%"}}/>
 
-        <div style={{position:"relative",zIndex:1,maxWidth:740,width:"100%",animation:"fadeUp .9s ease both"}}>
-
-          {/* Trust badge */}
+        <div style={{position:"relative",zIndex:1,maxWidth:760,width:"100%"}}>
           <div style={{display:"inline-flex",alignItems:"center",gap:8,
-            background:"rgba(124,58,237,.12)",border:"1px solid rgba(124,58,237,.3)",
-            borderRadius:50,padding:"6px 18px",marginBottom:32,
-            fontSize:11,fontWeight:700,color:"#c4b5fd",letterSpacing:".08em"}}>
-            <span style={{width:6,height:6,borderRadius:"50%",background:"#34d399",
-              animation:"pulse 1.5s infinite",display:"inline-block"}}/>
-            ✦ TRUSTED WORLDWIDE BY 48,000+ USERS
+            background:"rgba(99,102,241,0.1)",border:"1px solid rgba(99,102,241,0.25)",
+            borderRadius:100,padding:"6px 16px",marginBottom:32,
+            fontSize:11,fontWeight:600,color:"#818CF8",letterSpacing:"0.06em"}}>
+            <span style={{width:6,height:6,borderRadius:"50%",background:"#34d399",display:"inline-block"}}/>
+            TRUSTED BY 48,000+ BUSINESSES AND CREATORS
           </div>
 
-          {/* Headline */}
-          <h1 className="hero-title" style={{fontWeight:600,letterSpacing:"0.3px",
-            fontFamily:"'Playfair Display',serif",marginBottom:22,textAlign:"center"}}>
-            <span style={{color:"#f0f0ff"}}>Premium Growth</span>
-            <br/>
-            <span style={{background:"linear-gradient(135deg,#7c3aed 0%,#a855f7 50%,#d4a017 100%)",
+          <h1 style={{fontSize:"clamp(36px,6vw,64px)",fontWeight:700,lineHeight:1.12,
+            letterSpacing:"-0.03em",marginBottom:24,color:"#F8FAFC"}}>
+            Scale Your Social{" "}
+            <span style={{background:"linear-gradient(135deg,#6366F1,#818CF8,#A5B4FC)",
               WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent"}}>
-              for {words[wi]}
+              Presence
             </span>
+            {" "}Like a Brand
           </h1>
 
-          {/* Subtext — minimal */}
-          <p style={{fontSize:17,color:"#7070a0",maxWidth:460,margin:"0 auto 40px",lineHeight:1.7,fontWeight:400}}>
-            Real followers, likes &amp; views for Instagram, YouTube, TikTok and more. From <strong style={{color:C.goldL}}>₹0.09</strong>.
+          <p style={{fontSize:18,color:"#94A3B8",maxWidth:520,margin:"0 auto 40px",lineHeight:1.7,fontWeight:400}}>
+            All-in-one growth infrastructure for businesses, creators, and agencies. Fast delivery. Real results. Starting at just Rs.15.
           </p>
 
-          {/* CTAs */}
-          <div className="hero-cta-wrap" style={{display:"flex",gap:14,justifyContent:"center",flexWrap:"wrap",marginBottom:48}}>
-            <Btn v="purple" onClick={goSignup} size="lg" style={{minWidth:190,animation:"glowPurple 2.5s ease infinite"}}>
+          <div style={{display:"flex",gap:12,justifyContent:"center",flexWrap:"wrap",marginBottom:56}}>
+            <button onClick={goSignup} style={{background:"#6366F1",border:"none",
+              borderRadius:10,padding:"14px 32px",color:"#fff",fontSize:15,fontWeight:600,cursor:"pointer",
+              boxShadow:"0 0 40px rgba(99,102,241,0.35)"}}>
               Get Started Free
-            </Btn>
-            <Btn v="ghost" onClick={()=>document.getElementById("svc").scrollIntoView({behavior:"smooth"})} size="lg" style={{minWidth:160}}>
-              Browse Services
-            </Btn>
+            </button>
+            <button onClick={function(){document.getElementById("svc-sec").scrollIntoView({behavior:"smooth"});}}
+              style={{background:"rgba(255,255,255,0.05)",border:"1px solid rgba(255,255,255,0.12)",
+              borderRadius:10,padding:"14px 32px",color:"#F8FAFC",fontSize:15,fontWeight:600,cursor:"pointer"}}>
+              View Services
+            </button>
           </div>
 
-          {/* Urgency strip */}
-          <div style={{display:"flex",gap:12,justifyContent:"center",flexWrap:"wrap",marginBottom:16}}>
-            <div className="urgency-badge" style={{display:"inline-flex",alignItems:"center",gap:6,
-              background:"rgba(239,68,68,.1)",border:"1px solid rgba(239,68,68,.25)",
-              borderRadius:20,padding:"5px 14px",fontSize:11,color:"#f87171",fontWeight:700}}>
-              🔥 High demand — 200+ orders today
-            </div>
-            <div style={{display:"inline-flex",alignItems:"center",gap:6,
-              background:"rgba(52,211,153,.08)",border:"1px solid rgba(52,211,153,.2)",
-              borderRadius:20,padding:"5px 14px",fontSize:11,color:"#34d399",fontWeight:700}}>
-              <span style={{width:6,height:6,borderRadius:"50%",background:"#34d399",animation:"pulse 1.5s infinite",display:"inline-block"}}/>
-              Limited slots available today
-            </div>
-          </div>
-
-          {/* Platform pills */}
-          <div style={{display:"flex",gap:8,justifyContent:"center",flexWrap:"wrap"}}>
-            {["📸 Instagram","▶️ YouTube","🎵 TikTok","🐦 Twitter","✈️ Telegram","👍 Facebook"].map(p=>(
-              <span key={p} style={{background:"rgba(124,58,237,.08)",border:"1px solid rgba(124,58,237,.2)",
-                borderRadius:50,padding:"5px 14px",fontSize:11,fontWeight:600,color:"#6060a0"}}>{p}</span>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── QUICK TRUST BAR ── */}
-      <div style={{background:"rgba(255,255,255,.025)",borderTop:"1px solid rgba(255,255,255,.06)",
-        borderBottom:"1px solid rgba(255,255,255,.06)",padding:"14px 6%"}}>
-        <div style={{maxWidth:1000,margin:"0 auto",display:"flex",justifyContent:"center",
-          gap:24,flexWrap:"wrap",alignItems:"center"}}>
-          {[
-            {i:"🔒",t:"100% Secure Payments"},
-            {i:"⚡",t:"Instant Order Processing"},
-            {i:"🔄",t:"30-Day Refill Guarantee"},
-            {i:"👥",t:"Trusted by 10,000+ Users"},
-            {i:"💬",t:"24/7 WhatsApp Support"},
-          ].map(b=>
-            <div key={b.t} style={{display:"flex",alignItems:"center",gap:6,fontSize:12,color:"#8080a0",fontWeight:600}}>
-              <span style={{fontSize:15}}>{b.i}</span>{b.t}
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* ── TRUST STRIP ─────────────────────────────────────── */}
-      <section style={{background:"rgba(124,58,237,.04)",borderTop:"1px solid rgba(124,58,237,.12)",borderBottom:"1px solid rgba(124,58,237,.12)"}}>
-        <div style={{maxWidth:1000,margin:"0 auto",padding:"32px 6%",
-          display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(180px,1fr))",gap:0}}>
-          {[
-            {val:"48,000+",label:"Worldwide Users",icon:"🌍",c:"#c4b5fd"},
-            {val:"100K+",  label:"Orders Completed",icon:"📦",c:C.goldL},
-            {val:"100+",   label:"Premium Services",icon:"💎",c:"#34d399"},
-            {val:"4.9/5",  label:"Customer Rating",icon:"⭐",c:"#fbbf24"},
-            {val:"< 30min",label:"Average Start Time",icon:"⚡",c:"#60a5fa"},
-          ].map((s,i,arr)=>(
-            <div key={s.label} style={{textAlign:"center",padding:"20px 10px",
-              borderRight:i<arr.length-1?"1px solid rgba(124,58,237,.1)":undefined}}>
-              <div style={{fontSize:9,color:C.muted,letterSpacing:".1em",marginBottom:8,fontWeight:700,textTransform:"uppercase"}}>{s.icon} {s.label}</div>
-              <div style={{fontSize:26,fontWeight:900,color:s.c,fontFamily:"Syne,sans-serif"}}>{s.val}</div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* ── SERVICES PREVIEW ────────────────────────────────── */}
-      <section id="svc" style={{padding:"90px 6%"}}>
-        <div style={{maxWidth:1200,margin:"0 auto"}}>
-          <div style={{textAlign:"center",marginBottom:52}}>
-            <div style={{display:"inline-flex",alignItems:"center",gap:6,
-              background:"rgba(212,160,23,.1)",border:"1px solid rgba(212,160,23,.25)",
-              borderRadius:20,padding:"5px 16px",marginBottom:16}}>
-              <span style={{fontSize:10,fontWeight:800,color:C.goldL,letterSpacing:".1em"}}>💎 PREMIUM SERVICES</span>
-            </div>
-            <h2 style={{lineHeight:1.4,wordBreak:"break-word",fontFamily:"'Playfair Display',serif",fontSize:20,fontWeight:600,
-              color:"#f0f0ff",marginBottom:10,letterSpacing:"0.3px"}}>
-              100+ Services Available
-            </h2>
-            <p style={{color:C.muted,fontSize:14}}>Fast delivery · Non-drop guarantee · Secure ₹ payments</p>
-          </div>
-
-          {/* 3 visible premium service cards */}
-          <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(300px,1fr))",gap:18,marginBottom:18}}>
-            {SERVICES.slice(0,3).map(s=><SvcCard key={s.id} svc={s} onOrder={goSignup}/>)}
-          </div>
-
-          {/* Locked blur overlay */}
-          <div style={{position:"relative",borderRadius:20,overflow:"hidden"}}>
-            <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(300px,1fr))",gap:18,
-              filter:"blur(5px)",opacity:.4,pointerEvents:"none",userSelect:"none"}}>
-              {SERVICES.slice(3,9).map(s=>(
-                <div key={s.id} style={{background:"rgba(255,255,255,.04)",border:`1px solid ${C.border}`,
-                  borderRadius:16,padding:22}}>
-                  <div style={{fontSize:10,color:C.purpleL,fontWeight:800,marginBottom:6}}>{s.platform} · {s.cat}</div>
-                  <div style={{fontWeight:700,fontSize:14,color:"#e8e8f2",marginBottom:8}}>{s.name}</div>
-                  <div style={{color:C.muted,fontSize:12,lineHeight:1.5,marginBottom:12}}>{s.desc}</div>
-                  <div style={{height:34,background:"rgba(124,58,237,.15)",borderRadius:8}}/>
+          <div style={{display:"flex",gap:40,justifyContent:"center",flexWrap:"wrap"}}>
+            {[["48K+","Active Users"],["200+","Orders Daily"],["30 Day","Refill Guarantee"],["24/7","Support"]].map(function(s){
+              return (
+                <div key={s[0]} style={{textAlign:"center"}}>
+                  <div style={{fontSize:22,fontWeight:700,color:"#F8FAFC",letterSpacing:"-0.02em"}}>{s[0]}</div>
+                  <div style={{fontSize:11,color:"#64748B",fontWeight:500,marginTop:2}}>{s[1]}</div>
                 </div>
-              ))}
-            </div>
-            {/* CTA overlay */}
-            <div style={{position:"absolute",inset:0,display:"flex",flexDirection:"column",
-              alignItems:"center",justifyContent:"flex-end",
-              background:"linear-gradient(to bottom,transparent 0%,rgba(6,6,10,.98) 55%)",
-              borderRadius:20,padding:40}}>
-              <div style={{width:52,height:52,borderRadius:16,background:"rgba(124,58,237,.15)",
-                border:"1px solid rgba(124,58,237,.3)",display:"flex",alignItems:"center",
-                justifyContent:"center",fontSize:24,marginBottom:16}}>🔒</div>
-              <h3 style={{fontFamily:"Syne,sans-serif",fontWeight:900,fontSize:20,color:"#f0f0ff",
-                marginBottom:8,textAlign:"center"}}>100+ Premium Services</h3>
-              <p style={{color:C.muted,fontSize:13,marginBottom:24,textAlign:"center",maxWidth:360,lineHeight:1.6}}>
-                Create a free account to unlock all services, pricing tiers, and exclusive packages.
-              </p>
-              <div style={{display:"flex",gap:12,flexWrap:"wrap",justifyContent:"center",marginBottom:16}}>
-                <Btn v="purple" onClick={goSignup} size="lg" style={{animation:"glowPurple 2.5s ease infinite"}}>
-                  Login to Unlock All Services
-                </Btn>
-                <Btn v="ghost" onClick={goLogin} size="md">Already a member?</Btn>
-              </div>
-              <div style={{display:"flex",gap:18,flexWrap:"wrap",justifyContent:"center"}}>
-                {["✓ Free to join","✓ Instant access","✓ No hidden fees"].map(t=>(
-                  <span key={t} style={{fontSize:12,color:"#34d399",fontWeight:600}}>{t}</span>
-                ))}
-              </div>
-            </div>
+              );
+            })}
           </div>
         </div>
       </section>
 
-      {/* ── WHY CHOOSE US ───────────────────────────────────── */}
-      <section style={{padding:"90px 6%",background:"rgba(124,58,237,.03)",borderTop:"1px solid rgba(124,58,237,.1)"}}>
-        <div style={{maxWidth:1100,margin:"0 auto"}}>
-          <div style={{textAlign:"center",marginBottom:52}}>
-            <div style={{display:"inline-flex",alignItems:"center",gap:6,
-              background:"rgba(124,58,237,.1)",border:"1px solid rgba(124,58,237,.25)",
-              borderRadius:20,padding:"5px 16px",marginBottom:16}}>
-              <span style={{fontSize:10,fontWeight:800,color:"#c4b5fd",letterSpacing:".1em"}}>✦ WHY CHOOSE US</span>
-            </div>
-            <h2 style={{fontFamily:"'Playfair Display',serif",fontSize:22,fontWeight:600,color:"#f0f0ff",marginBottom:8,letterSpacing:"0.3px",wordBreak:"break-word",lineHeight:1.4}}>
-              The OpulentSMM Standard
-            </h2>
-            <p style={{color:C.muted,fontSize:14,maxWidth:440,margin:"0 auto"}}>Built for results. Not promises.</p>
-          </div>
-          <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(240px,1fr))",gap:18}}>
-            {[
-              {i:"⚡",t:"Instant Delivery",d:"Orders start within 0–30 minutes. Real-time tracking in your dashboard.",c:"#fbbf24",bg:"rgba(251,191,36,.05)",b:"rgba(251,191,36,.15)"},
-              {i:"💎",t:"High Quality",d:"Real, high-retention accounts. Engagement that actually counts.",c:"#a855f7",bg:"rgba(168,85,247,.05)",b:"rgba(168,85,247,.15)"},
-              {i:"🔄",t:"Non-Drop Guarantee",d:"Free 30-day refill on all eligible services. No questions asked.",c:"#34d399",bg:"rgba(52,211,153,.05)",b:"rgba(52,211,153,.15)"},
-              {i:"🔒",t:"Secure Payments",d:"All major UPI methods. No password required. 100% safe.",c:C.goldL,bg:"rgba(212,160,23,.05)",b:"rgba(212,160,23,.15)"},
-              {i:"🇮🇳",t:"India Specialists",d:"Optimised for Indian creators and brands. Indian audience focus.",c:"#f87171",bg:"rgba(239,68,68,.05)",b:"rgba(239,68,68,.15)"},
-              {i:"💬",t:"24/7 Support",d:"Real humans on WhatsApp and ticket support. Always available.",c:"#60a5fa",bg:"rgba(96,165,250,.05)",b:"rgba(96,165,250,.15)"},
-            ].map(f=>(
-              <div key={f.t} className="svc-card-hover"
-                style={{background:`linear-gradient(145deg,${f.bg},rgba(255,255,255,.01))`,
-                  border:`1px solid ${f.b}`,borderRadius:16,padding:28,transition:"all .25s"}}>
-                <div style={{width:48,height:48,borderRadius:13,background:f.bg,border:`1px solid ${f.b}`,
-                  display:"flex",alignItems:"center",justifyContent:"center",fontSize:22,marginBottom:16}}>
-                  {f.i}
-                </div>
-                <div style={{fontWeight:800,color:"#f0f0ff",fontSize:15,marginBottom:7,fontFamily:"Syne,sans-serif"}}>{f.t}</div>
-                <div style={{color:"#60607a",fontSize:13,lineHeight:1.6}}>{f.d}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── HOW IT WORKS ────────────────────────────────────── */}
-      <section style={{padding:"90px 6%",borderTop:"1px solid rgba(255,255,255,.05)"}}>
-        <div style={{maxWidth:900,margin:"0 auto",textAlign:"center"}}>
-          <h2 style={{lineHeight:1.4,wordBreak:"break-word",fontFamily:"'Playfair Display',serif",fontSize:20,fontWeight:600,color:"#f0f0ff",marginBottom:8,letterSpacing:"0.3px"}}>
-            Start in 4 Steps
-          </h2>
-          <p style={{color:C.muted,marginBottom:52,fontSize:14}}>No technical knowledge needed.</p>
-          <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(180px,1fr))",gap:16}}>
-            {[
-              {n:"01",i:"👤",t:"Create Account",d:"Sign up free in under 60 seconds.",c:"#c4b5fd"},
-              {n:"02",i:"💰",t:"Add Funds",d:"Top up via UPI — GPay, PhonePe, Paytm.",c:C.goldL},
-              {n:"03",i:"🛒",t:"Place Order",d:"Choose service, paste link, confirm.",c:"#34d399"},
-              {n:"04",i:"📈",t:"Watch it Grow",d:"Live delivery tracking in your dashboard.",c:"#60a5fa"},
-            ].map((s,i)=>(
-              <Card key={i} style={{padding:26,textAlign:"center",position:"relative",overflow:"hidden"}}>
-                <div style={{position:"absolute",top:10,right:14,fontSize:28,fontWeight:900,
-                  color:s.c,opacity:.08,fontFamily:"Syne,sans-serif",lineHeight:1}}>{s.n}</div>
-                <div style={{width:52,height:52,borderRadius:15,background:`${s.c}12`,
-                  border:`1px solid ${s.c}25`,display:"flex",alignItems:"center",
-                  justifyContent:"center",fontSize:24,margin:"0 auto 16px"}}>
-                  {s.i}
-                </div>
-                <div style={{fontWeight:800,fontSize:14,color:"#e8e8f2",marginBottom:6,fontFamily:"Syne,sans-serif"}}>{s.t}</div>
-                <div style={{color:C.muted,fontSize:12,lineHeight:1.6}}>{s.d}</div>
-              </Card>
-            ))}
-          </div>
-          <div style={{marginTop:42}}>
-            <Btn v="purple" onClick={goSignup} size="lg" style={{animation:"glowPurple 2.5s ease infinite"}}>
-              Get Started Free →
-            </Btn>
-          </div>
-        </div>
-      </section>
-
-      {/* ── ABOUT US ────────────────────────────────────────── */}
-      <section style={{padding:"90px 6%",background:"rgba(124,58,237,.03)",borderTop:"1px solid rgba(124,58,237,.1)"}}>
-        <div style={{maxWidth:900,margin:"0 auto"}}>
-          <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(340px,1fr))",gap:48,alignItems:"center"}}>
-            <div>
-              <div style={{display:"inline-flex",alignItems:"center",gap:6,
-                background:"rgba(212,160,23,.1)",border:"1px solid rgba(212,160,23,.25)",
-                borderRadius:20,padding:"5px 16px",marginBottom:20}}>
-                <span style={{fontSize:10,fontWeight:800,color:C.goldL,letterSpacing:".1em"}}>✦ ABOUT OPULENTSMM</span>
-              </div>
-              <h2 style={{fontFamily:"'Playfair Display',serif",fontSize:20,fontWeight:600,color:"#f0f0ff",
-                marginBottom:18,letterSpacing:"0.3px",lineHeight:1.15}}>
-                Built for<br/>
-                <span style={{background:"linear-gradient(135deg,#7c3aed,#d4a017)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent"}}>
-                  Digital Growth
-                </span>
-              </h2>
-              <p style={{color:"#7070a0",fontSize:14,lineHeight:1.85,marginBottom:24}}>
-                OpulentSMM is a premium social media growth platform built for creators, influencers, and brands who want to scale faster in the digital world.
-              </p>
-              <p style={{color:"#7070a0",fontSize:14,lineHeight:1.85,marginBottom:24}}>
-                We focus on delivering high-quality, reliable, and secure growth services across platforms like Instagram, YouTube, and TikTok. Our mission is simple — help creators grow faster, build authority, and unlock new opportunities online.
-              </p>
-              <p style={{color:"#7070a0",fontSize:14,lineHeight:1.85}}>
-                With thousands of successful orders and a rapidly growing community, OpulentSMM is trusted by users across India and worldwide. We don't just provide services — we help build digital presence.
-              </p>
-            </div>
-            <div style={{display:"flex",flexDirection:"column",gap:16}}>
-              {[
-                {i:"🏆",t:"Market Leaders",d:"Ranked among the top SMM panels in India for quality and reliability.",c:"#fbbf24"},
-                {i:"🔐",t:"Privacy First",d:"We never ask for passwords. Your account security is our priority.",c:"#34d399"},
-                {i:"🌏",t:"Global Reach",d:"Serving creators and brands across India and worldwide.",c:"#60a5fa"},
-                {i:"📈",t:"Proven Results",d:"100,000+ orders fulfilled. Real growth, real results.",c:C.goldL},
-              ].map(a=>(
-                <div key={a.t} style={{display:"flex",gap:14,padding:"16px 18px",
-                  background:"rgba(255,255,255,.03)",border:"1px solid rgba(255,255,255,.06)",
-                  borderRadius:14,transition:"all .2s"}}
-                  className="svc-card-hover">
-                  <div style={{width:40,height:40,borderRadius:11,background:`${a.c}12`,
-                    border:`1px solid ${a.c}25`,display:"flex",alignItems:"center",
-                    justifyContent:"center",fontSize:19,flexShrink:0}}>
-                    {a.i}
-                  </div>
-                  <div>
-                    <div style={{fontWeight:700,color:"#e8e8f2",fontSize:14,marginBottom:3}}>{a.t}</div>
-                    <div style={{color:C.muted,fontSize:12,lineHeight:1.55}}>{a.d}</div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── LIVE ACTIVITY ───────────────────────────────────── */}
-      <section style={{padding:"80px 6%",borderTop:"1px solid rgba(255,255,255,.05)"}}>
-        <div style={{maxWidth:1100,margin:"0 auto"}}>
-          <div style={{textAlign:"center",marginBottom:40}}>
-            <div style={{display:"inline-flex",alignItems:"center",gap:8,background:"rgba(52,211,153,.08)",
-              border:"1px solid rgba(52,211,153,.2)",borderRadius:20,padding:"6px 16px",marginBottom:14}}>
-              <span style={{width:7,height:7,borderRadius:"50%",background:"#34d399",
-                animation:"pulse 1.5s infinite",display:"inline-block"}}/>
-              <span style={{fontSize:11,fontWeight:700,color:"#34d399",letterSpacing:".06em"}}>LIVE ACTIVITY</span>
-            </div>
-            <h2 style={{lineHeight:1.4,wordBreak:"break-word",fontFamily:"'Playfair Display',serif",fontSize:20,fontWeight:600,color:"#f0f0ff",marginBottom:4}}>
-              Orders Happening Right Now
-            </h2>
-            <p style={{color:C.muted,fontSize:13}}>Join thousands of creators growing with OpulentSMM</p>
-          </div>
-          <LiveActivity/>
-        </div>
-      </section>
-
-      {/* ── TESTIMONIALS ────────────────────────────────────── */}
-      <section style={{padding:"90px 6%",background:"rgba(124,58,237,.03)",borderTop:"1px solid rgba(124,58,237,.1)"}}>
-        <div style={{maxWidth:1100,margin:"0 auto"}}>
-          <div style={{textAlign:"center",marginBottom:52}}>
-            <div style={{display:"inline-flex",alignItems:"center",gap:6,
-              background:"rgba(212,160,23,.1)",border:"1px solid rgba(212,160,23,.25)",
-              borderRadius:20,padding:"5px 16px",marginBottom:16}}>
-              <span style={{fontSize:10,fontWeight:800,color:C.goldL,letterSpacing:".1em"}}>⭐ CUSTOMER REVIEWS</span>
-            </div>
-            <h2 style={{lineHeight:1.4,wordBreak:"break-word",fontFamily:"'Playfair Display',serif",fontSize:20,fontWeight:600,color:"#f0f0ff",letterSpacing:"0.3px"}}>
-              Trusted by Creators
-            </h2>
-          </div>
-          <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(290px,1fr))",gap:18}}>
-            {[
-              {n:"Rahul S.",r:"Instagram Creator · Mumbai",t:"Got 5K followers in under 4 hours. Quality is amazing — they look completely organic. Already placed 3 more orders.",stars:5},
-              {n:"Priya M.",r:"YouTube Channel · Ahmedabad",t:"Used OpulentSMM for YouTube views and my video went trending. Indian views, real watch time. Best panel I've tried.",stars:5},
-              {n:"Arjun K.",r:"Digital Agency · Delhi",t:"Managing 20+ client accounts here. Fast delivery, great prices, and the dashboard makes bulk orders easy. Highly recommended.",stars:5},
-              {n:"Sneha R.",r:"TikTok Creator · Hyderabad",t:"Ordered Reel views and likes — content hit 200K impressions in 2 days. Incredible ROI for the price.",stars:5},
-              {n:"Vikram P.",r:"Brand Manager · Pune",t:"Instagram package helped us grow from 2K to 22K followers in one month. Support team is responsive and professional.",stars:5},
-            ].map((t,i)=>(
-              <Card key={i} style={{padding:24}} className="svc-card-hover">
-                <div style={{display:"flex",gap:2,marginBottom:14}}>
-                  {[1,2,3,4,5].map(s=>(
-                    <span key={s} style={{color:s<=t.stars?"#fbbf24":"rgba(255,255,255,.1)",fontSize:14}}>★</span>
-                  ))}
-                </div>
-                <p style={{color:"#a0a0c0",fontSize:13,lineHeight:1.75,marginBottom:18,fontStyle:"italic"}}>"{t.t}"</p>
-                <div style={{display:"flex",alignItems:"center",gap:10}}>
-                  <div style={{width:36,height:36,borderRadius:"50%",background:C.gP,flexShrink:0,
-                    display:"flex",alignItems:"center",justifyContent:"center",fontWeight:800,fontSize:14,color:"#fff"}}>
-                    {t.n[0]}
-                  </div>
-                  <div>
-                    <div style={{fontWeight:700,color:"#e8e8f2",fontSize:13}}>{t.n}</div>
-                    <div style={{fontSize:11,color:C.muted}}>{t.r}</div>
-                  </div>
-                </div>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── NEW USER REWARDS ─────────────────────────────────── */}
-      <section style={{padding:"80px 6%",borderTop:"1px solid rgba(255,255,255,.05)"}}>
-        <div style={{maxWidth:1100,margin:"0 auto"}}>
-          <div style={{textAlign:"center",marginBottom:44}}>
-            <div style={{display:"inline-flex",alignItems:"center",gap:8,background:"rgba(212,160,23,.1)",
-              border:"1px solid rgba(212,160,23,.25)",borderRadius:20,padding:"5px 16px",marginBottom:14}}>
-              <span style={{fontSize:10,fontWeight:800,color:C.goldL,letterSpacing:".1em"}}>🎁 NEW USER REWARDS</span>
-            </div>
-            <h2 style={{lineHeight:1.4,wordBreak:"break-word",fontFamily:"'Playfair Display',serif",fontSize:20,fontWeight:600,color:"#f0f0ff",marginBottom:8,letterSpacing:"0.3px"}}>Rewards After Your First Order</h2>
-            <p style={{color:C.muted,fontSize:13}}>Real bonuses automatically granted on completion</p>
-          </div>
-          <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(270px,1fr))",gap:16}}>
-            {[
-              {icon:"❤️",spend:"₹1,000",reward:"100 Free Likes or Saves",type:"Post only",color:"#34d399"},
-              {icon:"🎬",spend:"₹2,000",reward:"1,000 Free Views or Likes",type:"Reels only",color:"#60a5fa"},
-              {icon:"👥",spend:"₹3,000",reward:"1,000 Free Followers",type:"Indian followers only",color:C.goldL},
-            ].map((d,i)=>(
-              <Card key={i} gold style={{padding:26,position:"relative",overflow:"hidden"}}>
-                <div style={{position:"absolute",top:0,right:0,background:`${d.color}15`,
-                  borderRadius:"0 16px 0 10px",padding:"4px 14px",fontSize:10,fontWeight:800,color:d.color}}>
-                  {d.type}
-                </div>
-                <div style={{fontSize:32,marginBottom:14}}>{d.icon}</div>
-                <div style={{fontSize:11,color:C.muted,marginBottom:5}}>Spend {d.spend} → get free:</div>
-                <div style={{fontWeight:900,color:"#f0f0ff",fontSize:16,marginBottom:12,fontFamily:"Syne,sans-serif"}}>{d.reward}</div>
-                <div style={{fontSize:11,color:C.muted,lineHeight:1.5}}>Auto-credited after order completion.</div>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── FIRST DEPOSIT BONUS ──────────────────────────────── */}
-      <section style={{padding:"80px 6%",background:"linear-gradient(135deg,rgba(212,160,23,.05),rgba(212,160,23,.02))",borderTop:"1px solid rgba(212,160,23,.12)",borderBottom:"1px solid rgba(212,160,23,.12)"}}>
-        <div style={{maxWidth:740,margin:"0 auto",textAlign:"center"}}>
-          <div style={{display:"inline-flex",alignItems:"center",gap:8,background:"rgba(212,160,23,.12)",
-            border:"1px solid rgba(212,160,23,.35)",borderRadius:50,padding:"7px 20px",marginBottom:20,
-            boxShadow:"0 0 20px rgba(212,160,23,.1)"}}>
-            <span>🎁</span>
-            <span style={{fontSize:11,fontWeight:800,color:C.goldL,letterSpacing:".1em"}}>FIRST DEPOSIT BONUS</span>
-          </div>
-          <h2 style={{lineHeight:1.4,wordBreak:"break-word",fontFamily:"'Playfair Display',serif",fontSize:20,fontWeight:600,color:"#f0f0ff",marginBottom:12,letterSpacing:"0.3px"}}>
-            Get <span style={{background:C.gG,WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent"}}>Rs.10 Bonus</span> Free
-          </h2>
-          <p style={{color:C.muted,fontSize:14,marginBottom:32,lineHeight:1.7}}>
-            New users automatically receive <strong style={{color:C.goldL}}>Rs.10 free bonus</strong> on their first deposit of Rs.100 or more.
-          </p>
-          <div style={{display:"flex",gap:14,justifyContent:"center",flexWrap:"wrap",marginBottom:32}}>
-            {[["₹500","₹"+( 500+Math.round(500*FIRST_DEPOSIT_BONUS_PCT/100))],["₹1,000","₹"+(1000+Math.round(1000*FIRST_DEPOSIT_BONUS_PCT/100))],["₹2,000","₹"+(2000+Math.round(2000*FIRST_DEPOSIT_BONUS_PCT/100))]].map(([dep,get])=>(
-              <div key={dep} style={{background:"rgba(212,160,23,.08)",border:"1px solid rgba(212,160,23,.25)",borderRadius:12,padding:"14px 22px",textAlign:"center",minWidth:140}}>
-                <div style={{fontSize:11,color:C.muted,marginBottom:4}}>Deposit {dep}</div>
-                <div style={{fontSize:18,fontWeight:900,color:C.goldL}}>Get {get}</div>
-              </div>
-            ))}
-          </div>
-          <Btn v="gold" onClick={goSignup} size="lg" style={{animation:"glow 2.5s ease infinite"}}>Claim Bonus Now →</Btn>
-          <p style={{fontSize:11,color:C.muted,marginTop:10}}>*First deposit only · Minimum ₹100</p>
-        </div>
-      </section>
-
-      {/* ── FINAL CTA ────────────────────────────────────────── */}
-      <section style={{padding:"100px 6%",textAlign:"center"}}>
-        <div style={{maxWidth:640,margin:"0 auto"}}>
-          <Card glow style={{padding:"64px 40px",position:"relative",overflow:"hidden"}}>
-            <div style={{position:"absolute",top:"50%",left:"50%",transform:"translate(-50%,-50%)",
-              width:500,height:500,borderRadius:"50%",
-              background:"radial-gradient(ellipse,rgba(124,58,237,.1) 0%,transparent 70%)",pointerEvents:"none"}}/>
-            <div style={{position:"relative",zIndex:1}}>
-              <div style={{fontSize:48,marginBottom:16,animation:"floatY 3s ease-in-out infinite"}}>🚀</div>
-              <h2 style={{lineHeight:1.4,wordBreak:"break-word",fontFamily:"'Playfair Display',serif",fontSize:20,fontWeight:600,marginBottom:12,
-                background:"linear-gradient(135deg,#c4b5fd,#f5c842)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",letterSpacing:"0.3px"}}>
-                Start Growing Today
-              </h2>
-              <p style={{color:C.muted,fontSize:14,marginBottom:32,maxWidth:380,margin:"0 auto 32px",lineHeight:1.7}}>
-                Join 48,000+ users already growing with OpulentSMM. Setup takes under 2 minutes.
-              </p>
-              <div style={{display:"flex",gap:12,justifyContent:"center",flexWrap:"wrap",marginBottom:20}}>
-                <Btn v="purple" onClick={goSignup} size="lg" style={{animation:"glowPurple 2.5s ease infinite",minWidth:190}}>
-                  Join Now — It's Free
-                </Btn>
-                <Btn v="ghost" onClick={goLogin} size="lg">Log In</Btn>
-              </div>
-              <div style={{display:"flex",gap:16,justifyContent:"center",flexWrap:"wrap"}}>
-                {["🔒 No credit card","⚡ Instant access","✓ Cancel anytime"].map(t=>(
-                  <span key={t} style={{fontSize:11,color:"#34d399",fontWeight:700}}>{t}</span>
-                ))}
-              </div>
-            </div>
-          </Card>
-        </div>
-      </section>
-
-      {/* ── TRUST BADGES ─────────────────────────────────────── */}
-      <section style={{padding:"48px 6%",background:"rgba(255,255,255,.012)",borderTop:`1px solid ${C.border}`}}>
-        <div style={{maxWidth:1100,margin:"0 auto"}}>
-          <div style={{display:"flex",justifyContent:"center",gap:10,flexWrap:"wrap",marginBottom:28}}>
-            {[{i:"🔒",t:"SSL Secured",s:"256-bit"},{i:"⚡",t:"Instant Delivery",s:"0–30 min"},{i:"🔄",t:"30-Day Refill",s:"Free refill"},{i:"🇮🇳",t:"Indian UPI",s:"GPay · PhonePe"},{i:"📞",t:"24/7 Support",s:"WhatsApp"},{i:"✅",t:"Verified Panel",s:"Trusted"}].map(b=>(
-              <div key={b.t} style={{display:"flex",alignItems:"center",gap:9,padding:"10px 16px",
-                background:"rgba(255,255,255,.025)",border:`1px solid ${C.border}`,borderRadius:10}}>
-                <span style={{fontSize:18}}>{b.i}</span>
-                <div>
-                  <div style={{fontWeight:700,color:"#e8e8f2",fontSize:12}}>{b.t}</div>
-                  <div style={{fontSize:10,color:C.muted}}>{b.s}</div>
-                </div>
-              </div>
-            ))}
-          </div>
-          <div style={{textAlign:"center"}}>
-            <div style={{fontSize:10,color:C.muted,letterSpacing:".08em",marginBottom:10,fontWeight:700}}>ACCEPTED PAYMENTS</div>
-            <div style={{display:"flex",justifyContent:"center",gap:8,flexWrap:"wrap"}}>
-              {["📱 Google Pay","📱 PhonePe","📱 Paytm","🏦 UPI Transfer","💳 NEFT / IMPS"].map(p=>(
-                <span key={p} style={{background:"rgba(255,255,255,.04)",border:"1px solid rgba(212,160,23,.12)",borderRadius:8,padding:"6px 14px",fontSize:11,fontWeight:600,color:C.muted}}>{p}</span>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── FAQ ──────────────────────────────────────────────── */}
-      <section style={{padding:"80px 6%",borderTop:`1px solid ${C.border}`}}>
-        <div style={{maxWidth:700,margin:"0 auto"}}>
-          <h2 style={{lineHeight:1.4,wordBreak:"break-word",fontFamily:"'Playfair Display',serif",fontSize:20,fontWeight:600,color:"#f0f0ff",marginBottom:36,textAlign:"center",letterSpacing:"0.3px"}}>
-            Frequently Asked Questions
-          </h2>
-          {[
-            {q:"Is it safe for my account?",a:"Yes. We use delivery methods that comply with platform guidelines. We never ask for your password."},
-            {q:"How fast is delivery?",a:"Most orders start within 0–30 minutes. Full delivery completes in 1–24 hours depending on quantity."},
-            {q:"What payment methods do you accept?",a:"All UPI apps — Google Pay, PhonePe, Paytm, BHIM, and direct bank transfer. No credit card needed."},
-            {q:"Will followers/likes drop?",a:"We offer a 30-day refill guarantee. If numbers drop, contact support and we'll restore them free."},
-            {q:"How do I add balance?",a:"Go to Add Funds, pay via UPI QR code, enter your UTR number. Admin credits wallet within 30 minutes."},
-            {q:"Can I get a refund?",a:"If an order fails to deliver, your wallet is refunded immediately. Cash refunds take 3–5 business days."},
-          ].map((f,i)=>{
-            const [open,setOpen]=React.useState(false);
+      {/* TRUST BAR */}
+      <div style={{borderTop:"1px solid rgba(255,255,255,0.06)",borderBottom:"1px solid rgba(255,255,255,0.06)",
+        background:"rgba(255,255,255,0.02)",padding:"16px 6%"}}>
+        <div style={{maxWidth:960,margin:"0 auto",display:"flex",justifyContent:"center",gap:32,flexWrap:"wrap",alignItems:"center"}}>
+          {[["Secure Payments","SSL encrypted"],["Instant Delivery","0-30 min start"],["Non-Drop Guarantee","30 day refill"],["Real Engagement","Verified quality"],["UPI Payments","GPay, PhonePe"]].map(function(t){
             return (
-              <div key={i} style={{borderBottom:`1px solid rgba(255,255,255,.06)`,marginBottom:0}}>
-                <button onClick={()=>setOpen(o=>!o)} style={{width:"100%",background:"none",border:"none",
-                  padding:"18px 0",display:"flex",justifyContent:"space-between",alignItems:"center",
-                  cursor:"pointer",textAlign:"left",gap:16}}>
-                  <span style={{fontWeight:700,color:"#e8e8f2",fontSize:14,lineHeight:1.4}}>{f.q}</span>
-                  <span style={{fontSize:18,color:C.purpleL,flexShrink:0,transition:"transform .22s",
-                    transform:open?"rotate(45deg)":"none",display:"inline-block"}}>+</span>
-                </button>
-                {open&&<div style={{paddingBottom:18,color:C.muted,fontSize:13,lineHeight:1.75,
-                  animation:"slideDown .2s ease"}}>{f.a}</div>}
+              <div key={t[0]} style={{display:"flex",alignItems:"center",gap:8}}>
+                <div style={{width:6,height:6,borderRadius:"50%",background:"#6366F1"}}/>
+                <div>
+                  <div style={{fontSize:12,fontWeight:600,color:"#E2E8F0"}}>{t[0]}</div>
+                  <div style={{fontSize:10,color:"#64748B"}}>{t[1]}</div>
+                </div>
               </div>
             );
           })}
         </div>
+      </div>
+
+      {/* FEATURES */}
+      <section id="features-sec" style={{padding:"96px 6%"}}>
+        <div style={{maxWidth:1100,margin:"0 auto"}}>
+          <div style={{textAlign:"center",marginBottom:64}}>
+            <div style={{display:"inline-block",background:"rgba(99,102,241,0.1)",
+              border:"1px solid rgba(99,102,241,0.2)",borderRadius:100,
+              padding:"5px 14px",fontSize:11,fontWeight:600,color:"#818CF8",letterSpacing:"0.06em",marginBottom:16}}>PLATFORM FEATURES</div>
+            <h2 style={{fontSize:"clamp(28px,4vw,42px)",fontWeight:700,color:"#F8FAFC",letterSpacing:"-0.02em",marginBottom:14}}>
+              Everything You Need to Grow
+            </h2>
+            <p style={{color:"#94A3B8",fontSize:16,maxWidth:480,margin:"0 auto"}}>
+              Professional-grade tools built for serious creators and businesses.
+            </p>
+          </div>
+          <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(240px,1fr))",gap:20}}>
+            {[
+              {icon:"F",label:"Fast Delivery",desc:"Orders start within minutes. Most complete in under 24 hours with real-time tracking."},
+              {icon:"R",label:"Real Engagement",desc:"High-quality accounts with genuine activity. No bots. No fake drops."},
+              {icon:"A",label:"Scalable for Agencies",desc:"Bulk ordering, priority processing, and dedicated support for high-volume clients."},
+              {icon:"I",label:"Reliable Infrastructure",desc:"99.9% uptime. Firebase-powered backend. Your orders are always safe and tracked."},
+              {icon:"P",label:"UPI Payments",desc:"Pay securely with GPay, PhonePe, Paytm, or any UPI app. Instant wallet top-up."},
+              {icon:"G",label:"Refill Guarantee",desc:"30-day free refill on all eligible services. We stand behind every order we fulfill."}
+            ].map(function(f){
+              return (
+                <div key={f.label} style={{background:"rgba(255,255,255,0.03)",
+                  border:"1px solid rgba(255,255,255,0.08)",borderRadius:12,padding:"28px 24px"}}>
+                  <div style={{width:40,height:40,borderRadius:10,background:"rgba(99,102,241,0.12)",
+                    display:"flex",alignItems:"center",justifyContent:"center",
+                    fontSize:13,fontWeight:800,color:"#818CF8",marginBottom:16}}>{f.icon}</div>
+                  <div style={{fontWeight:600,color:"#F8FAFC",fontSize:15,marginBottom:8}}>{f.label}</div>
+                  <div style={{color:"#64748B",fontSize:13,lineHeight:1.6}}>{f.desc}</div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
       </section>
 
-      {/* ── FOOTER ───────────────────────────────────────────── */}
-      <footer style={{borderTop:"1px solid rgba(124,58,237,.1)",padding:"28px 6%",
-        display:"flex",justifyContent:"space-between",alignItems:"center",flexWrap:"wrap",gap:14}}>
-        <Logo/>
-        <div style={{color:C.muted,fontSize:12,display:"flex",gap:18,flexWrap:"wrap"}}>
-          {["Terms","Privacy","Refunds","Support"].map(l=>(
-            <span key={l} style={{cursor:"pointer",transition:"color .15s"}}
-              onMouseEnter={e=>e.target.style.color=C.goldL}
-              onMouseLeave={e=>e.target.style.color=C.muted}>{l}</span>
-          ))}
+      {/* HOW IT WORKS */}
+      <section style={{padding:"80px 6%",background:"rgba(99,102,241,0.04)",
+        borderTop:"1px solid rgba(99,102,241,0.1)",borderBottom:"1px solid rgba(99,102,241,0.1)"}}>
+        <div style={{maxWidth:900,margin:"0 auto",textAlign:"center"}}>
+          <div style={{display:"inline-block",background:"rgba(99,102,241,0.1)",
+            border:"1px solid rgba(99,102,241,0.2)",borderRadius:100,
+            padding:"5px 14px",fontSize:11,fontWeight:600,color:"#818CF8",letterSpacing:"0.06em",marginBottom:16}}>HOW IT WORKS</div>
+          <h2 style={{fontSize:"clamp(24px,4vw,38px)",fontWeight:700,color:"#F8FAFC",letterSpacing:"-0.02em",marginBottom:12}}>Up and Running in 3 Steps</h2>
+          <p style={{color:"#94A3B8",fontSize:15,marginBottom:56}}>No complex setup. No waiting. Start growing today.</p>
+          <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(220px,1fr))",gap:24}}>
+            {[
+              {n:"01",t:"Create Account",d:"Sign up free in 30 seconds. No credit card required. Get Rs.10 welcome credit instantly."},
+              {n:"02",t:"Add Funds",d:"Top up your wallet with UPI. GPay, PhonePe, Paytm any app works. Instant credit."},
+              {n:"03",t:"Place Order",d:"Pick your service, paste your link, confirm. Delivery starts immediately."}
+            ].map(function(s){
+              return (
+                <div key={s.n} style={{background:"rgba(255,255,255,0.03)",
+                  border:"1px solid rgba(255,255,255,0.08)",borderRadius:12,padding:"28px 22px",textAlign:"left"}}>
+                  <div style={{fontSize:32,fontWeight:800,color:"rgba(99,102,241,0.3)",letterSpacing:"-0.04em",marginBottom:14,lineHeight:1}}>{s.n}</div>
+                  <div style={{fontWeight:600,color:"#F8FAFC",fontSize:15,marginBottom:8}}>{s.t}</div>
+                  <div style={{color:"#64748B",fontSize:13,lineHeight:1.6}}>{s.d}</div>
+                </div>
+              );
+            })}
+          </div>
         </div>
-        <span style={{color:"#3a3a50",fontSize:11}}>© 2026 OpulentSMM India · All rights reserved</span>
+      </section>
+
+      {/* SERVICES */}
+      <section id="svc-sec" style={{padding:"96px 6%"}}>
+        <div style={{maxWidth:1100,margin:"0 auto"}}>
+          <div style={{textAlign:"center",marginBottom:56}}>
+            <div style={{display:"inline-block",background:"rgba(99,102,241,0.1)",
+              border:"1px solid rgba(99,102,241,0.2)",borderRadius:100,
+              padding:"5px 14px",fontSize:11,fontWeight:600,color:"#818CF8",letterSpacing:"0.06em",marginBottom:16}}>SERVICES</div>
+            <h2 style={{fontSize:"clamp(24px,4vw,38px)",fontWeight:700,color:"#F8FAFC",letterSpacing:"-0.02em",marginBottom:12}}>
+              All Major Platforms. One Dashboard.
+            </h2>
+            <p style={{color:"#94A3B8",fontSize:15}}>Choose from 20+ services across every major platform.</p>
+          </div>
+          <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(200px,1fr))",gap:14}}>
+            {[
+              {p:"Instagram",abbr:"IG",items:["Followers","Likes","Reel Views","Story Views","Comments","Saves"]},
+              {p:"YouTube",abbr:"YT",items:["Views","Likes","Subscribers"]},
+              {p:"Facebook",abbr:"FB",items:["Followers","Post Likes","Reel Likes","Video Views"]},
+              {p:"Twitter",abbr:"TW",items:["Followers","Likes"]},
+              {p:"TikTok",abbr:"TK",items:["Coming Soon"]},
+              {p:"Telegram",abbr:"TG",items:["Coming Soon"]}
+            ].map(function(pl){
+              return (
+                <div key={pl.p} onClick={goSignup} style={{background:"rgba(255,255,255,0.03)",
+                  border:"1px solid rgba(255,255,255,0.08)",borderRadius:12,padding:"22px 20px",cursor:"pointer"}}>
+                  <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:14}}>
+                    <div style={{width:36,height:36,borderRadius:8,background:"rgba(99,102,241,0.1)",
+                      display:"flex",alignItems:"center",justifyContent:"center",
+                      fontSize:11,fontWeight:800,color:"#818CF8"}}>{pl.abbr}</div>
+                    <span style={{fontWeight:600,color:"#F8FAFC",fontSize:14}}>{pl.p}</span>
+                  </div>
+                  <div style={{display:"flex",flexWrap:"wrap",gap:5}}>
+                    {pl.items.map(function(it){
+                      return (
+                        <span key={it} style={{fontSize:10,color:"#64748B",background:"rgba(255,255,255,0.04)",borderRadius:4,padding:"2px 7px"}}>{it}</span>
+                      );
+                    })}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* TESTIMONIALS */}
+      <section style={{padding:"80px 6%",background:"rgba(99,102,241,0.03)",borderTop:"1px solid rgba(255,255,255,0.05)"}}>
+        <div style={{maxWidth:900,margin:"0 auto"}}>
+          <div style={{textAlign:"center",marginBottom:48}}>
+            <div style={{display:"inline-block",background:"rgba(99,102,241,0.1)",
+              border:"1px solid rgba(99,102,241,0.2)",borderRadius:100,
+              padding:"5px 14px",fontSize:11,fontWeight:600,color:"#818CF8",letterSpacing:"0.06em",marginBottom:16}}>TESTIMONIALS</div>
+            <h2 style={{fontSize:"clamp(22px,4vw,34px)",fontWeight:700,color:"#F8FAFC",letterSpacing:"-0.02em"}}>
+              Trusted by Creators and Businesses
+            </h2>
+          </div>
+          <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(260px,1fr))",gap:16}}>
+            {[
+              {name:"Arjun M.",role:"Content Creator, Mumbai",q:"Orders delivered within 2 hours. My Instagram engagement went up significantly. The quality is genuinely impressive."},
+              {name:"Priya S.",role:"Digital Marketing Agency",q:"We manage 15+ client accounts through OpulentSMM. Reliable, fast, and the admin panel makes bulk ordering easy."},
+              {name:"Rahul K.",role:"Business Owner, Delhi",q:"Finally an SMM panel that feels professional. Clean interface, real results, and great support on WhatsApp."}
+            ].map(function(t){
+              return (
+                <div key={t.name} style={{background:"rgba(255,255,255,0.03)",border:"1px solid rgba(255,255,255,0.08)",borderRadius:12,padding:"24px"}}>
+                  <div style={{color:"#F59E0B",fontSize:13,marginBottom:12,letterSpacing:2}}>* * * * *</div>
+                  <p style={{color:"#94A3B8",fontSize:13,lineHeight:1.7,marginBottom:16}}>"{t.q}"</p>
+                  <div>
+                    <div style={{fontWeight:600,color:"#E2E8F0",fontSize:13}}>{t.name}</div>
+                    <div style={{color:"#64748B",fontSize:11,marginTop:2}}>{t.role}</div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section style={{padding:"96px 6%",textAlign:"center"}}>
+        <div style={{maxWidth:640,margin:"0 auto",background:"rgba(99,102,241,0.08)",
+          border:"1px solid rgba(99,102,241,0.2)",borderRadius:20,padding:"56px 40px"}}>
+          <h2 style={{fontSize:"clamp(24px,4vw,38px)",fontWeight:700,color:"#F8FAFC",letterSpacing:"-0.02em",marginBottom:14}}>
+            Start Scaling Your Social Growth Today
+          </h2>
+          <p style={{color:"#94A3B8",fontSize:15,marginBottom:36,lineHeight:1.7}}>
+            Join 48,000+ businesses and creators who trust OpulentSMM for real, fast, reliable growth.
+          </p>
+          <div style={{display:"flex",gap:12,justifyContent:"center",flexWrap:"wrap"}}>
+            <button onClick={goSignup} style={{background:"#6366F1",border:"none",borderRadius:10,
+              padding:"14px 32px",color:"#fff",fontSize:15,fontWeight:600,cursor:"pointer",
+              boxShadow:"0 0 40px rgba(99,102,241,0.35)"}}>Create Free Account</button>
+            <button onClick={goLogin} style={{background:"rgba(255,255,255,0.06)",
+              border:"1px solid rgba(255,255,255,0.12)",borderRadius:10,
+              padding:"14px 32px",color:"#F8FAFC",fontSize:15,fontWeight:600,cursor:"pointer"}}>Log In</button>
+          </div>
+          <p style={{color:"#475569",fontSize:12,marginTop:20}}>No credit card required. Free Rs.10 welcome credit on signup.</p>
+        </div>
+      </section>
+
+      {/* FOOTER */}
+      <footer style={{borderTop:"1px solid rgba(255,255,255,0.06)",padding:"40px 6%"}}>
+        <div style={{maxWidth:1100,margin:"0 auto",display:"flex",
+          justifyContent:"space-between",alignItems:"center",flexWrap:"wrap",gap:20}}>
+          <div>
+            <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:8}}>
+              <div style={{width:28,height:28,borderRadius:7,background:"linear-gradient(135deg,#6366F1,#818CF8)",
+                display:"flex",alignItems:"center",justifyContent:"center",fontSize:13,fontWeight:900,color:"#fff"}}>O</div>
+              <span style={{fontWeight:700,color:"#E2E8F0",fontSize:15}}>OpulentSMM</span>
+            </div>
+            <div style={{color:"#475569",fontSize:12}}>India's premium SMM growth platform.</div>
+          </div>
+          <div style={{display:"flex",gap:24,flexWrap:"wrap"}}>
+            {[["Home",function(){window.scrollTo({top:0,behavior:"smooth"});}],
+              ["Services",function(){document.getElementById("svc-sec").scrollIntoView({behavior:"smooth"});}],
+              ["Features",function(){document.getElementById("features-sec").scrollIntoView({behavior:"smooth"});}],
+              ["Login",goLogin],
+              ["Sign Up",goSignup]].map(function(l){
+              return (
+                <span key={l[0]} onClick={l[1]} style={{color:"#64748B",fontSize:13,cursor:"pointer",fontWeight:500}}>{l[0]}</span>
+              );
+            })}
+          </div>
+        </div>
+        <div style={{maxWidth:1100,margin:"20px auto 0",paddingTop:20,
+          borderTop:"1px solid rgba(255,255,255,0.05)",
+          display:"flex",justifyContent:"space-between",flexWrap:"wrap",gap:10}}>
+          <div style={{color:"#334155",fontSize:11}}>Copyright 2025 OpulentSMM. All rights reserved.</div>
+          <div style={{color:"#334155",fontSize:11}}>support@opulentsmm.in</div>
+        </div>
       </footer>
 
     </div>
   );
 };
 
-const QualityBadge = ({ label }) => {
-  const cfg = { "Non Drop":{ bg:"rgba(52,211,153,.12)",c:"#34d399",b:"rgba(52,211,153,.25)",i:"✓" },
-    "High Quality":{ bg:"rgba(96,165,250,.12)",c:"#60a5fa",b:"rgba(96,165,250,.25)",i:"⭐" },
-    "Refill Available":{ bg:"rgba(245,200,66,.12)",c:"#f5c842",b:"rgba(245,200,66,.25)",i:"🔄" } }[label]
-    || { bg:"rgba(124,58,237,.1)",c:"#c4b5fd",b:"rgba(124,58,237,.25)",i:"✦" };
-  return <span style={{fontSize:9,padding:"2px 8px",borderRadius:20,fontWeight:700,background:cfg.bg,color:cfg.c,border:`1px solid ${cfg.b}`}}>{cfg.i} {label}</span>;
-};
 
-const SvcCard = ({ svc, onOrder }) => {
-  const badgeStyle = svc.badge ? getBadgeStyle(svc.badge) : null;
-  const speedBg = svc.speedTag==="Instant"?"rgba(52,211,153,.08)":svc.speedTag==="Fast"?"rgba(96,165,250,.08)":"rgba(255,255,255,.04)";
-  const speedC  = svc.speedTag==="Instant"?"#34d399":svc.speedTag==="Fast"?"#60a5fa":"#fbbf24";
-  return (
-    <div className="svc-card-hover" onClick={onOrder} style={{cursor:"pointer",
-      background:"linear-gradient(145deg,rgba(255,255,255,.05),rgba(255,255,255,.02))",
-      border:`1px solid ${svc.badge?"rgba(124,58,237,.25)":C.border}`,borderRadius:16,padding:22,
-      backdropFilter:"blur(20px)",boxShadow:"0 4px 32px rgba(0,0,0,.4)",position:"relative",overflow:"hidden"}}>
-      {/* Badge ribbon top-right */}
-      {badgeStyle&&(
-        <div style={{position:"absolute",top:0,right:0,background:badgeStyle.bg,
-          border:`1px solid ${badgeStyle.border}`,borderRadius:"0 16px 0 10px",
-          padding:"4px 12px",fontSize:10,fontWeight:800,color:badgeStyle.color}}>
-          {svc.badge}
-        </div>
-      )}
-      <div style={{display:"flex",justifyContent:"space-between",marginBottom:10,alignItems:"flex-start"}}>
-        <div style={{flex:1,paddingRight:badgeStyle?40:10}}>
-          <div style={{fontSize:10,color:C.purpleL,fontWeight:800,letterSpacing:".08em",marginBottom:4}}>{svc.platform} · {svc.cat}</div>
-          <div style={{fontWeight:700,fontSize:15,color:"#e8e8f2",lineHeight:1.3,marginBottom:6}}>{svc.name}</div>
-          {/* Speed tag inline */}
-          <span style={{fontSize:9,padding:"2px 8px",borderRadius:20,fontWeight:700,background:speedBg,color:speedC,border:`1px solid ${speedC}25`}}>
-            {svc.speedTag==="Instant"?"⚡ Instant Start":svc.speedTag==="Fast"?"🚀 Fast Delivery":"🔄 Normal Delivery"}
-          </span>
-        </div>
-        <span style={{fontSize:28,flexShrink:0}}>{svc.icon}</span>
-      </div>
-      <p style={{color:C.muted,fontSize:12,lineHeight:1.6,marginBottom:14}}>{svc.desc}</p>
-      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:8,marginBottom:12}}>
-        {[{l:"Speed",v:svc.speed},{l:"Min Qty",v:(svc.min||0).toLocaleString()},{l:"Price",v:svc.tiers?"From ₹"+svc.tiers[0].price:`₹${svc.price}/unit`}].map(({l,v})=>(
-          <div key={l} style={{background:"rgba(255,255,255,.04)",borderRadius:8,padding:"7px 8px",textAlign:"center"}}>
-            <div style={{fontSize:9,color:C.muted,letterSpacing:".05em",marginBottom:2}}>{l}</div>
-            <div style={{fontSize:11,fontWeight:800,color:"#c4b5fd"}}>{v}</div>
-          </div>
-        ))}
-      </div>
-      {svc.quality&&svc.quality.length>0&&(
-        <div style={{display:"flex",gap:5,flexWrap:"wrap",marginBottom:12}}>
-          {svc.quality.map(q=><QualityBadge key={q} label={q}/>)}
-        </div>
-      )}
-      <Btn style={{width:"100%",justifyContent:"center"}} size="sm">Order Now →</Btn>
-    </div>
-  );
-};
-
-// ═══════════════════════════════════════════════════════════════
-//  AUTH — SIGNUP
-// ═══════════════════════════════════════════════════════════════
-const Signup = ({ goLogin, onSuccess }) => {
-  const [form,setForm]=useState({name:"",email:"",password:"",confirm:""});
-  const [errs,setErrs]=useState({});
-  const [loading,setLoading]=useState(false);
-  const [done,setDone]=useState(false);
-  const [errMsg,setErrMsg]=useState("");
-  const F=(k,v)=>setForm(f=>({...f,[k]:v}));
-
-  const validate=()=>{
-    const e={};
-    if(!form.name.trim()) e.name="Full name required";
-    if(!form.email.includes("@")) e.email="Enter valid email";
-    if(form.password.length<6) e.password="Min 6 characters";
-    if(form.password!==form.confirm) e.confirm="Passwords don't match";
-    setErrs(e); return !Object.keys(e).length;
-  };
-
-  const handleSignup=async()=>{
-    if(!validate()) return;
-    setErrMsg("");
-    setLoading(true);
-    try {
-      const auth = await getFirebaseAuth();
-      if(auth){
-        const cred = await auth.createUserWithEmailAndPassword(form.email, form.password);
-        await cred.user.sendEmailVerification();
-        const referralCode = getReferral();
-        // Save user to DB with referral
-        DB.addUser({
-          id:"USR-"+Date.now(),
-          name:form.name,
-          email:form.email,
-          balance:0,
-          orders:0,
-          joined:today(),
-          status:"Active",
-          referral: referralCode,
-          referredBy: referralCode,
-        });
-        if(referralCode) clearReferral(); // clear after successful use
-        setLoading(false);
-        setDone(true);
-      }
-    } catch(e){
-      setLoading(false);
-      if(e.code==="auth/email-already-in-use")
-        setErrMsg("This email is already registered! Please log in instead.");
-      else if(e.code==="auth/invalid-email")
-        setErrMsg("Invalid email address. Please check and try again.");
-      else if(e.code==="auth/weak-password")
-        setErrMsg("Password too weak. Use at least 6 characters.");
-      else setErrMsg("Error: " + (e.code || e.message || "Unknown"));
-    }
-  };
-
-  return (
-    <AuthWrap>
-      <Logo/>
-      <div style={{margin:"28px 0 24px"}}>
-        <h2 style={{fontFamily:"Syne,sans-serif",fontSize:26,fontWeight:900,color:"#f0f0ff",marginBottom:5}}>
-          {done?"Check Your Email! 📧":"Create Account"}
-        </h2>
-        <p style={{color:C.muted,fontSize:13}}>
-          {done?"We sent a verification link to your email. Click it to activate your account!":"Start growing your social media today"}
-        </p>
-      </div>
-
-      {!done&&<>
-        {errMsg&&<div style={{background:"rgba(239,68,68,.1)",border:"1px solid rgba(239,68,68,.3)",borderRadius:11,padding:"12px 16px",marginBottom:18,color:"#f87171",fontSize:13}}>⚠ {errMsg}</div>}
-        <Inp label="Full Name" value={form.name} onChange={e=>F("name",e.target.value)} placeholder="Your full name" error={errs.name} icon="👤"/>
-        <Inp label="Email Address" type="email" value={form.email} onChange={e=>F("email",e.target.value)} placeholder="you@email.com" error={errs.email} icon="📧"/>
-        <Inp label="Password" type="password" value={form.password} onChange={e=>F("password",e.target.value)} placeholder="Min 6 characters" error={errs.password} icon="🔒"/>
-        <Inp label="Confirm Password" type="password" value={form.confirm} onChange={e=>F("confirm",e.target.value)} placeholder="Repeat password" error={errs.confirm} icon="🔒"/>
-        <Btn onClick={handleSignup} loading={loading} style={{width:"100%",justifyContent:"center",marginTop:4}} size="lg">Create Account →</Btn>
-        <p style={{textAlign:"center",marginTop:18,color:C.muted,fontSize:13}}>
-          Have an account? <span onClick={goLogin} style={{color:C.purpleL,fontWeight:700,cursor:"pointer"}}>Log In</span>
-        </p>
-      </>}
-
-      {done&&(
-        <div style={{textAlign:"center",padding:"28px 0"}}>
-          <div style={{width:76,height:76,borderRadius:"50%",background:C.gP,margin:"0 auto 18px",
-            display:"flex",alignItems:"center",justifyContent:"center",fontSize:34,boxShadow:"0 0 40px rgba(124,58,237,.4)"}}>📧</div>
-          <h3 style={{fontWeight:900,color:"#c4b5fd",fontSize:18,marginBottom:8}}>Verification Email Sent!</h3>
-          <p style={{color:C.muted,fontSize:13,marginBottom:20}}>Check your inbox at<br/><strong style={{color:"#f0f0ff"}}>{form.email}</strong><br/>and click the link to verify.</p>
-          <Btn onClick={goLogin} style={{width:"100%",justifyContent:"center"}} size="lg">Go to Login →</Btn>
-        </div>
-      )}
-    </AuthWrap>
-  );
-};
-
-// ─── Firebase Auth Helper ─────────────────────────────────────
-
-
-// ─── Auth — LOGIN ─────────────────────────────────────────────
 const Login = ({ goSignup, onUserLogin, onAdminLogin }) => {
   const [form,setForm]=useState({email:"",password:""});
   const [err,setErr]=useState("");
